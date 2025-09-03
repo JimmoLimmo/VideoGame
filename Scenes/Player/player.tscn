@@ -1,6 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6qwdj501fg6f"]
+[gd_scene load_steps=14 format=3 uid="uid://c6qwdj501fg6f"]
 
 [ext_resource type="Texture2D" uid="uid://cdejhjqax3a51" path="res://Sprites/Player/Player_metroid.png" id="1_uvnfx"]
+[ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_xpcdj"]
+[ext_resource type="Script" uid="uid://yuq1i44nft4l" path="res://Scripts/Player/Sword.cs" id="2_a3d8c"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a3d8c"]
 radius = 6.0
@@ -88,6 +90,23 @@ tracks/0/keys = {
 "update": 1,
 "values": [17, 18, 19, 20]
 }
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"AttackStart"
+}, {
+"args": [],
+"method": &"AttackEnd"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_mtuoh"]
 resource_name = "Walk"
@@ -117,9 +136,10 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_74mp2"]
-size = Vector2(15, 21)
+size = Vector2(16, 25)
 
 [node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_xpcdj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_uvnfx")
@@ -138,8 +158,11 @@ libraries = {
 autoplay = "Idle"
 
 [node name="Sword" type="Area2D" parent="."]
+script = ExtResource("2_a3d8c")
+
+[node name="Marker2D" type="Marker2D" parent="Sword"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
-position = Vector2(11.5, 10.5)
+position = Vector2(12, 8.5)
 shape = SubResource("RectangleShape2D_74mp2")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
