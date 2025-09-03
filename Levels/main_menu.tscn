@@ -53,6 +53,7 @@ script = ExtResource("6_5qvx8")
 
 [node name="MenuTab2" type="PanelContainer" parent="."]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("2_8md67")
