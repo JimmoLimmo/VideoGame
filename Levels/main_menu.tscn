@@ -1,0 +1,73 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1h0os8of8lwj"]
+
+[ext_resource type="Script" uid="uid://bwrmaq58dyppy" path="res://Scripts/Menu/MainMenuManager.cs" id="1_3es34"]
+[ext_resource type="Script" uid="uid://dl4iwf2p4aoy7" path="res://Scripts/Menu/MenuTab.cs" id="2_8md67"]
+[ext_resource type="Script" uid="uid://brxmvjgsn0dss" path="res://Scripts/Menu/StartGameButton.cs" id="3_5qvx8"]
+[ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="3_15p6s"]
+[ext_resource type="PackedScene" uid="uid://dmgl4w1eym6hu" path="res://Levels/level_1.tscn" id="4_hllw6"]
+[ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_5qvx8"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3es34")
+
+[node name="MenuTab" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_8md67")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuTab"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MenuTab/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Game"
+horizontal_alignment = 1
+
+[node name="StartGameBtn" type="Button" parent="MenuTab/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Start"
+script = ExtResource("3_5qvx8")
+sceneToSwtichTo = ExtResource("4_hllw6")
+
+[node name="OptionsBtn" type="Button" parent="MenuTab/VBoxContainer" node_paths=PackedStringArray("switchToMenu")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Options"
+script = ExtResource("3_15p6s")
+switchToMenu = NodePath("../../../MenuTab2")
+
+[node name="QuitBtn" type="Button" parent="MenuTab/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Quit Game"
+script = ExtResource("6_5qvx8")
+
+[node name="MenuTab2" type="PanelContainer" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_8md67")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuTab2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MenuTab2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Second Menu"
+
+[node name="ReturnBtn" type="Button" parent="MenuTab2/VBoxContainer" node_paths=PackedStringArray("switchToMenu")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Return"
+script = ExtResource("3_15p6s")
+switchToMenu = NodePath("../../../MenuTab")
