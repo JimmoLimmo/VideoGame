@@ -10,17 +10,46 @@ public partial class Player : CharacterBody2D
     private Sprite2D _sprite;
 
     [Export] public NodePath SwordPath { get; set; }  // assign in Inspector
-    private Sword _sword;
+    [Export] public NodePath HudPath   { get; set; }  // assign in Inspector
 
-    // simple cooldown to prevent spam
+    private Sword _sword;
+    private HUD _hud;
+
     [Export] public float AttackCooldown = 0.25f;
     private float _attackTimer = 0f;
 
+    private int _hp = 5;
+
     public override void _Ready()
     {
-        _anim = GetNode<AnimationPlayer>("AnimationPlayer");
+        _anim  = GetNode<AnimationPlayer>("AnimationPlayer");
         _sprite = GetNode<Sprite2D>("Sprite2D");
-        _sword = GetNode<Sword>(SwordPath); // e.g. "Sword"
+
+        _sword = GetNodeOrNull<Sword>(SwordPath);
+        if (_sword == null)
+            GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
+
+        _hud = GetNodeOrNull<HUD>(HudPath);
+        if (_hud == null)
+            GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
+
+        // 🔧 Defer HUD sync so HUD._Ready() has time to build its UI
+        CallDeferred(nameof(SyncHud));
+    }
+
+    private void SyncHud()
+    {
+        // Try to resolve again in case the node was instanced after Player._Ready()
+        _hud ??= GetNodeOrNull<HUD>(HudPath);
+        if (_hud == null)
+        {
+            GD.PushError($"[Player] Could not sync HUD; node still null at '{HudPath}'.");
+            return;
+        }
+
+        // Clamp to HUD capacity and apply initial value
+        _hp = Mathf.Min(_hp, _hud.MaxMasks);
+        _hud.SetHealth(_hp);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -52,7 +81,7 @@ public partial class Player : CharacterBody2D
         if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f)
         {
             _attackTimer = AttackCooldown;
-            _anim.Play("Sword");          // animation controls hitbox window
+            _anim.Play("Sword"); // animation calls AttackStart/AttackEnd
         }
 
         // Movement anims if not attacking
@@ -70,7 +99,21 @@ public partial class Player : CharacterBody2D
         MoveAndSlide();
     }
 
-    // These are called by AnimationPlayer via Call Method tracks:
-    public void AttackStart()  => _sword?.EnableHitbox();
-    public void AttackEnd()    => _sword?.DisableHitbox();
+    // Called by AnimationPlayer
+    public void AttackStart() => _sword?.EnableHitbox();
+    public void AttackEnd()   => _sword?.DisableHitbox();
+
+    public void TakeDamage(int dmg)
+    {
+        _hp = Mathf.Max(0, _hp - dmg);
+        _hud?.SetHealth(_hp);
+        _hud?.FlashDamage();
+    }
+
+    public void Heal(int amt)
+    {
+        int max = _hud?.MaxMasks ?? _hp;
+        _hp = Mathf.Min(_hp + amt, max);
+        _hud?.SetHealth(_hp);
+    }
 }

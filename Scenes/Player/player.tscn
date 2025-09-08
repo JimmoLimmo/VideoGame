@@ -140,6 +140,7 @@ size = Vector2(16, 25)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_xpcdj")
+SwordPath = NodePath("Sword")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_uvnfx")

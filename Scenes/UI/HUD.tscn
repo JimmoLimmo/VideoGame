@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://c4jxu7rwtkoxu"]
+
+[node name="Hud" type="CanvasLayer"]
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TopLeft" type="Control" parent="Root"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Health" type="HBoxContainer" parent="Root/TopLeft"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
