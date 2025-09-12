@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://c6qwdj501fg6f"]
+[gd_scene load_steps=15 format=3 uid="uid://c6qwdj501fg6f"]
 
 [ext_resource type="Texture2D" uid="uid://cdejhjqax3a51" path="res://Sprites/Player/Player_metroid.png" id="1_uvnfx"]
 [ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_xpcdj"]
 [ext_resource type="Script" uid="uid://yuq1i44nft4l" path="res://Scripts/Player/Sword.cs" id="2_a3d8c"]
+[ext_resource type="Script" path="res://Scenes/Player/Camera2d.cs" id="4_mtuoh"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a3d8c"]
 radius = 6.0
@@ -167,3 +168,8 @@ script = ExtResource("2_a3d8c")
 position = Vector2(12, 8.5)
 shape = SubResource("RectangleShape2D_74mp2")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("4_mtuoh")
+
+[connection signal="Hit" from="." to="Camera2D" method="_on_player_hit"]
