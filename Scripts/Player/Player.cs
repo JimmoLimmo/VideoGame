@@ -10,8 +10,17 @@ public partial class Player : CharacterBody2D
     // Movement Variables
     private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
     private bool _isDashing = false; // Whether the player is currently dashing
+    private bool _hasAirDashed = false; // Tracks if the player has dashed in the air
+    private bool _isWallSliding = false; // Tracks if the player is sliding on a wall
     private float _dashTimer = 0f; // Tracks remaining dash time
     private float _dashCooldownTimer = 0f; // Tracks cooldown time
+    [Export] public float WallJumpLockTime = 0.1f; // lock duration in seconds
+    private float _wallJumpLockTimer = 0f;
+
+
+    // Wall Slide Settings
+    [Export] public float WallSlideSpeed = 100.0f; // Speed of sliding down a wall
+    [Export] public float WallJumpForce = 600.0f; // Force applied when jumping off a wall
 
     // Dash Settings
     [Export] public float DashSpeed = 400.0f; // Speed during dash
@@ -73,34 +82,45 @@ public partial class Player : CharacterBody2D
     {
         if (_isDead) return; // Disable controls if dead
 
+        _wallJumpLockTimer = Mathf.Max(0f, _wallJumpLockTimer - (float)delta);
+
         HandleDashCooldown(delta);
+
         if (_isDashing)
         {
             HandleDash(delta);
-            return; // Skip normal movement while dashing
+        }
+        else
+        {
+            HandleMovement(delta);
         }
 
-        HandleMovement(delta);
-        HandleJump();
-        HandleDashInput();
-        HandleAttack(delta);
-        HandleAnimations();
+        if (_isWallSliding && !_isDashing)
+            HandleWallSlide(delta);
+
+        HandleJump();         // Allow jumping regardless of dash
+        HandleDashInput();    // Still process new dash input
+        HandleAttack(delta);  // Allow attacking mid-air or mid-dash
+        HandleAnimations();   // Update animation
     }
 
     // Movement Logic
     private void HandleMovement(double delta)
     {
+        // Respect wall-jump input lock
+        float inputX = (_wallJumpLockTimer > 0f)
+            ? 0f
+            : Input.GetAxis("move_left", "move_right");
+
         Vector2 velocity = Velocity;
 
-        if (!IsOnFloor())
+        if (!IsOnFloor() && !_isWallSliding)
             velocity += GetGravity() * (float)delta;
 
-        Vector2 dir = Input.GetVector("move_left", "move_right", "ui_up", "ui_down");
-
-        if (Mathf.Abs(dir.X) > 0.01f)
+        if (Mathf.Abs(inputX) > 0.01f)
         {
-            velocity.X = dir.X * Speed;
-            bool facingLeft = dir.X < 0f;
+            velocity.X = inputX * Speed;
+            bool facingLeft = inputX < 0f;
             _sprite.FlipH = facingLeft;
             _sword?.SetFacingLeft(facingLeft);
         }
@@ -113,10 +133,35 @@ public partial class Player : CharacterBody2D
         MoveAndSlide();
     }
 
+
+    // Jump Logic
     private void HandleJump()
     {
-        if (Input.IsActionJustPressed("jump") && IsOnFloor())
-            Velocity = new Vector2(Velocity.X, JumpVelocity);
+        if (Input.IsActionJustPressed("jump"))
+        {
+            if (IsOnFloor())
+            {
+                // Normal jump
+                Velocity = new Vector2(Velocity.X, JumpVelocity);
+            }
+            else if (_isWallSliding)
+            {
+                // Jump away from the wall with a strong horizontal push
+                int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
+                Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+
+                // Start input lock so holding into wall doesn’t cancel this
+                _isWallSliding = false;
+                _wallJumpLockTimer = WallJumpLockTime;
+            }
+            else if (_isDashing)
+            {
+                // Preserve momentum when jumping during a dash
+                Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+                _isDashing = false; // End the dash
+                _dashTimer = 0f; // Reset the dash timer
+            }
+        }
     }
 
     // Dash Logic
@@ -129,13 +174,14 @@ public partial class Player : CharacterBody2D
     private void HandleDash(double delta)
     {
         _dashTimer -= (float)delta;
-        if (_dashTimer <= 0f)
+        if (_dashTimer <= 0f || !Input.IsActionPressed("dash"))
         {
             _isDashing = false; // End the dash
         }
         else
         {
-            Velocity = _dashDirection * DashSpeed; // Maintain dash velocity
+            // Only apply dash velocity if the player is still dashing
+            Velocity = _dashDirection * DashSpeed;
             MoveAndSlide();
         }
     }
@@ -144,7 +190,19 @@ public partial class Player : CharacterBody2D
     {
         if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing)
         {
-            StartDash(Input.GetVector("move_left", "move_right", "ui_up", "ui_down"));
+            if (IsOnWall() && !IsOnFloor())
+            {
+                // Dash up the wall at a controlled speed
+                Vector2 upIntoWall = new Vector2((_sprite.FlipH ? -1 : 1) * 0.2f, -1f).Normalized();
+                StartDash(upIntoWall);
+
+            }
+            else if (IsOnFloor() || !_hasAirDashed)
+            {
+                StartDash(Input.GetVector("move_left", "move_right", "ui_up", "ui_down"));
+                if (!IsOnFloor())
+                    _hasAirDashed = true; // Mark air dash as used
+            }
         }
     }
 
@@ -156,9 +214,28 @@ public partial class Player : CharacterBody2D
         _isDashing = true;
         _dashTimer = DashDuration;
         _dashCooldownTimer = DashCooldown;
-        _dashDirection = direction.Normalized();
 
-        _anim.Play("Dash"); // Optional: Play a dash animation
+        // Scale the dash speed for wall dashing
+        _dashDirection = direction.Normalized();
+        Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f); // Reduce speed for wall dashing
+
+        // _anim.Play("Dash"); // Play dash animation
+    }
+
+    // Wall Slide Logic
+    private void HandleWallSlide(double delta)
+    {
+        if (IsOnWall() && !IsOnFloor())
+        {
+            _isWallSliding = true;
+
+            // Stick to the wall and slide down slowly
+            Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
+        }
+        else
+        {
+            _isWallSliding = false;
+        }
     }
 
     // Attack Logic
@@ -233,4 +310,24 @@ public partial class Player : CharacterBody2D
             GetTree().Paused = true; // Pause the game
         }
     }
+
+    // Reset States on Ground or Wall Contact
+    public override void _Process(double delta)
+    {
+        if (IsOnFloor())
+        {
+            _hasAirDashed = false; // Reset air dash when touching the ground
+        }
+
+        if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing)
+        {
+            _isWallSliding = true;  // Enable wall sliding when touching a wall
+            _hasAirDashed = false;  // Reset air dash when touching a wall
+        }
+        else if (!IsOnWall() || IsOnFloor())
+        {
+            _isWallSliding = false;
+        }
+    }
+
 }
