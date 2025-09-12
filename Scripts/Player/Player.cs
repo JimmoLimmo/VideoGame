@@ -3,33 +3,40 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
+    // Constants
     public const float Speed = 150.0f;
     public const float JumpVelocity = -350.0f;
 
-    [Export] public float DashSpeed = 400.0f; // Speed during dash
-    [Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
-    [Export] public float DashCooldown = .5f; // Cooldown time between dashes
-
+    // Movement Variables
+    private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
+    private bool _isDashing = false; // Whether the player is currently dashing
     private float _dashTimer = 0f; // Tracks remaining dash time
     private float _dashCooldownTimer = 0f; // Tracks cooldown time
-    private bool _isDashing = false; // Whether the player is currently dashing
-    private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
 
-    private AnimationPlayer _anim;
-    private Sprite2D _sprite;
+    // Dash Settings
+    [Export] public float DashSpeed = 400.0f; // Speed during dash
+    [Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
+    [Export] public float DashCooldown = 0.5f; // Cooldown time between dashes
 
-    [Export] public NodePath SwordPath { get; set; }  // assign in Inspector
-    [Export] public NodePath HudPath { get; set; }  // assign in Inspector
-
-    private Sword _sword;
-    private HUD _hud;
-
+    // Attack Variables
     [Export] public float AttackCooldown = 0.25f;
     private float _attackTimer = 0f;
 
+    // Health Variables
     private int _hp = 5;
-
     private bool _isDead = false;
+
+    // Node Paths
+    [Export] public NodePath SwordPath { get; set; } // Assign in Inspector
+    [Export] public NodePath HudPath { get; set; } // Assign in Inspector
+
+    // Node References
+    private AnimationPlayer _anim;
+    private Sprite2D _sprite;
+    private Sword _sword;
+    private HUD _hud;
+
+    // Initialization
     public override void _Ready()
     {
         _anim = GetNode<AnimationPlayer>("AnimationPlayer");
@@ -43,13 +50,12 @@ public partial class Player : CharacterBody2D
         if (_hud == null)
             GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
 
-        // 🔧 Defer HUD sync so HUD._Ready() has time to build its UI
+        // Defer HUD sync so HUD._Ready() has time to build its UI
         CallDeferred(nameof(SyncHud));
     }
 
     private void SyncHud()
     {
-        // Try to resolve again in case the node was instanced after Player._Ready()
         _hud ??= GetNodeOrNull<HUD>(HudPath);
         if (_hud == null)
         {
@@ -62,31 +68,28 @@ public partial class Player : CharacterBody2D
         _hud.SetHealth(_hp);
     }
 
+    // Physics Process
     public override void _PhysicsProcess(double delta)
     {
         if (_isDead) return; // Disable controls if dead
 
-        // Handle dash cooldown
-        if (_dashCooldownTimer > 0f)
-            _dashCooldownTimer -= (float)delta;
-
-        // Handle dash logic
+        HandleDashCooldown(delta);
         if (_isDashing)
         {
-            _dashTimer -= (float)delta;
-            if (_dashTimer <= 0f)
-            {
-                _isDashing = false; // End the dash
-            }
-            else
-            {
-                Velocity = _dashDirection * DashSpeed; // Maintain dash velocity
-                MoveAndSlide();
-                return; // Skip normal movement while dashing
-            }
+            HandleDash(delta);
+            return; // Skip normal movement while dashing
         }
 
-        // Normal movement logic
+        HandleMovement(delta);
+        HandleJump();
+        HandleDashInput();
+        HandleAttack(delta);
+        HandleAnimations();
+    }
+
+    // Movement Logic
+    private void HandleMovement(double delta)
+    {
         Vector2 velocity = Velocity;
 
         if (!IsOnFloor())
@@ -106,37 +109,43 @@ public partial class Player : CharacterBody2D
             velocity.X = Mathf.MoveToward(velocity.X, 0, Speed);
         }
 
-        // Jump input
-        if (Input.IsActionJustPressed("jump") && IsOnFloor())
-            velocity.Y = JumpVelocity;
-
-        // Dash input
-        if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing)
-        {
-            StartDash(dir);
-        }
-
-        // Attack input
-        _attackTimer -= (float)delta;
-        if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f)
-        {
-            _attackTimer = AttackCooldown;
-            _anim.Play("Sword"); // animation calls AttackStart/AttackEnd
-        }
-
-        // Movement anims if not attacking
-        if (_anim.CurrentAnimation != "Sword" || !_anim.IsPlaying())
-        {
-            string nextAnim =
-                !IsOnFloor() ? (velocity.Y < 0f ? "Jump" : "Fall") :
-                Mathf.Abs(velocity.X) > 1f ? "Walk" : "Idle";
-
-            if (_anim.CurrentAnimation != nextAnim)
-                _anim.Play(nextAnim);
-        }
-
         Velocity = velocity;
         MoveAndSlide();
+    }
+
+    private void HandleJump()
+    {
+        if (Input.IsActionJustPressed("jump") && IsOnFloor())
+            Velocity = new Vector2(Velocity.X, JumpVelocity);
+    }
+
+    // Dash Logic
+    private void HandleDashCooldown(double delta)
+    {
+        if (_dashCooldownTimer > 0f)
+            _dashCooldownTimer -= (float)delta;
+    }
+
+    private void HandleDash(double delta)
+    {
+        _dashTimer -= (float)delta;
+        if (_dashTimer <= 0f)
+        {
+            _isDashing = false; // End the dash
+        }
+        else
+        {
+            Velocity = _dashDirection * DashSpeed; // Maintain dash velocity
+            MoveAndSlide();
+        }
+    }
+
+    private void HandleDashInput()
+    {
+        if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing)
+        {
+            StartDash(Input.GetVector("move_left", "move_right", "ui_up", "ui_down"));
+        }
     }
 
     private void StartDash(Vector2 direction)
@@ -152,10 +161,35 @@ public partial class Player : CharacterBody2D
         _anim.Play("Dash"); // Optional: Play a dash animation
     }
 
-    // Called by AnimationPlayer
+    // Attack Logic
+    private void HandleAttack(double delta)
+    {
+        _attackTimer -= (float)delta;
+        if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f)
+        {
+            _attackTimer = AttackCooldown;
+            _anim.Play("Sword"); // Animation calls AttackStart/AttackEnd
+        }
+    }
+
     public void AttackStart() => _sword?.EnableHitbox();
     public void AttackEnd() => _sword?.DisableHitbox();
 
+    // Animation Logic
+    private void HandleAnimations()
+    {
+        if (_anim.CurrentAnimation != "Sword" || !_anim.IsPlaying())
+        {
+            string nextAnim =
+                !IsOnFloor() ? (Velocity.Y < 0f ? "Jump" : "Fall") :
+                Mathf.Abs(Velocity.X) > 1f ? "Walk" : "Idle";
+
+            if (_anim.CurrentAnimation != nextAnim)
+                _anim.Play(nextAnim);
+        }
+    }
+
+    // Health Logic
     public void TakeDamage(int dmg)
     {
         if (_isDead) return; // Ignore damage if already dead
@@ -174,7 +208,6 @@ public partial class Player : CharacterBody2D
         _hp = Mathf.Min(_hp + amt, max);
         _hud?.SetHealth(_hp);
     }
-
 
     public void Die()
     {
@@ -198,7 +231,6 @@ public partial class Player : CharacterBody2D
             // Trigger game-over logic (e.g., restart level, show game-over screen)
             GD.Print("Game Over!");
             GetTree().Paused = true; // Pause the game
-                                     // Optionally, emit a signal or call a GameManager to handle game-over UI
         }
     }
 }
