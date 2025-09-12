@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rf6l5"]
-size = Vector2(381, 57.75)
+size = Vector2(680.5, 57.75)
 
 [node name="level_1" type="Node2D"]
 
@@ -35,3 +35,15 @@ texture = ExtResource("3_3mhv4")
 script = ExtResource("4_rfktq")
 MaskFull = ExtResource("5_0urlm")
 MaskEmpty = ExtResource("3_rf6l5")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(-234.75, 196)
+shape = SubResource("RectangleShape2D_rf6l5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D2"]
+position = Vector2(-211.503, 195)
+scale = Vector2(2.01876, 0.316667)
+texture = ExtResource("3_3mhv4")
