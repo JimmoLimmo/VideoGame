@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dmgl4w1eym6hu"]
+[gd_scene load_steps=13 format=3 uid="uid://dmgl4w1eym6hu"]
 
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="2_3mhv4"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
 [ext_resource type="Script" uid="uid://gowqknc7yq3y" path="res://Scripts/Level/HazardArea.cs" id="7_xoyoh"]
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="9_62b6n"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="9_xoyoh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rf6l5"]
 size = Vector2(680.5, 57.75)
@@ -23,6 +24,18 @@ size = Vector2(48, 48)
 [node name="Player" parent="." instance=ExtResource("1_n0qsc")]
 position = Vector2(-34, -25)
 HudPath = NodePath("../Hud")
+
+[node name="Enemy" parent="." instance=ExtResource("9_xoyoh")]
+visible = false
+position = Vector2(-145, 42)
+LeftLimitPath = NodePath("Left Limit Patrol")
+RightLimitPath = NodePath("Right Limit Patrol")
+
+[node name="Right Limit Patrol" type="Node2D" parent="Enemy"]
+position = Vector2(145, -2)
+
+[node name="Left Limit Patrol" type="Node2D" parent="Enemy"]
+position = Vector2(-13, -1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(6, 2)
