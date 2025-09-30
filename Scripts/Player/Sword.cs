@@ -1,19 +1,29 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class Sword : Area2D
 {
 	[Export] public int Damage { get; set; } = 10;
-	[Export] public Node2D VisualAnchor { get; set; } // Optional anchor 
+	[Export] public Node2D VisualAnchor { get; set; } // Optional anchor
+	
+	private HashSet<Area2D> _hitEnemies = new HashSet<Area2D>();
 
 	public override void _Ready()
 	{
-		BodyEntered += OnBodyEntered;
 		Monitoring = false;       // OFF by default
-		Monitorable = false;      // sword shouldn't be hittable
+		Monitorable = true;
 	}
 
-	public void EnableHitbox()  => Monitoring = true;
-	public void DisableHitbox() => Monitoring = false;
+	public void EnableHitbox() {
+		Monitoring = true;
+		_hitEnemies.Clear();
+		GD.Print("Start Attack");
+	}
+	
+	public void DisableHitbox() {
+		Monitoring = false;
+		GD.Print("End Attack");
+	}
 
 	// Mirror sword hitbox when player flips
 	public void SetFacingLeft(bool left)
@@ -22,13 +32,31 @@ public partial class Sword : Area2D
 		// Scale = new Vector2(left ? -1 : 1, 1);
 		if (VisualAnchor != null) VisualAnchor.Scale = new Vector2(left ? -1 : 1, 1);
 	}
-
-	private void OnBodyEntered(Node2D body)
-	{
-		if (body.IsInGroup("enemies"))
-		{
-			if (body.HasMethod("TakeDamage"))
-				body.Call("TakeDamage", Damage);
+	
+	public void HitCheck() {
+		var areas = GetOverlappingAreas();
+		
+		foreach(Area2D area in areas) {
+			if(_hitEnemies.Add(area)) {
+				GD.Print("Hit " + area.Name);
+				
+				Node current = area;
+				while(current != null && !current.HasMethod("TakeDamage")) {
+					current = current.GetParent();
+					GD.Print("Check next");
+				}
+				
+				if(current == null) {
+					GD.Print("null");
+					continue;
+				}
+				
+				GD.Print("Hit Node: " + current.Name);
+				
+				if(current.HasMethod("TakeDamage")) {
+					current.CallDeferred("TakeDamage", Damage);
+				}
+			}
 		}
 	}
 }
