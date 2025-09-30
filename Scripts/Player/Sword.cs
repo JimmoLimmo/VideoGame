@@ -17,12 +17,10 @@ public partial class Sword : Area2D
 	public void EnableHitbox() {
 		Monitoring = true;
 		_hitEnemies.Clear();
-		GD.Print("Start Attack");
 	}
 	
 	public void DisableHitbox() {
 		Monitoring = false;
-		GD.Print("End Attack");
 	}
 
 	// Mirror sword hitbox when player flips
@@ -34,6 +32,7 @@ public partial class Sword : Area2D
 	}
 	
 	public void HitCheck() {
+		Monitoring = true;
 		var areas = GetOverlappingAreas();
 		
 		foreach(Area2D area in areas) {

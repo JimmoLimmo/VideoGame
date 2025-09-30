@@ -19,7 +19,6 @@ public partial class Collectable : Area2D {
 	private void OnBodyEntered(Node2D body) {
 		if(body is Player player) {
 			player.OnCollect(Type);
-			
 			QueueFree();
 		}
 	}

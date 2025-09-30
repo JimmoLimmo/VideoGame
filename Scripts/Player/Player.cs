@@ -21,11 +21,14 @@ public partial class Player : CharacterBody2D
 	// Wall Slide Settings
 	[Export] public float WallSlideSpeed = 100.0f; // Speed of sliding down a wall
 	[Export] public float WallJumpForce = 600.0f; // Force applied when jumping off a wall
+	private float CurrentWallSlideSpeed = 980.0f; //
+	private bool hasWalljump = false;
 
 	// Dash Settings
 	[Export] public float DashSpeed = 400.0f; // Speed during dash
 	[Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
 	[Export] public float DashCooldown = 0.5f; // Cooldown time between dashes
+	private bool hasDash = false;
 
 	// Attack Variables
 	[Export] public float AttackCooldown = 0.25f;
@@ -150,7 +153,7 @@ public partial class Player : CharacterBody2D
 				// Normal jump
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
 			}
-			else if (_isWallSliding)
+			else if (_isWallSliding && hasWalljump)
 			{
 				// Jump away from the wall with a strong horizontal push
 				int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
@@ -194,7 +197,7 @@ public partial class Player : CharacterBody2D
 
 	private void HandleDashInput()
 	{
-		if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing)
+		if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing && hasDash)
 		{
 			if (IsOnWall() && !IsOnFloor())
 			{
@@ -236,7 +239,7 @@ public partial class Player : CharacterBody2D
 			_isWallSliding = true;
 
 			// Stick to the wall and slide down slowly
-			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
+			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, CurrentWallSlideSpeed));
 		}
 		else
 		{
@@ -341,12 +344,13 @@ public partial class Player : CharacterBody2D
 	}
 	
 	public void OnCollect(CollectableType type) {
-		GD.Print(type);
-		
 		if(type == CollectableType.Sword) {
-			GD.Print("Add Sword");
-			
 			hasSword = true;
+		} else if(type == CollectableType.Dash) {
+			hasDash = true;
+		} else if(type == CollectableType.Walljump) {
+			CurrentWallSlideSpeed = WallSlideSpeed;
+			hasWalljump = true;
 		}
 	}
 
