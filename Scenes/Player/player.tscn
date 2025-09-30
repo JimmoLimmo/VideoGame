@@ -170,3 +170,12 @@ debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2.25, 2.25)
+
+[node name="HazardBox" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HazardBox"]
+position = Vector2(-1, 11)
+scale = Vector2(1.1, 1.1)
+shape = SubResource("CapsuleShape2D_a3d8c")
+debug_color = Color(1, 0.203922, 0.203922, 0.419608)

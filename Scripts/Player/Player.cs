@@ -62,6 +62,9 @@ public partial class Player : CharacterBody2D
 		// Defer HUD sync so HUD._Ready() has time to build its UI
 		CallDeferred(nameof(SyncHud));
 		
+		var hazardBox = GetNode<Area2D>("HazardBox");
+		hazardBox.BodyEntered += areaHazard;
+		
 		AddToGroup("player");
 	}
 
@@ -330,6 +333,10 @@ public partial class Player : CharacterBody2D
 		{
 			_isWallSliding = false;
 		}
+	}
+
+	public void areaHazard(Node2D body) {
+		TakeDamage(1);
 	}
 
 }
