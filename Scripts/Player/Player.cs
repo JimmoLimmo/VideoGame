@@ -30,6 +30,7 @@ public partial class Player : CharacterBody2D
 	// Attack Variables
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
+	private bool hasSword = false;
 
 	// Health Variables
 	private int _hp = 5;
@@ -247,7 +248,7 @@ public partial class Player : CharacterBody2D
 	private void HandleAttack(double delta)
 	{
 		_attackTimer -= (float)delta;
-		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f)
+		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword)
 		{
 			_attackTimer = AttackCooldown;
 			_anim.Play("Sword"); // Animation calls AttackStart/AttackEnd
@@ -337,6 +338,16 @@ public partial class Player : CharacterBody2D
 
 	public void areaHazard(Node2D body) {
 		TakeDamage(1);
+	}
+	
+	public void OnCollect(CollectableType type) {
+		GD.Print(type);
+		
+		if(type == CollectableType.Sword) {
+			GD.Print("Add Sword");
+			
+			hasSword = true;
+		}
 	}
 
 }
