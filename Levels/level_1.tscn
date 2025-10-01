@@ -140,7 +140,7 @@ tile_set = SubResource("TileSet_62b6n")
 tile_map_data = PackedByteArray("AAAzAAUAAAAGAAMAAAA0AAUAAAAGAAMAAAA1AAUAAAAGAAMAAAA2AAUAAAAGAAMAAAA3AAUAAAAGAAMAAAA4AAUAAAAGAAMAAAA5AAUAAAAGAAMAAAAjAAIAAAACAAMAAAAkAAIAAAACAAMAAAAlAAIAAAACAAMAAAAmAAIAAAACAAMAAAAnAAIAAAACAAMAAAAoAAIAAAACAAMAAAApAAIAAAACAAMAAAAqAAIAAAACAAMAAAA6AAUAAAAGAAMAAAA=")
 tile_set = SubResource("TileSet_77x7w")
 
-[node name="Player" parent="." instance=ExtResource("1_n0qsc")]
+[node name="Player" parent="." groups=["enemies"] instance=ExtResource("1_n0qsc")]
 position = Vector2(-36, -28)
 HudPath = NodePath("../Hud")
 
