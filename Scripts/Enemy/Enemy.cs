@@ -6,7 +6,7 @@ public partial class Enemy : CharacterBody2D
 	private AnimationPlayer _anim;
 	private Sprite2D _sprite;
 
-	[Export] public int MaxHealth = 3;
+	[Export] public int MaxHealth = 15;
 	[Export] public float Speed = 100f;
 	[Export] public NodePath LeftLimitPath;
 	[Export] public NodePath RightLimitPath;
@@ -40,7 +40,7 @@ public partial class Enemy : CharacterBody2D
 			if (GlobalPosition.X >= _rightLimit.X)
 				_movingRight = false;
 			_sprite.FlipH = false;
-			_anim.Play("Walk");
+			_anim.Play("Walk_right");
 
 		}
 		else
@@ -48,6 +48,8 @@ public partial class Enemy : CharacterBody2D
 			velocity.X = -Speed;
 			if (GlobalPosition.X <= _leftLimit.X)
 				_movingRight = true;
+			_sprite.FlipH = true;
+			_anim.Play("Walk_left");
 		}
 
 		Velocity = velocity;

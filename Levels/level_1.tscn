@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://iyovbraw1ggt"]
+[gd_scene load_steps=19 format=4 uid="uid://iyovbraw1ggt"]
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="13_lk57d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]
 texture = ExtResource("1_0urlm")
@@ -143,18 +144,6 @@ tile_set = SubResource("TileSet_77x7w")
 position = Vector2(-36, -28)
 HudPath = NodePath("../Hud")
 
-[node name="Enemy" parent="." instance=ExtResource("9_xoyoh")]
-visible = false
-position = Vector2(-145, 42)
-LeftLimitPath = NodePath("Left Limit Patrol")
-RightLimitPath = NodePath("Right Limit Patrol")
-
-[node name="Right Limit Patrol" type="Node2D" parent="Enemy"]
-position = Vector2(145, -2)
-
-[node name="Left Limit Patrol" type="Node2D" parent="Enemy"]
-position = Vector2(-13, -1)
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(6, 2)
 zoom = Vector2(3, 3)
@@ -181,3 +170,6 @@ position = Vector2(1192, 104)
 
 [node name="BreakableWall3" parent="." instance=ExtResource("9_xoyoh")]
 position = Vector2(1120, -24)
+
+[node name="Enemy" parent="." instance=ExtResource("13_lk57d")]
+position = Vector2(149, 24)
