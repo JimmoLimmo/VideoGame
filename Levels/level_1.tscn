@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-[gd_scene load_steps=18 format=4 uid="uid://dmgl4w1eym6hu"]
-=======
-[gd_scene load_steps=13 format=3 uid="uid://dmgl4w1eym6hu"]
->>>>>>> d8f6074f2951fb53a47db9c4d90249997f64a528
+[gd_scene load_steps=18 format=4 uid="uid://iyovbraw1ggt"]
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
@@ -12,13 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="8_77x7w"]
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="9_62b6n"]
-<<<<<<< HEAD
 [ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
-=======
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="9_xoyoh"]
->>>>>>> d8f6074f2951fb53a47db9c4d90249997f64a528
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]
 texture = ExtResource("1_0urlm")
