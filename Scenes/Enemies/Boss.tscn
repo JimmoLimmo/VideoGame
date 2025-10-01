@@ -1,0 +1,122 @@
+[gd_scene load_steps=12 format=3 uid="uid://dx45kp88yb5w5"]
+
+[ext_resource type="Texture2D" uid="uid://caijoqimgyej3" path="res://Sprites/Enemies/boss_temp_sprite_sheet.png" id="1_l82wv"]
+[ext_resource type="Script" uid="uid://ckt41mkx1k3b2" path="res://Scripts/Enemies/Boss.cs" id="1_wetjm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wetjm"]
+radius = 22.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_b1s5r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h5ksp"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_26idx"]
+radius = 20.0
+
+[sub_resource type="Animation" id="Animation_b1s5r"]
+resource_name = "Attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_ycikm"]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_wetjm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oh6af"]
+_data = {
+&"Attack": SubResource("Animation_b1s5r"),
+&"Idle": SubResource("Animation_ycikm"),
+&"RESET": SubResource("Animation_wetjm")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ycikm"]
+radius = 213.084
+
+[node name="Boss" type="Node2D"]
+script = ExtResource("1_wetjm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_l82wv")
+hframes = 2
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_wetjm")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-17, 15)
+shape = SubResource("CircleShape2D_b1s5r")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(18, 16)
+shape = SubResource("CircleShape2D_h5ksp")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_26idx")
+debug_color = Color(0.607558, 0.137895, 0.167734, 0.42)
+
+[node name="Swipe" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Swipe"]
+position = Vector2(-3, -2)
+polygon = PackedVector2Array(-5, 31, -6, 24, 1.75178, 22.1144, 12, 19, 20, 15, 25, 7, 26, -5, 29, -7, 33.9652, -2.74407, 34, 18, 28, 28, 18, 34, 2, 34)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_oh6af")
+}
+autoplay = "Idle"
+
+[node name="IdleTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AttentionRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttentionRange"]
+shape = SubResource("CircleShape2D_ycikm")

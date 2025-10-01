@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 [gd_scene load_steps=18 format=4 uid="uid://dmgl4w1eym6hu"]
+=======
+[gd_scene load_steps=21 format=4 uid="uid://iyovbraw1ggt"]
+>>>>>>> Stashed changes
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
@@ -11,6 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
+<<<<<<< Updated upstream
+=======
+[ext_resource type="AudioStream" uid="uid://cstmep0wvx18w" path="res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" id="13_2hkqn"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="13_lk57d"]
+[ext_resource type="PackedScene" uid="uid://dx45kp88yb5w5" path="res://Scenes/Enemies/Boss.tscn" id="14_2hkqn"]
+>>>>>>> Stashed changes
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]
 texture = ExtResource("1_0urlm")
@@ -139,8 +149,13 @@ tile_set = SubResource("TileSet_62b6n")
 tile_map_data = PackedByteArray("AAAzAAUAAAAGAAMAAAA0AAUAAAAGAAMAAAA1AAUAAAAGAAMAAAA2AAUAAAAGAAMAAAA3AAUAAAAGAAMAAAA4AAUAAAAGAAMAAAA5AAUAAAAGAAMAAAAjAAIAAAACAAMAAAAkAAIAAAACAAMAAAAlAAIAAAACAAMAAAAmAAIAAAACAAMAAAAnAAIAAAACAAMAAAAoAAIAAAACAAMAAAApAAIAAAACAAMAAAAqAAIAAAACAAMAAAA6AAUAAAAGAAMAAAA=")
 tile_set = SubResource("TileSet_77x7w")
 
+<<<<<<< Updated upstream
 [node name="Player" parent="." instance=ExtResource("1_n0qsc")]
 position = Vector2(-36, -28)
+=======
+[node name="Player" parent="." groups=["enemies"] instance=ExtResource("1_n0qsc")]
+position = Vector2(327, -363)
+>>>>>>> Stashed changes
 HudPath = NodePath("../Hud")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -169,3 +184,22 @@ position = Vector2(1192, 104)
 
 [node name="BreakableWall3" parent="." instance=ExtResource("9_xoyoh")]
 position = Vector2(1120, -24)
+<<<<<<< Updated upstream
+=======
+
+[node name="Enemy" parent="." instance=ExtResource("13_lk57d")]
+position = Vector2(149, 24)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_2hkqn")
+volume_db = -10.306
+pitch_scale = 1.62
+autoplay = true
+
+[node name="Boss" parent="." node_paths=PackedStringArray("player") instance=ExtResource("14_2hkqn")]
+position = Vector2(314, -453)
+player = NodePath("../Player")
+
+[node name="SwordUpgrade2" parent="." instance=ExtResource("8_77x7w")]
+position = Vector2(369, -353)
+>>>>>>> Stashed changes

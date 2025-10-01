@@ -11,8 +11,6 @@ public partial class BreakableWall : Node
 	public void TakeDamage(int damage) {
 		health -= damage;
 		
-		GD.Print("Wall Hit, HP: " + health);
-		
 		if(health <= 0) {
 			BreakWall();
 		}

@@ -6,7 +6,7 @@ public partial class Sword : Area2D
 	[Export] public int Damage { get; set; } = 10;
 	[Export] public Node2D VisualAnchor { get; set; } // Optional anchor
 	
-	private HashSet<Area2D> _hitEnemies = new HashSet<Area2D>();
+	private HashSet<Node> _hitEnemies = new HashSet<Node>();
 
 	public override void _Ready()
 	{
@@ -36,25 +36,17 @@ public partial class Sword : Area2D
 		var areas = GetOverlappingAreas();
 		
 		foreach(Area2D area in areas) {
-			if(_hitEnemies.Add(area)) {
-				GD.Print("Hit " + area.Name);
-				
-				Node current = area;
-				while(current != null && !current.HasMethod("TakeDamage")) {
-					current = current.GetParent();
-					GD.Print("Check next");
-				}
-				
-				if(current == null) {
-					GD.Print("null");
-					continue;
-				}
-				
-				GD.Print("Hit Node: " + current.Name);
-				
-				if(current.HasMethod("TakeDamage")) {
-					current.CallDeferred("TakeDamage", Damage);
-				}
+			Node current = area;
+			while(current != null && !current.HasMethod("TakeDamage")) {
+				current = current.GetParent();
+			}
+			
+			if(current == null) {
+				continue;
+			}
+			
+			if(_hitEnemies.Add(current)) {
+				current.CallDeferred("TakeDamage", Damage);
 			}
 		}
 	}
