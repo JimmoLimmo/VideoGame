@@ -90,14 +90,19 @@ public partial class Enemy : CharacterBody2D
 	// }
 	private void OnHitBoxBodyEntered(Node2D body)
 	{
+		// If the Player body (CharacterBody2D) enters, allow damage
 		if (body is Player p)
 			p.ApplyHit(ContactDamage, GlobalPosition);
 	}
 
 	private void OnHitBoxAreaEntered(Area2D area)
 	{
+		// Ignore swords and other areas; only hurt the player’s HURTBOX
+		if (!area.IsInGroup("player_hurtbox")) return;
+
 		if (area.GetParent() is Player p)
 			p.ApplyHit(ContactDamage, GlobalPosition);
 	}
+
 
 }
