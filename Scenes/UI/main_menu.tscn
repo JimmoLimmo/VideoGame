@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://iyovbraw1ggt" path="res://Levels/level_1.tscn" id="4_lrjdf"]
 [ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="5_wqme5"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_jewm6"]
-[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="7_gih0s"]
+[ext_resource type="AudioStream" uid="uid://cstmep0wvx18w" path="res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" id="7_gih0s"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3

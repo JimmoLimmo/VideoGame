@@ -75,7 +75,7 @@ public partial class Player : CharacterBody2D
 		// Defer HUD sync so HUD._Ready() has time to build its UI
 		CallDeferred(nameof(SyncHud));
 
-		var hazardBox = GetNode<Area2D>("HazardBox");
+		var hazardBox = GetNode<Area2D>("player");
 		hazardBox.BodyEntered += areaHazard;
 
 		AddToGroup("player");
@@ -401,26 +401,27 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void ApplyHit(int dmg, Vector2 sourceGlobalPos) {
-    if (_isDead || _invulnerable) return;
+	public void ApplyHit(int dmg, Vector2 sourceGlobalPos)
+	{
+		if (_isDead || _invulnerable) return;
 
-    // 1) take damage
-    TakeDamage(dmg);
+		// 1) take damage
+		TakeDamage(dmg);
 
-    // 2) start i-frames + hitstun
-    _invulnerable = true;
-    _invulnTimer = InvulnTime;
-    _hitstunTimer = HitstunTime;
+		// 2) start i-frames + hitstun
+		_invulnerable = true;
+		_invulnTimer = InvulnTime;
+		_hitstunTimer = HitstunTime;
 
-    // 3) compute knockback (away from source, with a bit of upward kick)
-    Vector2 dir = (GlobalPosition - sourceGlobalPos).Normalized();
-    Vector2 kb = new Vector2(dir.X, 0).Normalized() * KnockbackForce;
-    kb.Y = -Mathf.Abs(KnockbackUpward); // negative = up
-    Velocity = kb;
+		// 3) compute knockback (away from source, with a bit of upward kick)
+		Vector2 dir = (GlobalPosition - sourceGlobalPos).Normalized();
+		Vector2 kb = new Vector2(dir.X, 0).Normalized() * KnockbackForce;
+		kb.Y = -Mathf.Abs(KnockbackUpward); // negative = up
+		Velocity = kb;
 
-    // optional: immediately slide once so it feels snappy
-    MoveAndSlide();
-}
+		// optional: immediately slide once so it feels snappy
+		MoveAndSlide();
+	}
 
 
 }

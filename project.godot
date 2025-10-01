@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="2d Metroid Vania"
-run/main_scene="uid://dmgl4w1eym6hu"
+run/main_scene="uid://d1h0os8of8lwj"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
