@@ -1,0 +1,85 @@
+using Godot;
+using System;
+
+public partial class Enemy : CharacterBody2D
+{
+	private AnimationPlayer _anim;
+	private Sprite2D _sprite;
+
+	[Export] public int MaxHealth = 15;
+	[Export] public float Speed = 100f;
+	[Export] public NodePath LeftLimitPath;
+	[Export] public NodePath RightLimitPath;
+	[Export] public int ContactDamage = 1;   
+
+	private int _currentHealth;
+	private Vector2 _leftLimit;
+	private Vector2 _rightLimit;
+	private bool _movingRight = true;
+	private bool _inHitBox = false;
+
+	public override void _Ready()
+	{
+		_currentHealth = MaxHealth;
+		var leftLimit = GetNode<Node2D>(LeftLimitPath);
+		var rightLimit = GetNode<Node2D>(RightLimitPath);
+		AddToGroup("enemies");
+
+		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
+		_sprite = GetNode<Sprite2D>("Sprite2D");
+		_leftLimit = leftLimit.GlobalPosition;
+		_rightLimit = rightLimit.GlobalPosition;
+
+		// Connect Area2D hitbox signal (make sure you name the child "HitBox")
+		var hitBox = GetNode<Area2D>("HitBox");
+		hitBox.BodyEntered += OnHitBoxEntered;
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		Vector2 velocity = Velocity;
+
+		if (_movingRight)
+		{
+			velocity.X = Speed;
+			if (GlobalPosition.X >= _rightLimit.X)
+				_movingRight = false;
+
+			_sprite.FlipH = false;
+			_anim.Play("Walk_right");
+		}
+		else
+		{
+			velocity.X = -Speed;
+			if (GlobalPosition.X <= _leftLimit.X)
+				_movingRight = true;
+
+			_sprite.FlipH = true;
+			_anim.Play("Walk_left");
+		}
+
+		Velocity = velocity;
+		MoveAndSlide();
+	}
+
+	public void TakeDamage(int amount)
+	{
+		_currentHealth -= amount;
+		if (_currentHealth <= 0)
+			Die();
+	}
+
+	private void Die()
+	{
+		QueueFree(); // Remove enemy from scene
+	}
+
+	// Called when the player enters the enemy's hitbox
+	private void OnHitBoxEntered(Node body)
+	{
+		if (body.IsInGroup("player") && body is Player player)
+		{
+			player.TakeDamage(ContactDamage);
+		}
+	}
+}
