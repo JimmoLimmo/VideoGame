@@ -49,6 +49,15 @@ public partial class Player : CharacterBody2D
 	private Sword _sword;
 	private HUD _hud;
 
+	// Damage Handling Crap
+	[Export] public float InvulnTime = 0.6f;     // seconds of invulnerability
+	[Export] public float HitstunTime = 0.15f;   // time you can't control the player
+	[Export] public float KnockbackForce = 260f; // pixels/sec knockback speed
+	[Export] public float KnockbackUpward = 120f;// upward component
+	private bool _invulnerable = false;
+	private float _invulnTimer = 0f;
+	private float _hitstunTimer = 0f;
+
 	// Initialization
 	public override void _Ready()
 	{
@@ -65,10 +74,10 @@ public partial class Player : CharacterBody2D
 
 		// Defer HUD sync so HUD._Ready() has time to build its UI
 		CallDeferred(nameof(SyncHud));
-		
+
 		var hazardBox = GetNode<Area2D>("HazardBox");
 		hazardBox.BodyEntered += areaHazard;
-		
+
 		AddToGroup("player");
 	}
 
@@ -111,6 +120,37 @@ public partial class Player : CharacterBody2D
 		HandleDashInput();    // Still process new dash input
 		HandleAttack(delta);  // Allow attacking mid-air or mid-dash
 		HandleAnimations();   // Update animation
+
+		// decrement timers
+		if (_invulnerable)
+		{
+			_invulnTimer -= (float)delta;
+			if (_invulnTimer <= 0f)
+			{
+				_invulnerable = false;
+				_sprite.SelfModulate = Colors.White; // stop flicker
+			}
+			else
+			{
+				// simple flicker (toggle alpha)
+				// 10 Hz blink:
+				bool on = ((int)(Time.GetTicksMsec() / 100) % 2) == 0;
+				_sprite.SelfModulate = new Color(1, 1, 1, on ? 0.5f : 1f);
+			}
+		}
+
+		if (_hitstunTimer > 0f)
+		{
+			_hitstunTimer -= (float)delta;
+
+			// During hitstun: no input, just apply gravity and keep current Velocity
+			Vector2 v = Velocity;
+			if (!IsOnFloor()) v += GetGravity() * (float)delta;
+			Velocity = v;
+			MoveAndSlide();
+			return; // skip normal controls this frame
+		}
+
 	}
 
 	// Movement Logic
@@ -339,19 +379,48 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void areaHazard(Node2D body) {
+	public void areaHazard(Node2D body)
+	{
 		TakeDamage(1);
 	}
-	
-	public void OnCollect(CollectableType type) {
-		if(type == CollectableType.Sword) {
+
+	public void OnCollect(CollectableType type)
+	{
+		if (type == CollectableType.Sword)
+		{
 			hasSword = true;
-		} else if(type == CollectableType.Dash) {
+		}
+		else if (type == CollectableType.Dash)
+		{
 			hasDash = true;
-		} else if(type == CollectableType.Walljump) {
+		}
+		else if (type == CollectableType.Walljump)
+		{
 			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
 		}
 	}
+
+	public void ApplyHit(int dmg, Vector2 sourceGlobalPos) {
+    if (_isDead || _invulnerable) return;
+
+    // 1) take damage
+    TakeDamage(dmg);
+
+    // 2) start i-frames + hitstun
+    _invulnerable = true;
+    _invulnTimer = InvulnTime;
+    _hitstunTimer = HitstunTime;
+
+    // 3) compute knockback (away from source, with a bit of upward kick)
+    Vector2 dir = (GlobalPosition - sourceGlobalPos).Normalized();
+    Vector2 kb = new Vector2(dir.X, 0).Normalized() * KnockbackForce;
+    kb.Y = -Mathf.Abs(KnockbackUpward); // negative = up
+    Velocity = kb;
+
+    // optional: immediately slide once so it feels snappy
+    MoveAndSlide();
+}
+
 
 }

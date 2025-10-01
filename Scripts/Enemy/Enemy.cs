@@ -10,7 +10,7 @@ public partial class Enemy : CharacterBody2D
 	[Export] public float Speed = 100f;
 	[Export] public NodePath LeftLimitPath;
 	[Export] public NodePath RightLimitPath;
-	[Export] public int ContactDamage = 1;   
+	[Export] public int ContactDamage = 1;
 
 	private int _currentHealth;
 	private Vector2 _leftLimit;
@@ -30,9 +30,10 @@ public partial class Enemy : CharacterBody2D
 		_leftLimit = leftLimit.GlobalPosition;
 		_rightLimit = rightLimit.GlobalPosition;
 
-		// Connect Area2D hitbox signal (make sure you name the child "HitBox")
+		// Connect Area2D hitbox signal 
 		var hitBox = GetNode<Area2D>("HitBox");
-		hitBox.BodyEntered += OnHitBoxEntered;
+		hitBox.BodyEntered += OnHitBoxBodyEntered;   // Physics bodies
+		hitBox.AreaEntered += OnHitBoxAreaEntered;   // Areas
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -65,6 +66,7 @@ public partial class Enemy : CharacterBody2D
 	public void TakeDamage(int amount)
 	{
 		_currentHealth -= amount;
+		GD.Print($"Health: {_currentHealth}");
 		if (_currentHealth <= 0)
 			Die();
 	}
@@ -75,11 +77,27 @@ public partial class Enemy : CharacterBody2D
 	}
 
 	// Called when the player enters the enemy's hitbox
-	private void OnHitBoxEntered(Node body)
+	// 	private void OnHitBoxEntered(Node body)
+	// 	{
+	// 		GD.Print($"Hitbox entered by: {body.Name}");
+	// 		// if (body.IsInGroup("player") && body is Player player)
+	// 		if (body is Player player)
+	// 		{
+	// 			GD.Print("Player detected! Applying damage.");
+	// 			player.TakeDamage(ContactDamage);
+	// 		}
+	// 	}
+	// }
+	private void OnHitBoxBodyEntered(Node2D body)
 	{
-		if (body.IsInGroup("player") && body is Player player)
-		{
-			player.TakeDamage(ContactDamage);
-		}
+		if (body is Player p)
+			p.ApplyHit(ContactDamage, GlobalPosition);
 	}
+
+	private void OnHitBoxAreaEntered(Area2D area)
+	{
+		if (area.GetParent() is Player p)
+			p.ApplyHit(ContactDamage, GlobalPosition);
+	}
+
 }
