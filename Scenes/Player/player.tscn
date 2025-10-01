@@ -107,6 +107,32 @@ tracks/1/keys = {
 "method": &"AttackEnd"
 }]
 }
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sword")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.11, 0.133333, 0.166667, 0.19),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"HitCheck"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_mtuoh"]
 resource_name = "Walk"
@@ -135,10 +161,10 @@ _data = {
 &"Walk": SubResource("Animation_mtuoh")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_74mp2"]
-size = Vector2(16, 25)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xpcdj"]
+size = Vector2(11, 20)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_xpcdj")
 SwordPath = NodePath("Sword")
 
@@ -158,15 +184,25 @@ libraries = {
 }
 autoplay = "Idle"
 
-[node name="Sword" type="Area2D" parent="."]
+[node name="Sword" type="Area2D" parent="." node_paths=PackedStringArray("VisualAnchor")]
 script = ExtResource("2_a3d8c")
+VisualAnchor = NodePath(".")
 
 [node name="Marker2D" type="Marker2D" parent="Sword"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
-position = Vector2(12, 8.5)
-shape = SubResource("RectangleShape2D_74mp2")
+position = Vector2(13.5, 10)
+shape = SubResource("RectangleShape2D_xpcdj")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2.25, 2.25)
+
+[node name="player" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+position = Vector2(-1, 11)
+scale = Vector2(1.1, 1.1)
+shape = SubResource("CapsuleShape2D_a3d8c")
+debug_color = Color(1, 0.203922, 0.203922, 0.419608)
