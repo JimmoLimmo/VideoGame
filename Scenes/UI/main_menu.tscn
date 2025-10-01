@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://d1h0os8of8lwj"]
+[gd_scene load_steps=8 format=3 uid="uid://d1h0os8of8lwj"]
 
 [ext_resource type="Script" uid="uid://bwrmaq58dyppy" path="res://Scripts/Menu/MainMenuManager.cs" id="1_4pqbp"]
 [ext_resource type="Script" uid="uid://dl4iwf2p4aoy7" path="res://Scripts/Menu/MenuTab.cs" id="2_gih0s"]
 [ext_resource type="Script" uid="uid://brxmvjgsn0dss" path="res://Scripts/Menu/StartGameButton.cs" id="3_k33u3"]
-[ext_resource type="PackedScene" uid="uid://dmgl4w1eym6hu" path="res://Levels/level_1.tscn" id="4_lrjdf"]
+[ext_resource type="PackedScene" uid="uid://iyovbraw1ggt" path="res://Levels/level_1.tscn" id="4_lrjdf"]
 [ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="5_wqme5"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_jewm6"]
+[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="7_gih0s"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -38,12 +39,11 @@ text = "Start"
 script = ExtResource("3_k33u3")
 sceneToSwtichTo = ExtResource("4_lrjdf")
 
-[node name="OptionsBtn" type="Button" parent="MenuTab/VBoxContainer" node_paths=PackedStringArray("switchToMenu")]
+[node name="OptionsBtn" type="Button" parent="MenuTab/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Options"
 script = ExtResource("5_wqme5")
-switchToMenu = NodePath("../../../MenuTab2")
 
 [node name="QuitBtn" type="Button" parent="MenuTab/VBoxContainer"]
 layout_mode = 2
@@ -66,9 +66,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Second Menu"
 
-[node name="ReturnBtn" type="Button" parent="MenuTab2/VBoxContainer" node_paths=PackedStringArray("switchToMenu")]
+[node name="ReturnBtn" type="Button" parent="MenuTab2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Return"
 script = ExtResource("5_wqme5")
-switchToMenu = NodePath("../../../MenuTab")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_gih0s")
+volume_db = -6.832
+autoplay = true

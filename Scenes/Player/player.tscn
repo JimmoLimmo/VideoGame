@@ -162,7 +162,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xpcdj"]
-size = Vector2(11, 20)
+size = Vector2(14, 20)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_xpcdj")
@@ -191,7 +191,7 @@ VisualAnchor = NodePath(".")
 [node name="Marker2D" type="Marker2D" parent="Sword"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
-position = Vector2(13.5, 10)
+position = Vector2(15, 10)
 shape = SubResource("RectangleShape2D_xpcdj")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
