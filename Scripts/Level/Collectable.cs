@@ -10,12 +10,11 @@ public enum CollectableType {
 
 public partial class Collectable : Area2D {
 	[Export] public CollectableType Type {get; set;} = CollectableType.Sword;
-	[Export] public string ItemName = "Item";
 	[Export] public Texture2D PickupTexture;
+	[Export] public string ItemName = "Item";
+	[Export] public string keybindDesc = "Press <Button> to use";
 	[Export] public string Description = "You Got an Item!";
 	[Export] public double WaitTime = 2;
-	
-	private string keybindDesc = "Press";
 	
 	private bool canDismiss = false;
 	

@@ -12,9 +12,10 @@ radius = 8.0
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("1_deo2m")
 Type = 1
-ItemName = "Dash"
 PickupTexture = ExtResource("2_y8lg2")
-Description = "Dash over deep pits and away from danger"
+ItemName = "Dash"
+keybindDesc = "Press C to use."
+Description = "Dash over deep pits and away from danger."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_deo2m")
