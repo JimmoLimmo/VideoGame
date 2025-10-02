@@ -1,0 +1,117 @@
+[gd_scene load_steps=5 format=3 uid="uid://d30vj7qfwl6uj"]
+
+[ext_resource type="FontFile" uid="uid://d2hia3xtij0yu" path="res://Font/TIMES.TTF" id="1_73ird"]
+[ext_resource type="Texture2D" uid="uid://b6vsqjiappifj" path="res://missing_texture.png" id="1_m2pj5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m2pj5"]
+font = ExtResource("1_73ird")
+font_size = 46
+
+[sub_resource type="LabelSettings" id="LabelSettings_0ul6c"]
+font = ExtResource("1_73ird")
+font_size = 32
+
+[node name="CollectionOverlay" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.556863)
+
+[node name="ItemImage" type="TextureRect" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -155.0
+offset_top = 195.0
+offset_right = 155.0
+offset_bottom = 506.0
+grow_horizontal = 2
+texture = ExtResource("1_m2pj5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemName" type="Label" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -283.0
+offset_top = 139.5
+offset_right = 283.0
+offset_bottom = 190.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Temp Text"
+label_settings = SubResource("LabelSettings_m2pj5")
+horizontal_alignment = 1
+
+[node name="Keybind" type="Label" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -68.0
+offset_top = -315.0
+offset_right = 68.0
+offset_bottom = -264.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Press"
+label_settings = SubResource("LabelSettings_0ul6c")
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -600.5
+offset_top = -245.0
+offset_right = 600.5
+offset_bottom = -194.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Description"
+label_settings = SubResource("LabelSettings_0ul6c")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="SpaceIndicator" type="ColorRect" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -115.0
+offset_right = 20.0
+offset_bottom = -75.0
+grow_horizontal = 2
+grow_vertical = 0
