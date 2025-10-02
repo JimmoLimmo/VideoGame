@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://iyovbraw1ggt"]
+[gd_scene load_steps=21 format=4 uid="uid://iyovbraw1ggt"]
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_2hkqn"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="13_lk57d"]
+[ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_2hkqn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]
 texture = ExtResource("1_0urlm")
@@ -180,3 +181,5 @@ position = Vector2(149, 24)
 stream = ExtResource("13_2hkqn")
 volume_db = -10.306
 autoplay = true
+
+[node name="CollectionOverlay" parent="." instance=ExtResource("14_2hkqn")]
