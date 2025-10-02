@@ -1,9 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://drte6k2wl2kle"]
+[gd_scene load_steps=3 format=3 uid="uid://drte6k2wl2kle"]
 
-[ext_resource type="Texture2D" uid="uid://cevvhdyha8whp" path="res://image.png" id="1_8bdyi"]
+[ext_resource type="Texture2D" uid="uid://csw4j11liypac" path="res://PlayerCharacter_MockUp.png" id="1_8bdyi"]
+[ext_resource type="Texture2D" uid="uid://7lmfk1aksm6x" path="res://PlayerCharacter_MockUp_Claw.png" id="2_4dfv8"]
 
 [node name="Temp" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(48, -32)
+position = Vector2(46, -76)
+scale = Vector2(0.438937, 0.438937)
 texture = ExtResource("1_8bdyi")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(139, -60)
+scale = Vector2(0.439, 0.439)
+texture = ExtResource("2_4dfv8")
