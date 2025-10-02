@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dr1g7ulllxmnx"]
+
+[ext_resource type="Texture2D" uid="uid://bvnm2d8ejdp0u" path="res://Sprites/SaveStation/oldcomps.png" id="1_lidck"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0hpnn"]
+size = Vector2(15, 18)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_0hpnn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_lidck")
+hframes = 2
+vframes = 2
+frame = 2

@@ -424,4 +424,54 @@ public partial class Player : CharacterBody2D
 	}
 
 
+	// --- Save / Load helpers -------------------------------------------------
+
+	public SaveManager.SaveData ToSaveData()
+	{
+		return new SaveManager.SaveData
+		{
+			Hp = _hp,
+			HasSword = hasSword,
+			HasDash = hasDash,
+			HasWalljump = hasWalljump,
+			PlayerPosition = GlobalPosition
+		};
+	}
+
+	public void ApplySaveData(SaveManager.SaveData data, bool setPosition = true)
+	{
+		if (data == null) return;
+
+		_hp = data.Hp;
+		hasSword = data.HasSword;
+		hasDash = data.HasDash;
+		hasWalljump = data.HasWalljump;
+
+		// Update relevant nodes/UI
+		_hud?.SetHealth(_hp);
+		if (_sword != null) {
+			_sword.Show();
+			_sword.Visible = hasSword;
+		}
+
+		if (setPosition)
+		{
+			// Teleport player to saved position
+			GlobalPosition = data.PlayerPosition;
+		}
+	}
+
+	public void SaveToFile()
+	{
+		SaveManager.Save(ToSaveData());
+	}
+
+	public void LoadFromFile()
+	{
+		var data = SaveManager.Load();
+		if (data != null)
+			ApplySaveData(data);
+	}
+
+
 }
