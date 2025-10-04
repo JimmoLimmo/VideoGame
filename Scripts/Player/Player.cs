@@ -61,6 +61,13 @@ public partial class Player : CharacterBody2D
 	// Initialization
 	public override void _Ready()
 	{
+		if(GlobalRoomChange.Activate) {
+			GlobalPosition = GlobalRoomChange.PlayerPos;
+			if (GlobalRoomChange.PlayerJumpOnEnter) Velocity = new Vector2(0, JumpVelocity);
+			hasSword = GlobalRoomChange.hasSword;
+			GlobalRoomChange.Activate = false;
+		}
+		
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
@@ -384,20 +391,19 @@ public partial class Player : CharacterBody2D
 		TakeDamage(1);
 	}
 
-	public void OnCollect(CollectableType type)
-	{
-		if (type == CollectableType.Sword)
-		{
+	public void OnCollect(CollectableType type) {
+		if (type == CollectableType.Sword) {
 			hasSword = true;
+			GlobalRoomChange.hasSword = hasSword;
 		}
-		else if (type == CollectableType.Dash)
-		{
+		else if (type == CollectableType.Dash) {
 			hasDash = true;
+			GlobalRoomChange.hasDash = hasDash;
 		}
-		else if (type == CollectableType.Walljump)
-		{
+		else if (type == CollectableType.Walljump) {
 			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
+			GlobalRoomChange.hasWalljump = hasWalljump;
 		}
 	}
 

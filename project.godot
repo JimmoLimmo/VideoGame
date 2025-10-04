@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="2d Metroid Vania"
-run/main_scene="uid://d1h0os8of8lwj"
+run/main_scene="uid://bqgy4uxus1twn"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalRoomChange="*res://Scripts/GlobalRoomChange.cs"
 
 [display]
 

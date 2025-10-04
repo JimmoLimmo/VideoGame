@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3kfeb17b550a"]
+
+[ext_resource type="Script" uid="uid://ctw6cupbu25iu" path="res://Scripts/Level/DoorArea2D.cs" id="1_q3axa"]
+
+[node name="DoorArea2D" type="Area2D"]
+script = ExtResource("1_q3axa")
