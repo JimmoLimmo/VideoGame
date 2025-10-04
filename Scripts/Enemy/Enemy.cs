@@ -19,6 +19,7 @@ public partial class Enemy : CharacterBody2D
 	private bool _inHitBox = false;
 	
 	private CpuParticles2D bloodEmitter;
+	private CpuParticles2D sparkEmitter;
 
 	public override void _Ready()
 	{
@@ -38,6 +39,7 @@ public partial class Enemy : CharacterBody2D
 		hitBox.AreaEntered += OnHitBoxAreaEntered;   // Areas
 		
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
+		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -72,6 +74,7 @@ public partial class Enemy : CharacterBody2D
 		_currentHealth -= amount;
 		GD.Print($"Health: {_currentHealth}");
 		bloodEmitter.Restart();
+		sparkEmitter.Restart();
 		CheckDeath();
 	}
 
