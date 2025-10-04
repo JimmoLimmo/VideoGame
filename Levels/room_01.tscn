@@ -1,0 +1,125 @@
+[gd_scene load_steps=15 format=4 uid="uid://bqgy4uxus1twn"]
+
+[ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="1_25p3n"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="2_dht5x"]
+[ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_l5rdh"]
+[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="5_y5lni"]
+[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="6_rntpy"]
+[ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="7_jd76r"]
+[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="8_t8cl2"]
+[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="8_y5lni"]
+[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="9_rntpy"]
+[ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="10_jd76r"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l5rdh"]
+texture = ExtResource("1_25p3n")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:1/0 = 0
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+0:2/0 = 0
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:2/0 = 0
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:2/0 = 0
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:5/0 = 0
+2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:5/0 = 0
+3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:5/0 = 0
+4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+0:8/0 = 0
+1:8/0 = 0
+0:5/size_in_atlas = Vector2i(2, 3)
+0:5/0 = 0
+0:5/0/texture_origin = Vector2i(0, 16)
+2:6/size_in_atlas = Vector2i(2, 2)
+2:6/0 = 0
+2:6/0/texture_origin = Vector2i(0, 8)
+4:3/size_in_atlas = Vector2i(1, 2)
+4:3/0 = 0
+4:3/0/texture_origin = Vector2i(0, -8)
+
+[sub_resource type="TileSet" id="TileSet_l5rdh"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_l5rdh")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r1pom"]
+size = Vector2(323, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rntpy"]
+size = Vector2(20, 48)
+
+[node name="Room01" type="Node2D"]
+
+[node name="StageTiles" type="TileMapLayer" parent="."]
+position = Vector2(-1, 0)
+tile_map_data = PackedByteArray("AAD3/wIAAAABAAAAAAD4/wIAAAABAAAAAAD5/wIAAAABAAAAAAD6/wIAAAABAAAAAAD7/wIAAAABAAAAAAD8/wIAAAABAAAAAAD9/wIAAAABAAAAAAD+/wIAAAABAAAAAAD//wIAAAABAAAAAAAAAAIAAAABAAAAAAABAAIAAAABAAAAAAACAAIAAAABAAAAAAADAAIAAAABAAAAAAAEAAIAAAABAAAAAAAFAAIAAAABAAAAAAAGAAIAAAABAAAAAAAHAAIAAAABAAAAAAAIAAIAAAABAAAAAAAJAAIAAAABAAAAAAAKAAIAAAABAAAAAAALAAIAAAABAAAAAAAMAAIAAAABAAAAAAANAAIAAAABAAAAAAAOAAIAAAABAAAAAAAPAAIAAAABAAAAAAAQAAIAAAABAAAAAAARAAIAAAABAAAAAAASAAIAAAABAAAAAAATAAIAAAABAAAAAAAUAAIAAAABAAAAAAAVAAIAAAABAAAAAAD2/wEAAAACAAEAAAD2/wAAAAACAAEAAAD2////AAACAAEAAAD2//7/AAACAAEAAAD2//3/AAACAAEAAAD2//z/AAACAAEAAAD2//v/AAACAAEAAAD2//r/AAACAAEAAAD2//n/AAACAAEAAAD2//j/AAACAAEAAAD3//f/AAABAAIAAAD4//f/AAABAAIAAAD5//f/AAABAAIAAAD6//f/AAABAAIAAAD7//f/AAABAAIAAAD8//f/AAABAAIAAAD9//f/AAABAAIAAAD+//f/AAABAAIAAAD///f/AAABAAIAAAAAAPf/AAABAAIAAAABAPf/AAABAAIAAAACAPf/AAABAAIAAAADAPf/AAABAAIAAAAEAPf/AAABAAIAAAAFAPf/AAABAAIAAAAGAPf/AAABAAIAAAAHAPf/AAABAAIAAAAIAPf/AAABAAIAAAAJAPf/AAABAAIAAAAKAPf/AAABAAIAAAALAPf/AAABAAIAAAAMAPf/AAABAAIAAAANAPf/AAABAAIAAAAOAPf/AAABAAIAAAAPAPf/AAABAAIAAAAQAPf/AAABAAIAAAARAPf/AAABAAIAAAASAPf/AAABAAIAAAATAPf/AAABAAIAAAAUAPf/AAABAAIAAAAVAPf/AAABAAIAAAAWAPj/AAAAAAEAAAAWAPn/AAAAAAEAAAAWAPr/AAAAAAEAAAAWAPv/AAAAAAEAAAAWAPz/AAAAAAEAAAAWAP3/AAAAAAEAAAAWAP7/AAAAAAIAAAAXAP7/AAABAAIAAAAYAP7/AAABAAIAAAAZAP7/AAABAAIAAAAWAAIAAAABAAAAAAAXAAIAAAABAAAAAAAYAAIAAAABAAAAAAAZAAIAAAABAAAAAAA=")
+tile_set = SubResource("TileSet_l5rdh")
+
+[node name="CameraBounds" type="Area2D" parent="."]
+
+[node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
+position = Vector2(124, -6)
+shape = SubResource("RectangleShape2D_r1pom")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3, 3)
+script = ExtResource("2_l5rdh")
+playerPath = NodePath("../Player")
+boundsPath = NodePath("../CameraBounds/CameraCollsion")
+
+[node name="Player" parent="." groups=["enemies"] instance=ExtResource("2_dht5x")]
+position = Vector2(354, 7)
+HudPath = NodePath("../Hud")
+
+[node name="Hud" parent="." instance=ExtResource("5_y5lni")]
+script = ExtResource("6_rntpy")
+MaskFull = ExtResource("7_jd76r")
+MaskEmpty = ExtResource("8_t8cl2")
+
+[node name="DoorArea2D" parent="." instance=ExtResource("8_y5lni")]
+position = Vector2(387, 10)
+ConnectedRoom = "res://Levels/room_02.tscn"
+PlayerPos = Vector2(-160, 9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea2D"]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_rntpy")
+
+[node name="SwordUpgrade" parent="." instance=ExtResource("9_rntpy")]
+position = Vector2(190, 17)
+
+[node name="CollectionOverlay" parent="." instance=ExtResource("10_jd76r")]
