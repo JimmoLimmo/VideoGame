@@ -33,6 +33,7 @@ public partial class Collectable : Area2D {
 	
 	private void ShowPickupOverlay() {
 		var currentScene = GetTree().CurrentScene;
+		var musicPlayer = currentScene.GetNode<AudioStreamPlayer>("AudioStreamPlayer");
 		var ui = currentScene.GetNode<CanvasLayer>("CollectionOverlay");
 		var overlay = ui.GetNode<ColorRect>("Control/Overlay");
 		var nameLabel = ui.GetNode<Label>("Control/ItemName");
@@ -56,6 +57,7 @@ public partial class Collectable : Area2D {
 		image.Visible = true;
 		
 		GetTree().Paused = true;
+		musicPlayer.ProcessMode = Node.ProcessModeEnum.Always;
 		ui.ProcessMode = Node.ProcessModeEnum.Always;
 		
 		var timer = new Timer();

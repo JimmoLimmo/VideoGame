@@ -132,4 +132,21 @@ initial_velocity_max = 196.72
 angular_velocity_max = 1.25
 color = Color(0.546409, 7.33994e-07, 3.85046e-07, 1)
 
+[node name="SparkEmitter" type="CPUParticles2D" parent="."]
+position = Vector2(2, -2)
+rotation = -0.757473
+emitting = false
+amount = 17
+lifetime = 0.11
+one_shot = true
+speed_scale = 0.35
+explosiveness = 0.35
+randomness = 1.0
+lifetime_randomness = 0.68
+emission_shape = 2
+emission_sphere_radius = 2.1
+initial_velocity_min = 189.65
+initial_velocity_max = 234.9
+color = Color(1, 1, 0.356863, 1)
+
 [connection signal="area_entered" from="HitBox" to="." method="OnHitBoxEntered"]
