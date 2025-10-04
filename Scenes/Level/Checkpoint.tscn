@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b45jr477n6ff0"]
+
+[ext_resource type="Script" uid="uid://c84ndg38vvq0k" path="res://Scripts/Level/Checkpoint.cs" id="1_hfhtd"]
+
+[node name="Checkpoint" type="Area2D"]
+script = ExtResource("1_hfhtd")
+
+[node name="RespawnPoint" type="Marker2D" parent="."]

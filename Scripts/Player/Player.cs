@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public partial class Player : CharacterBody2D
 {
@@ -48,6 +49,7 @@ public partial class Player : CharacterBody2D
 	private Sprite2D _sprite;
 	private Sword _sword;
 	private HUD _hud;
+	private ScreenFader fade;
 
 	// Damage Handling Crap
 	[Export] public float InvulnTime = 0.6f;     // seconds of invulnerability
@@ -57,6 +59,7 @@ public partial class Player : CharacterBody2D
 	private bool _invulnerable = false;
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
+	private Vector2 respawnPoint;
 
 	// Initialization
 	public override void _Ready()
@@ -65,8 +68,12 @@ public partial class Player : CharacterBody2D
 			GlobalPosition = GlobalRoomChange.PlayerPos;
 			if (GlobalRoomChange.PlayerJumpOnEnter) Velocity = new Vector2(0, JumpVelocity);
 			hasSword = GlobalRoomChange.hasSword;
+			hasDash = GlobalRoomChange.hasDash;
+			hasWalljump = GlobalRoomChange.hasWalljump;
 			GlobalRoomChange.Activate = false;
 		}
+		
+		respawnPoint = Position;
 		
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
@@ -78,6 +85,8 @@ public partial class Player : CharacterBody2D
 		_hud = GetNodeOrNull<HUD>(HudPath);
 		if (_hud == null)
 			GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
+			
+		fade = GetNode<ScreenFader>("../ScreenFade");
 
 		// Defer HUD sync so HUD._Ready() has time to build its UI
 		CallDeferred(nameof(SyncHud));
@@ -386,9 +395,12 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void areaHazard(Node2D body)
+	public async void areaHazard(Node2D body)
 	{
 		TakeDamage(1);
+		await fade.FadeOut(0.25f);
+		Position = respawnPoint;
+		await fade.FadeIn(0.25f);
 	}
 
 	public void OnCollect(CollectableType type) {
@@ -429,5 +441,8 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-
+	public void SetCheckpoint(Vector2 globalPos) {
+		respawnPoint = globalPos;
+		GD.Print("Respawn Set");
+	}
 }
