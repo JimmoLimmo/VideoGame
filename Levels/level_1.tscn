@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="8_77x7w"]
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="9_62b6n"]
-[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
+[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Environment/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_2hkqn"]
@@ -88,7 +88,7 @@ texture = ExtResource("9_62b6n")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_2hkqn")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0urlm"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34erp"]
 texture = ExtResource("9_62b6n")
 2:3/0 = 0
 2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 0, -5.03604, 8, -0.539576, 8, 8, -8, 8)
@@ -125,7 +125,7 @@ texture = ExtResource("9_62b6n")
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 4
 physics_layer_1/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_0urlm")
+sources/0 = SubResource("TileSetAtlasSource_34erp")
 
 [node name="level_1" type="Node2D"]
 
