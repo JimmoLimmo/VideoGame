@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="1_3rhbc"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="1_abewm"]
-[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="2_w4q1f"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="2_w4q1f"]
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_y07lf"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="4_4de1t"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="4_y07lf"]
