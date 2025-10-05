@@ -200,32 +200,32 @@ public partial class Player : CharacterBody2D
 
 
 	// Jump Logic
-	private void HandleJump()
-	{
-		if (Input.IsActionJustPressed("jump"))
-		{
-			if (IsOnFloor())
-			{
-				// Normal jump
+	private void HandleJump() {
+		if(IsOnFloor()) {
+			if (Input.IsActionJustPressed("jump")) {
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
+			} 
+		} else {
+			if(Input.IsActionJustReleased("jump")) {
+				Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 			}
-			else if (_isWallSliding && hasWalljump)
-			{
-				// Jump away from the wall with a strong horizontal push
-				int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
-				Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+		}
+		
+		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
+			// Jump away from the wall with a strong horizontal push
+			int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
+			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
 
-				// Start input lock so holding into wall doesn’t cancel this
-				_isWallSliding = false;
-				_wallJumpLockTimer = WallJumpLockTime;
-			}
-			else if (_isDashing)
-			{
-				// Preserve momentum when jumping during a dash
-				Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-				_isDashing = false; // End the dash
-				_dashTimer = 0f; // Reset the dash timer
-			}
+			// Start input lock so holding into wall doesn’t cancel this
+			_isWallSliding = false;
+			_wallJumpLockTimer = WallJumpLockTime;
+		}
+		else if (_isDashing && Input.IsActionJustPressed("jump"))
+		{
+			// Preserve momentum when jumping during a dash
+			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+			_isDashing = false; // End the dash
+			_dashTimer = 0f; // Reset the dash timer
 		}
 	}
 
