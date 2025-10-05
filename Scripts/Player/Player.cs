@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 public partial class Player : CharacterBody2D
 {
 	// Constants
-	public const float Speed = 150.0f;
-	public const float JumpVelocity = -350.0f;
+	public const float Speed = 700.0f;
+	public const float JumpVelocity = -1000.0f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
@@ -324,7 +324,7 @@ public partial class Player : CharacterBody2D
 		{
 			string nextAnim =
 				!IsOnFloor() ? (Velocity.Y < 0f ? "Jump" : "Fall") :
-				Mathf.Abs(Velocity.X) > 1f ? "Walk" : "Idle";
+				Mathf.Abs(Velocity.X) > 1f ? "Run" : "Idle";
 
 			if (_anim.CurrentAnimation != nextAnim)
 				_anim.Play(nextAnim);

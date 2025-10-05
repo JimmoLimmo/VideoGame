@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cd6icyvan6d3m" path="res://Scripts/Environment/Gear.cs" id="1_w4y37"]
 [ext_resource type="Texture2D" uid="uid://bive7o0lfbujm" path="res://Sprites/Environment/Gear_Tileset.png" id="2_klqmh"]
 
-[node name="SmallGear" type="Node2D"]
+[node name="SmallOpenGear" type="Node2D"]
 script = ExtResource("1_w4y37")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
