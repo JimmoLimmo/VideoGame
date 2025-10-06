@@ -5,10 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://76merjs60id2" path="res://Scenes/Environment/MediumGear.tscn" id="2_p4erq"]
 [ext_resource type="PackedScene" uid="uid://c17p6nhy8jnwb" path="res://Scenes/Environment/SmallGear.tscn" id="3_p4erq"]
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="5_w4v7x"]
-[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="6_mkyii"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="6_mkyii"]
 [ext_resource type="PackedScene" uid="uid://bk5vxoiry1el0" path="res://Scenes/Environment/SmallOpenGear.tscn" id="7_mkyii"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_afen0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mkyii"]
 texture = ExtResource("2_f87w0")
 texture_region_size = Vector2i(128, 128)
 1:4/0 = 0
@@ -23,9 +23,9 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_w4v7x"]
 tile_size = Vector2i(128, 128)
-sources/0 = SubResource("TileSetAtlasSource_afen0")
+sources/0 = SubResource("TileSetAtlasSource_mkyii")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p4erq"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oe5jq"]
 texture = ExtResource("1_uvd1l")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
@@ -50,9 +50,9 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSet" id="TileSet_afen0"]
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 1
-sources/2 = SubResource("TileSetAtlasSource_p4erq")
+sources/2 = SubResource("TileSetAtlasSource_oe5jq")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f87w0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q0ila"]
 texture = ExtResource("1_uvd1l")
 texture_region_size = Vector2i(128, 128)
 0:2/0 = 0
@@ -68,7 +68,7 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_mkyii"]
 tile_size = Vector2i(128, 128)
-sources/2 = SubResource("TileSetAtlasSource_f87w0")
+sources/2 = SubResource("TileSetAtlasSource_q0ila")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oe5jq"]
 size = Vector2(1160.5, 343)
@@ -76,16 +76,16 @@ size = Vector2(1160.5, 343)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_w4v7x"]
 polygon = PackedVector2Array(0, 0, 896, 0, 896, 127, 256, 128, 256, 1025, 1664, 1024, 1664, 128, 1024, 130, 1024, 0, 1920, 0, 1920, 1152, 0, 1152)
 
-[sub_resource type="Gradient" id="Gradient_w4v7x"]
+[sub_resource type="Gradient" id="Gradient_7t67w"]
 colors = PackedColorArray(0.856618, 0.801582, 0.130281, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mkyii"]
-gradient = SubResource("Gradient_w4v7x")
+gradient = SubResource("Gradient_7t67w")
 fill = 1
 fill_from = Vector2(0.515695, 0.452915)
 fill_to = Vector2(0.5, 0)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mkyii"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bwca4"]
 texture = ExtResource("2_f87w0")
 texture_region_size = Vector2i(128, 128)
 0:4/0 = 0
@@ -100,7 +100,7 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_oe5jq"]
 tile_size = Vector2i(128, 128)
-sources/0 = SubResource("TileSetAtlasSource_mkyii")
+sources/0 = SubResource("TileSetAtlasSource_bwca4")
 
 [node name="Test" type="Node2D"]
 
