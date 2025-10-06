@@ -21,6 +21,9 @@ public partial class Collectable : Area2D {
 	public override void _Ready() {
 		BodyEntered += OnBodyEntered;
 		ProcessMode = Node.ProcessModeEnum.Always;
+		if(GlobalRoomChange.hasSword == true && Type == CollectableType.Sword) QueueFree();
+		else if(GlobalRoomChange.hasDash == true && Type == CollectableType.Dash) QueueFree();
+		else if(GlobalRoomChange.hasWalljump == true && Type == CollectableType.Walljump) QueueFree();
 	}
 	
 	private void OnBodyEntered(Node2D body) {
@@ -32,7 +35,9 @@ public partial class Collectable : Area2D {
 	}
 	
 	private void ShowPickupOverlay() {
-		var ui = GetTree().Root.GetNode<CanvasLayer>("level_1/CollectionOverlay");
+		var currentScene = GetTree().CurrentScene;
+		var musicPlayer = currentScene.GetNode<AudioStreamPlayer>("AudioStreamPlayer");
+		var ui = currentScene.GetNode<CanvasLayer>("CollectionOverlay");
 		var overlay = ui.GetNode<ColorRect>("Control/Overlay");
 		var nameLabel = ui.GetNode<Label>("Control/ItemName");
 		var keybindLabel = ui.GetNode<Label>("Control/Keybind");
@@ -55,6 +60,7 @@ public partial class Collectable : Area2D {
 		image.Visible = true;
 		
 		GetTree().Paused = true;
+		musicPlayer.ProcessMode = Node.ProcessModeEnum.Always;
 		ui.ProcessMode = Node.ProcessModeEnum.Always;
 		
 		var timer = new Timer();
@@ -62,7 +68,8 @@ public partial class Collectable : Area2D {
 		timer.WaitTime = 1.5;
 		timer.OneShot = true;
 		timer.Timeout += () => {
-			var ui = GetTree().Root.GetNode<CanvasLayer>("level_1/CollectionOverlay");
+			var currentScene = GetTree().CurrentScene;
+			var ui = currentScene.GetNode<CanvasLayer>("CollectionOverlay");
 			var spaceIndicator = ui.GetNode<ColorRect>("Control/SpaceIndicator");
 			
 			spaceIndicator.Visible = true;
@@ -79,7 +86,8 @@ public partial class Collectable : Area2D {
 	}
 	
 	private void ClearPickupOverlay() {
-		var ui = GetTree().Root.GetNode<CanvasLayer>("level_1/CollectionOverlay");
+		var currentScene = GetTree().CurrentScene;
+		var ui = currentScene.GetNode<CanvasLayer>("CollectionOverlay");
 		var overlay = ui.GetNode<ColorRect>("Control/Overlay");
 		var nameLabel = ui.GetNode<Label>("Control/ItemName");
 		var keybindLabel = ui.GetNode<Label>("Control/Keybind");
