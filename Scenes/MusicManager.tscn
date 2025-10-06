@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6apd1kxci3d4"]
+
+[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="1_iysw5"]
+
+[node name="MusicManager" type="Node"]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("1_iysw5")
+autoplay = true
