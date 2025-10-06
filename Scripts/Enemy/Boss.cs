@@ -6,8 +6,8 @@ public partial class Boss : CharacterBody2D
     // ---------- Tunables ----------
     [Export] public int MaxHealth = 1000;
     [Export] public float WalkSpeed = 120f;
-    [Export] public float JumpVy = -900f;
-    [Export] public float JumpVx = 220f;
+    [Export] public float JumpVy = -200f;
+    [Export] public float JumpVx = 220f; // keep positive in Inspector
     [Export] public float SlashSlideSpeed = 320f;
     [Export] public float UppercutHoriSpeed = 100f;
     [Export] public float DashSpeed = 420f;
@@ -18,6 +18,9 @@ public partial class Boss : CharacterBody2D
     [Export] public float ArenaRightX = 700f;
     [Export] public int ContactDamage = 1;
     [Export] public NodePath PlayerPath;
+
+    // Optional gravity scale (multiplies world gravity)
+    [Export] public float GravityScale = 1f;
 
     // ---------- Animation names ----------
     [Export] public string AIdle = "Idle";
@@ -38,7 +41,9 @@ public partial class Boss : CharacterBody2D
 
     [Export] public bool RunWithoutAnimations = true;
     [Export] public bool WatchdogEnabled = true;
-    [Export] public float WatchdogSeconds = 6.0f; // increased
+    [Export] public float WatchdogSeconds = 6.0f;
+    [Export] public bool LogStateChanges = true;
+
     private float _watchdog = 0f;
 
     // ---------- Internal timers ----------
@@ -46,6 +51,9 @@ public partial class Boss : CharacterBody2D
     private float _readyTimer = 0f;
     private float _idleDecisionTimer = 0f;
     private float _stateTimer = 0f;
+    private float _landTimer = 0f;
+    private float _airTime = 0f;
+    private bool _colliderReenabledMidair = false;
 
     // ---------- Node references ----------
     private AnimationPlayer _anim;
@@ -59,25 +67,45 @@ public partial class Boss : CharacterBody2D
     private Player _player;
 
     // ---------- FSM ----------
-    private enum State {
-        Ready, ReadyDrop, RoarPrep, Roar, Idle,
-        Move, Jump, Fall, Dash, DashStop,
-        Hurt, Die_1, Die_2
-    }
+    private enum State { Ready, ReadyDrop, RoarPrep, Roar, Idle, Move, Jump, Fall, Dash, DashStop, Hurt, Die_1, Die_2 }
 
     private State _state = State.Ready;
     private bool _stateNew = true;
+    private bool _changedThisFrame = false; // <<< NEW
     private Vector2 _playerPos = Vector2.Zero;
     private int _hp;
     private readonly RandomNumberGenerator _rng = new();
 
-    // ---------- Jump detach fix ----------
+    // ---------- Jump / detach ----------
     private CollisionShape2D _col;
     private float _defaultSnap = 10f;
     private int _detachFrames = 0;
     private bool _snapSuppressed = false;
+    private bool _leftGround = false; // gate landing until truly airborne
 
-    private Vector2 GetBossGravity() => GetGravity();
+    // Motion mode (Grounded <-> Floating)
+    private MotionModeEnum _defaultMotionMode = MotionModeEnum.Grounded;
+
+    // ---------- Gravity ----------
+    private Vector2 _worldGravity = Vector2.Zero;
+
+    private void RefreshWorldGravity()
+    {
+        float g = (float)ProjectSettings.GetSetting("physics/2d/default_gravity");
+        Vector2 v = ((Vector2)ProjectSettings.GetSetting("physics/2d/default_gravity_vector")).Normalized();
+        _worldGravity = v * g * Mathf.Max(0f, GravityScale);
+    }
+
+    private void ApplyGravityGroundAware(double dt)
+    {
+        if (!IsOnFloor() || Velocity.Y < 0f)
+            Velocity += _worldGravity * (float)dt;
+    }
+
+    private void ApplyGravityAlways(double dt)
+    {
+        Velocity += _worldGravity * (float)dt;
+    }
 
     private bool HasAnim(string name) =>
         _anim != null && !string.IsNullOrEmpty(name) && _anim.HasAnimation(name);
@@ -91,19 +119,22 @@ public partial class Boss : CharacterBody2D
     private bool AnimFinished(string name)
     {
         if (RunWithoutAnimations || !HasAnim(name)) return true;
-        // fixed condition
-        return !_anim.IsPlaying() || _anim.CurrentAnimation != name;
+        return !_anim.IsPlaying() && _anim.CurrentAnimation == name;
     }
 
     public override void _Ready()
     {
         _hp = MaxHealth;
         UpDirection = Vector2.Up;
-        GD.Print($"[Boss READY] JumpVy = {JumpVy}");
 
-        _anim = GetNodeOrNull<AnimationPlayer>("SpriteRoot/AnimationPlayer");
-        _spriteRoot = GetNode<Node2D>("SpriteRoot");
-        _sprite = GetNode<Sprite2D>("SpriteRoot/Sprite2D");
+        RefreshWorldGravity();
+        GD.Print($"[Boss READY] JumpVy = {JumpVy}, Gravity={_worldGravity}");
+
+        _anim = GetNodeOrNull<AnimationPlayer>("SpriteRoot/AnimationPlayer")
+             ?? GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+
+        _spriteRoot = GetNodeOrNull<Node2D>("SpriteRoot") ?? this;
+        _sprite = GetNodeOrNull<Sprite2D>("SpriteRoot/Sprite2D");
         _blood = GetNodeOrNull<CpuParticles2D>("BloodEmitter");
         _spark = GetNodeOrNull<CpuParticles2D>("SparkEmitter");
         _matTimer = GetNodeOrNull<Timer>("MateriaTimer");
@@ -132,35 +163,37 @@ public partial class Boss : CharacterBody2D
 
         _col = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
         _defaultSnap = FloorSnapLength;
+
+        _defaultMotionMode = MotionMode; // remember editor setting
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        _changedThisFrame = false; // <<< reset at frame start
+
         if (_player != null) _playerPos = _player.GlobalPosition;
 
-        // Hard detach
         if (_detachFrames > 0)
         {
             FloorSnapLength = 0f;
             _snapSuppressed = true;
-            if (_col != null) _col.Disabled = true;
+            _col?.SetDeferred("disabled", true);
             _detachFrames--;
         }
-        else if (_snapSuppressed)
-        {
-            if (_col != null) _col.Disabled = false;
-            FloorSnapLength = _defaultSnap;
-            _snapSuppressed = false;
-        }
+        // DO NOT auto re-enable here; Jump/Fall restore on landing
 
         if (WatchdogEnabled)
         {
-            _watchdog += (float)delta;
-            if (_watchdog > WatchdogSeconds)
+            bool transient = _state is State.Jump or State.Fall or State.Dash or State.DashStop;
+            if (!transient)
             {
-                GD.PushWarning($"[Boss] Watchdog tripped in state: {_state}. Forcing Idle.");
-                Velocity = Vector2.Zero;
-                Change(State.Idle);
+                _watchdog += (float)delta;
+                if (_watchdog > WatchdogSeconds)
+                {
+                    GD.PushWarning($"[Boss] Watchdog tripped in state: {_state}. Forcing Idle.");
+                    Velocity = Vector2.Zero;
+                    Change(State.Idle);
+                }
             }
         }
 
@@ -176,19 +209,22 @@ public partial class Boss : CharacterBody2D
             case State.Fall: S_Fall(delta); break;
             case State.Dash: S_Dash(delta); break;
             case State.DashStop: S_DashStop(delta); break;
+            case State.Hurt: S_Hurt(delta); break;
+            case State.Die_1: S_Die1(delta); break;
+            case State.Die_2: S_Die2(delta); break;
         }
 
-        _stateNew = false;
+        // <<< only clear _stateNew if no Change() happened this frame
+        if (!_changedThisFrame) _stateNew = false;
 
         _debugTimer -= (float)delta;
         if (_debugTimer <= 0f)
         {
-            GD.Print($"[Boss] State={_state} Pos={GlobalPosition} Vel={Velocity} OnFloor={IsOnFloor()}");
+            GD.Print($"[Boss] State={_state} Pos={GlobalPosition} Vel={Velocity} OnFloor={IsOnFloor()} Grav={_worldGravity}");
             _debugTimer = 0.25f;
         }
     }
 
-    [Export] public bool LogStateChanges = true;
     private void Change(State s)
     {
         if (LogStateChanges && s != _state)
@@ -196,18 +232,13 @@ public partial class Boss : CharacterBody2D
         _state = s;
         _stateNew = true;
         _watchdog = 0f;
+        _changedThisFrame = true; // <<< mark so _stateNew survives to next frame
     }
 
-    // ---------- Physics helpers ----------
-    private void ApplyGravity(double dt)
-    {
-        if (!IsOnFloor() || Velocity.Y < 0f)
-            Velocity += GetBossGravity() * (float)dt;
-    }
-
+    // ---------- Helpers ----------
     private void FacePlayer()
     {
-        if (_player == null) return;
+        if (_player == null || _spriteRoot == null) return;
         bool faceLeft = _playerPos.X < GlobalPosition.X;
         _spriteRoot.Scale = new Vector2(faceLeft ? 1 : -1, 1);
     }
@@ -223,33 +254,37 @@ public partial class Boss : CharacterBody2D
     private void S_ReadyDrop(double dt)
     {
         if (_stateNew) SafePlay(AFall);
-        ApplyGravity(dt);
+        ApplyGravityGroundAware(dt);
         MoveAndSlide();
         if (IsOnFloor()) Change(State.Idle);
     }
 
     private void S_RoarPrep(double dt)
     {
-        if (_stateNew) SafePlay(ARoarPrep);
-        if (AnimFinished(ARoarPrep)) Change(State.Roar);
+        if (_stateNew) { SafePlay(ARoarPrep); _stateTimer = 0.35f; }
+        _stateTimer -= (float)dt;
+        if (_stateTimer <= 0f || AnimFinished(ARoarPrep)) Change(State.Roar);
     }
 
     private void S_Roar(double dt)
     {
-        if (_stateNew) SafePlay(ARoar);
-        if (AnimFinished(ARoar)) Change(State.Idle);
+        if (_stateNew) { SafePlay(ARoar); _stateTimer = 0.6f; }
+        _stateTimer -= (float)dt;
+        if (_stateTimer <= 0f || AnimFinished(ARoar)) Change(State.Idle);
     }
 
     private void S_Idle(double dt)
     {
         if (_stateNew)
         {
+            FacePlayer();
             SafePlay(AIdle);
             _idleDecisionTimer = 0.5f;
+            MotionMode = _defaultMotionMode; // ensure grounded
         }
 
         Velocity = new Vector2(Mathf.MoveToward(Velocity.X, 0, 2000f * (float)dt), Velocity.Y);
-        ApplyGravity(dt);
+        ApplyGravityGroundAware(dt);
         MoveAndSlide();
 
         _idleDecisionTimer -= (float)dt;
@@ -264,90 +299,91 @@ public partial class Boss : CharacterBody2D
             FacePlayer();
             SafePlay(AMove);
             _stateTimer = 1.5f;
+            MotionMode = _defaultMotionMode; // walking uses grounded
         }
 
         float dir = _playerPos.X > GlobalPosition.X ? 1f : -1f;
         float target = dir * WalkSpeed;
         Velocity = new Vector2(Mathf.MoveToward(Velocity.X, target, 2500f * (float)dt), Velocity.Y);
 
-        ApplyGravity(dt);
+        ApplyGravityGroundAware(dt);
         MoveAndSlide();
 
         _stateTimer -= (float)dt;
         if (_stateTimer <= 0f) Change(State.Idle);
     }
 
-    // ---------- Jump + Fall (fixed) ----------
-private void S_Jump(double dt)
-{
-    if (_stateNew)
+    private void S_Jump(double dt)
     {
-        // === setup ===
-        _defaultSnap = FloorSnapLength;
-        FloorSnapLength = 0f;
-        _snapSuppressed = true;
-        _detachFrames = 10;
+        if (_stateNew)
+        {
+            _defaultSnap = FloorSnapLength;
+            FloorSnapLength = 0f;         // detach without switching modes
+            _snapSuppressed = true;
+            _detachFrames = 10;
+            _leftGround = false;
+            _airTime = 0f;
+            _colliderReenabledMidair = false;
 
-        // ensure we're not still flagged "on floor"
-        MoveAndSlide(); // run one frame of movement to clear contact
+            _col ??= GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+            if (_col != null) _col.Disabled = true;   // briefly disable so we don't re-stick the same frame
 
-        // temporarily disable collider so floor won't instantly reattach
-        if (_col == null)
-            _col = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
-        if (_col != null)
-            _col.Disabled = true;
+            GlobalPosition += new Vector2(0, -2f);    // tiny lift
 
-        // small lift
-        GlobalPosition += new Vector2(0, -2f);
+            float dir = Mathf.Sign(_playerPos.X - GlobalPosition.X);
+            if (Mathf.IsZeroApprox(dir)) dir = 1f;
+            float vx = Mathf.Abs(JumpVx);
 
-        // determine jump direction
-        float dir = Mathf.Sign(_playerPos.X - GlobalPosition.X);
-        if (Mathf.IsZeroApprox(dir)) dir = 1f;
+            Velocity = new Vector2(dir * vx, JumpVy);
+            GD.Print($"[Boss JUMP INIT] Velocity={Velocity}");
 
-        // apply launch velocity
-        Velocity = new Vector2(dir * JumpVx, JumpVy);
-        GD.Print($"[Boss JUMP INIT] Velocity={Velocity}");
+            SafePlay(AJump);
+            return; // integrate next frame
+        }
 
-        SafePlay(AJump);
+        // Airborne integration
+        ApplyGravityAlways(dt);
+        MoveAndSlide();
+
+        // Track leaving ground
+        if (!IsOnFloor()) _airTime += (float)dt;
+        if (!_leftGround && !IsOnFloor()) _leftGround = true;
+
+        // Re-enable collider midair so floor can be detected later
+        if (_leftGround && !_colliderReenabledMidair && (_airTime > 0.06f || Velocity.Y > 0f))
+        {
+            _col?.SetDeferred("disabled", false);
+            _colliderReenabledMidair = true;
+        }
+
+        // Rising -> Falling
+        if (!IsOnFloor() && Velocity.Y > 0f)
+            Change(State.Fall);
+
+        // Land early (very low jump)
+        if (_colliderReenabledMidair && IsOnFloor())
+        {
+            FloorSnapLength = _defaultSnap;
+            _snapSuppressed = false;
+            _detachFrames = 0;
+            Change(State.Idle);
+        }
     }
-
-    // === airborne motion ===
-    if (!_stateNew)
-        ApplyGravity(dt);
-
-    MoveAndSlide();
-
-    // only allow landing after we've been clearly airborne
-    bool airborne = !IsOnFloor() || Velocity.Y < -10f || _detachFrames > 0;
-
-    if (!airborne && IsOnFloor())
-    {
-        // restore collider and snap
-        if (_col != null) _col.Disabled = false;
-        FloorSnapLength = _defaultSnap;
-        _snapSuppressed = false;
-        _detachFrames = 0;
-
-        Change(State.Idle);
-        return;
-    }
-
-    // transition to fall after rising
-    if (!IsOnFloor() && Velocity.Y > 0f)
-        Change(State.Fall);
-}
-
-    private float _landTimer = 0f;
 
     private void S_Fall(double dt)
     {
         if (_stateNew)
         {
             SafePlay(AFall);
-            _landTimer = 0.12f;
+            _landTimer = 0.08f; // small debounce
+
+            // ensure collider ON during the fall so we can detect floor
+            if (_col != null && _col.Disabled)
+                _col.SetDeferred("disabled", false);
+            _colliderReenabledMidair = true;
         }
 
-        ApplyGravity(dt);
+        ApplyGravityAlways(dt);
         MoveAndSlide();
 
         if (IsOnFloor())
@@ -355,8 +391,7 @@ private void S_Jump(double dt)
             _landTimer -= (float)dt;
             if (_landTimer <= 0f)
             {
-                if (_col != null) _col.Disabled = false;
-                FloorSnapLength = _defaultSnap;
+                FloorSnapLength = _defaultSnap; // restore snapping
                 _snapSuppressed = false;
                 _detachFrames = 0;
                 Change(State.Idle);
@@ -368,28 +403,76 @@ private void S_Jump(double dt)
     {
         if (_stateNew)
         {
-            // fixed direction logic
-            float dir = _spriteRoot.Scale.X == 1 ? 1 : -1;
+            float dir = (_spriteRoot?.Scale.X ?? 1f) == 1f ? -1f : 1f;
             Velocity = new Vector2(dir * DashSpeed, 0);
             SafePlay(ADash);
+            MotionMode = _defaultMotionMode; // ground dash
         }
-
-        ApplyGravity(dt);
+        ApplyGravityGroundAware(dt);
         MoveAndSlide();
 
-        bool hitLeftBound = GlobalPosition.X < ArenaLeftX;
-        bool hitRightBound = GlobalPosition.X > ArenaRightX;
-        if (hitLeftBound || hitRightBound)
-            Change(State.DashStop);
+        bool hitLeft = GlobalPosition.X <= ArenaLeftX + 2f;
+        bool hitRight = GlobalPosition.X >= ArenaRightX - 2f;
+        if (hitLeft || hitRight) Change(State.DashStop);
     }
 
     private void S_DashStop(double dt)
     {
-        if (_stateNew) SafePlay(ADashStop);
+        if (_stateNew) { SafePlay(ADashStop); _stateTimer = 0.25f; }
+        _stateTimer -= (float)dt;
+
         Velocity = new Vector2(Mathf.MoveToward(Velocity.X, 0, DashStopAccel * (float)dt), Velocity.Y);
-        ApplyGravity(dt);
+        ApplyGravityGroundAware(dt);
         MoveAndSlide();
-        if (AnimFinished(ADashStop)) Change(State.Idle);
+
+        if (_stateTimer <= 0f || AnimFinished(ADashStop)) Change(State.Idle);
+    }
+
+    private void S_Hurt(double dt)
+    {
+        if (_stateNew)
+        {
+            SafePlay(AStagger);
+            float dir = _player != null && _playerPos.X < GlobalPosition.X ? 1f : -1f;
+            Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.2f);
+            _stateTimer = 0.3f;
+            MotionMode = MotionModeEnum.Floating; // brief pop
+        }
+
+        _stateTimer -= (float)dt;
+        ApplyGravityGroundAware(dt);
+        MoveAndSlide();
+
+        if (_stateTimer <= 0f || AnimFinished(AStagger))
+        {
+            MotionMode = _defaultMotionMode;
+            Change(State.Idle);
+        }
+    }
+
+    private void S_Die1(double dt)
+    {
+        if (_stateNew)
+        {
+            Velocity = Vector2.Zero;
+            SafePlay(ADeath);
+            _stateTimer = 1.0f;
+            MotionMode = MotionModeEnum.Floating;
+        }
+        _stateTimer -= (float)dt;
+        if (_stateTimer <= 0f || AnimFinished(ADeath))
+            Change(State.Die_2);
+    }
+
+    private void S_Die2(double dt)
+    {
+        if (_stateNew)
+        {
+            _col?.SetDeferred("disabled", true);
+            _hurtbox?.SetDeferred("monitoring", false);
+            _hitbox?.SetDeferred("monitoring", false);
+            SetPhysicsProcess(false);
+        }
     }
 
     // ---------- Damage ----------
@@ -416,5 +499,5 @@ private void S_Jump(double dt)
             p.ApplyHit(ContactDamage, GlobalPosition);
     }
 
-    private void OnMateriaTimeout() => _sprite.SelfModulate = Colors.White;
+    private void OnMateriaTimeout() { if (_sprite != null) _sprite.SelfModulate = Colors.White; }
 }

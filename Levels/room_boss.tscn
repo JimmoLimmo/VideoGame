@@ -184,7 +184,7 @@ HudPath = NodePath("../Hud")
 [node name="Boss" parent="." instance=ExtResource("14_pfkkc")]
 position = Vector2(296, 941)
 WalkSpeed = 250.0
-JumpVy = -5000.93
+JumpVy = -1000.0
 JumpVx = -181.4
 DashSpeed = 485.57
 DashStopAccel = 2500.05
@@ -245,7 +245,7 @@ texture = SubResource("GradientTexture2D_jd76r")
 [node name="MidDropoff" type="Node2D" parent="."]
 
 [node name="RightDropoff" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(2306.28, 445.69)
+position = Vector2(2303.28, 445.69)
 rotation = 3.14159
 scale = Vector2(3.8748, 21.9775)
 texture = SubResource("GradientTexture2D_rntpy")
@@ -294,7 +294,6 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="Hud" parent="." instance=ExtResource("8_b8a68")]
 visible = false
 script = ExtResource("9_3npna")
-size = 50
 MaskFull = ExtResource("10_0jl2y")
 MaskEmpty = ExtResource("11_75yyn")
 

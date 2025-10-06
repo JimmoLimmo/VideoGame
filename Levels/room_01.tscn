@@ -297,7 +297,6 @@ shape = SubResource("RectangleShape2D_ykuuq")
 [node name="Hud" parent="." instance=ExtResource("10_2g3pj")]
 visible = false
 script = ExtResource("11_ykuuq")
-size = 50
 MaskFull = ExtResource("12_wlflr")
 MaskEmpty = ExtResource("13_i48qr")
 
