@@ -1,33 +1,15 @@
-[gd_scene load_steps=14 format=3 uid="uid://c6qwdj501fg6f"]
+[gd_scene load_steps=13 format=3 uid="uid://c1kbf658k3yb"]
 
-[ext_resource type="Texture2D" uid="uid://cdejhjqax3a51" path="res://Sprites/Player/Player_metroid.png" id="1_uvnfx"]
-[ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_xpcdj"]
-[ext_resource type="Script" uid="uid://yuq1i44nft4l" path="res://Scripts/Player/Sword.cs" id="2_a3d8c"]
+[ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_evcib"]
+[ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="1_whvb5"]
+[ext_resource type="Script" uid="uid://yuq1i44nft4l" path="res://Scripts/Player/Sword.cs" id="3_lgeye"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a3d8c"]
-radius = 6.0
-height = 22.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_whvb5"]
+radius = 75.0
+height = 343.333
 
-[sub_resource type="Animation" id="Animation_jlvik"]
-resource_name = "Dead"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
-}
-
-[sub_resource type="Animation" id="Animation_dd0ac"]
+[sub_resource type="Animation" id="Animation_ude3g"]
 resource_name = "Fall"
-length = 0.1
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -38,12 +20,11 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [16]
+"values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_xpcdj"]
+[sub_resource type="Animation" id="Animation_evcib"]
 resource_name = "Idle"
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -51,16 +32,28 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.266667, 0.466667, 0.7, 0.933333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0, 2, 3, 4, 4]
+"values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_htcer"]
+[sub_resource type="Animation" id="Animation_h54ih"]
 resource_name = "Jump"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
-[sub_resource type="Animation" id="Animation_gk6dx"]
+[sub_resource type="Animation" id="Animation_lgeye"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -72,70 +65,12 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [1]
+"values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_0u5uq"]
-resource_name = "Sword"
+[sub_resource type="Animation" id="Animation_yn3cd"]
+resource_name = "Run"
 length = 0.4
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.333333),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [17, 18, 19, 20]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"AttackStart"
-}, {
-"args": [],
-"method": &"AttackEnd"
-}]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sword")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.11, 0.133333, 0.166667, 0.19),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"values": [{
-"args": [],
-"method": &"HitCheck"
-}, {
-"args": [],
-"method": &"HitCheck"
-}, {
-"args": [],
-"method": &"HitCheck"
-}, {
-"args": [],
-"method": &"HitCheck"
-}, {
-"args": [],
-"method": &"HitCheck"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_mtuoh"]
-resource_name = "Walk"
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -144,65 +79,64 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0666667, 0.133333, 0.2, 0.266667, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+"values": [6, 7, 8, 9, 10, 11]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_jhyir"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f4cuq"]
 _data = {
-&"Dead": SubResource("Animation_jlvik"),
-&"Fall": SubResource("Animation_dd0ac"),
-&"Idle": SubResource("Animation_xpcdj"),
-&"Jump": SubResource("Animation_htcer"),
-&"RESET": SubResource("Animation_gk6dx"),
-&"Sword": SubResource("Animation_0u5uq"),
-&"Walk": SubResource("Animation_mtuoh")
+&"Fall": SubResource("Animation_ude3g"),
+&"Idle": SubResource("Animation_evcib"),
+&"Jump": SubResource("Animation_h54ih"),
+&"RESET": SubResource("Animation_lgeye"),
+&"Run": SubResource("Animation_yn3cd")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xpcdj"]
-size = Vector2(14, 20)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yn3cd"]
+size = Vector2(141.833, 330.833)
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
-script = ExtResource("1_xpcdj")
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f4cuq"]
+radius = 80.303
+height = 333.333
+
+[node name="Player" type="CharacterBody2D"]
+scale = Vector2(0.6, 0.6)
+script = ExtResource("1_evcib")
 SwordPath = NodePath("Sword")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_uvnfx")
-hframes = 8
-vframes = 7
-frame = 1
+position = Vector2(0, -23.3333)
+texture = ExtResource("1_whvb5")
+hframes = 6
+vframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 11)
-shape = SubResource("CapsuleShape2D_a3d8c")
+shape = SubResource("CapsuleShape2D_whvb5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_jhyir")
+&"": SubResource("AnimationLibrary_f4cuq")
 }
-autoplay = "Idle"
 
 [node name="Sword" type="Area2D" parent="." node_paths=PackedStringArray("VisualAnchor")]
-script = ExtResource("2_a3d8c")
+script = ExtResource("3_lgeye")
 VisualAnchor = NodePath(".")
 
 [node name="Marker2D" type="Marker2D" parent="Sword"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
-position = Vector2(15, 10)
-shape = SubResource("RectangleShape2D_xpcdj")
+position = Vector2(165, 3.33333)
+shape = SubResource("RectangleShape2D_yn3cd")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2.25, 2.25)
-
 [node name="player" type="Area2D" parent="."]
+position = Vector2(-21.6667, 1.66667)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
-position = Vector2(-1, 11)
+position = Vector2(21.6667, -1.66667)
 scale = Vector2(1.1, 1.1)
-shape = SubResource("CapsuleShape2D_a3d8c")
+shape = SubResource("CapsuleShape2D_f4cuq")
 debug_color = Color(1, 0.203922, 0.203922, 0.419608)

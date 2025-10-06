@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddti75ydnggyo"]
+
+[ext_resource type="Script" uid="uid://8kb4v2coyq1t" path="res://Scripts/Environment/CrumbleFloor.cs" id="1_jo63a"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_nq5m8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yf1ft"]
+size = Vector2(512, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jo63a"]
+size = Vector2(364.05, 71)
+
+[node name="FactoryBreakawayFloor" type="Node2D"]
+script = ExtResource("1_jo63a")
+
+[node name="PhysicsArea" type="StaticBody2D" parent="."]
+
+[node name="LeftBlock" type="Sprite2D" parent="PhysicsArea"]
+position = Vector2(-128, 128)
+texture = ExtResource("1_nq5m8")
+region_enabled = true
+region_rect = Rect2(256, 0, 256, 256)
+
+[node name="RightBlock" type="Sprite2D" parent="PhysicsArea"]
+position = Vector2(128, 128)
+texture = ExtResource("1_nq5m8")
+region_enabled = true
+region_rect = Rect2(256, 0, 256, 256)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsArea"]
+position = Vector2(0, 128)
+shape = SubResource("RectangleShape2D_yf1ft")
+
+[node name="PlayerCollider" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollider"]
+position = Vector2(0, -36.5)
+shape = SubResource("RectangleShape2D_jo63a")
+debug_color = Color(0.564939, 0.455334, 0.840094, 0.42)
