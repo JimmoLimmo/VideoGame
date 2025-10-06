@@ -4,6 +4,7 @@ using System;
 public partial class CameraController : Camera2D {
 	[Export] public NodePath playerPath;
 	[Export] public NodePath boundsPath;
+	[Export] public int cameraYOffset = -300;
 	
 	private CharacterBody2D player;
 	
@@ -29,6 +30,7 @@ public partial class CameraController : Camera2D {
 		Vector2 max = boundsCenter + extents;
 		
 		Vector2 targetPos = player.Position;
+		targetPos.Y += cameraYOffset;
 		
 		float clampedX = Mathf.Clamp(targetPos.X, min.X, max.X);
 		float clampedY = Mathf.Clamp(targetPos.Y, min.Y, max.Y);

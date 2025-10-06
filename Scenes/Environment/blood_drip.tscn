@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bt4x8yyqiagtg"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r1pom"]
+size = Vector2(15, 15)
+
+[node name="BloodDrip" type="CPUParticles2D"]
+amount = 1
+texture = SubResource("PlaceholderTexture2D_r1pom")
+lifetime = 1.54
+speed_scale = 1.5
+randomness = 0.2
+emission_shape = 1
+emission_sphere_radius = 3.53
+color = Color(0.647059, 0, 0, 1)
