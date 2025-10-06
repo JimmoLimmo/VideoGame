@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://u5ti17mobc8c"]
+
+[ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
+[ext_resource type="Texture2D" uid="uid://csw4j11liypac" path="res://PlayerCharacter_MockUp.png" id="2_okvah"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_okvah"]
+radius = 77.0
+height = 354.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0puiv"]
+radius = 86.0
+height = 336.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ghr8m"]
+radius = 105.0
+height = 364.0
+
+[node name="Boss" type="CharacterBody2D"]
+script = ExtResource("1_wshln")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_okvah")
+debug_color = Color(8.18223e-07, 0.6335, 0.439752, 0.42)
+
+[node name="SpriteRoot" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteRoot"]
+modulate = Color(0.992349, 0, 0.179767, 1)
+position = Vector2(0, -1)
+texture = ExtResource("2_okvah")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2(-1, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-2, -7)
+shape = SubResource("CapsuleShape2D_0puiv")
+debug_color = Color(0.957019, 2.40654e-06, 0.534826, 0.42)
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(-4, -8)
+shape = SubResource("CapsuleShape2D_ghr8m")
+
+[node name="BloodEmitter" type="CPUParticles2D" parent="."]
+visible = false
+
+[node name="SparkEmitter" type="CPUParticles2D" parent="."]
+visible = false
+
+[node name="MateriaTimer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
