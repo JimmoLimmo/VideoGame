@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6apd1kxci3d4"]
+
+[ext_resource type="Script" uid="uid://djo38rhpyy0ea" path="res://Scenes/MusicManager.cs" id="1_6b4sy"]
+
+[node name="MusicManager" type="Node"]
+script = ExtResource("1_6b4sy")
+
+[node name="A" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+bus = &"Music"
+
+[node name="B" type="AudioStreamPlayer" parent="."]
+bus = &"Music"

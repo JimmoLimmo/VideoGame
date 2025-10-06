@@ -1,14 +1,14 @@
 [gd_scene load_steps=21 format=4 uid="uid://iyovbraw1ggt"]
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
-[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="1_n0qsc"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="2_3mhv4"]
 [ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="3_rf6l5"]
 [ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="4_rfktq"]
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="8_77x7w"]
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="9_62b6n"]
-[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
+[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Environment/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_2hkqn"]
@@ -23,7 +23,7 @@ texture = ExtResource("1_0urlm")
 [sub_resource type="TileSet" id="TileSet_xoyoh"]
 sources/0 = SubResource("TileSetAtlasSource_77x7w")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f4pg2"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2hkqn"]
 texture = ExtResource("9_62b6n")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -86,9 +86,9 @@ texture = ExtResource("9_62b6n")
 
 [sub_resource type="TileSet" id="TileSet_62b6n"]
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_f4pg2")
+sources/0 = SubResource("TileSetAtlasSource_2hkqn")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0urlm"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34erp"]
 texture = ExtResource("9_62b6n")
 2:3/0 = 0
 2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 0, -5.03604, 8, -0.539576, 8, 8, -8, 8)
@@ -125,7 +125,7 @@ texture = ExtResource("9_62b6n")
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 4
 physics_layer_1/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_0urlm")
+sources/0 = SubResource("TileSetAtlasSource_34erp")
 
 [node name="level_1" type="Node2D"]
 
@@ -144,7 +144,7 @@ tile_map_data = PackedByteArray("AAAzAAUAAAAGAAMAAAA0AAUAAAAGAAMAAAA1AAUAAAAGAAM
 tile_set = SubResource("TileSet_77x7w")
 
 [node name="Player" parent="." groups=["enemies"] instance=ExtResource("1_n0qsc")]
-position = Vector2(-36, -28)
+position = Vector2(-53, -36)
 HudPath = NodePath("../Hud")
 
 [node name="Camera2D" type="Camera2D" parent="."]

@@ -114,4 +114,39 @@ position = Vector2(1, -2)
 scale = Vector2(1.01836, 1)
 shape = SubResource("RectangleShape2D_2t2r4")
 
+[node name="BloodEmitter" type="CPUParticles2D" parent="."]
+rotation = -0.975639
+emitting = false
+amount = 225
+lifetime = 0.21
+one_shot = true
+speed_scale = 0.7
+explosiveness = 1.0
+randomness = 0.79
+lifetime_randomness = 1.0
+draw_order = 1
+emission_shape = 2
+emission_sphere_radius = 2.61
+initial_velocity_min = 90.16
+initial_velocity_max = 196.72
+angular_velocity_max = 1.25
+color = Color(0.546409, 7.33994e-07, 3.85046e-07, 1)
+
+[node name="SparkEmitter" type="CPUParticles2D" parent="."]
+position = Vector2(2, -2)
+rotation = -0.757473
+emitting = false
+amount = 17
+lifetime = 0.11
+one_shot = true
+speed_scale = 0.35
+explosiveness = 0.35
+randomness = 1.0
+lifetime_randomness = 0.68
+emission_shape = 2
+emission_sphere_radius = 2.1
+initial_velocity_min = 189.65
+initial_velocity_max = 234.9
+color = Color(1, 1, 0.356863, 1)
+
 [connection signal="area_entered" from="HitBox" to="." method="OnHitBoxEntered"]

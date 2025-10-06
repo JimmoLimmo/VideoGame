@@ -1,11 +1,12 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public partial class Player : CharacterBody2D
 {
 	// Constants
-	public const float Speed = 150.0f;
-	public const float JumpVelocity = -350.0f;
+	public const float Speed = 700.0f;
+	public const float JumpVelocity = -1000.0f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
@@ -48,6 +49,7 @@ public partial class Player : CharacterBody2D
 	private Sprite2D _sprite;
 	private Sword _sword;
 	private HUD _hud;
+	private ScreenFader fade;
 
 	// Damage Handling Crap
 	[Export] public float InvulnTime = 0.6f;     // seconds of invulnerability
@@ -57,10 +59,22 @@ public partial class Player : CharacterBody2D
 	private bool _invulnerable = false;
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
+	private Vector2 respawnPoint;
 
 	// Initialization
 	public override void _Ready()
 	{
+		if(GlobalRoomChange.Activate) {
+			GlobalPosition = GlobalRoomChange.PlayerPos;
+			if (GlobalRoomChange.PlayerJumpOnEnter) Velocity = new Vector2(0, JumpVelocity);
+			hasSword = GlobalRoomChange.hasSword;
+			hasDash = GlobalRoomChange.hasDash;
+			hasWalljump = GlobalRoomChange.hasWalljump;
+			GlobalRoomChange.Activate = false;
+		}
+		
+		respawnPoint = Position;
+		
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
@@ -71,6 +85,8 @@ public partial class Player : CharacterBody2D
 		_hud = GetNodeOrNull<HUD>(HudPath);
 		if (_hud == null)
 			GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
+			
+		fade = GetNode<ScreenFader>("../ScreenFade");
 
 		// Defer HUD sync so HUD._Ready() has time to build its UI
 		CallDeferred(nameof(SyncHud));
@@ -184,32 +200,32 @@ public partial class Player : CharacterBody2D
 
 
 	// Jump Logic
-	private void HandleJump()
-	{
-		if (Input.IsActionJustPressed("jump"))
-		{
-			if (IsOnFloor())
-			{
-				// Normal jump
+	private void HandleJump() {
+		if(IsOnFloor()) {
+			if (Input.IsActionJustPressed("jump")) {
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
+			} 
+		} else {
+			if(Input.IsActionJustReleased("jump")) {
+				Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 			}
-			else if (_isWallSliding && hasWalljump)
-			{
-				// Jump away from the wall with a strong horizontal push
-				int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
-				Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+		}
+		
+		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
+			// Jump away from the wall with a strong horizontal push
+			int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
+			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
 
-				// Start input lock so holding into wall doesn’t cancel this
-				_isWallSliding = false;
-				_wallJumpLockTimer = WallJumpLockTime;
-			}
-			else if (_isDashing)
-			{
-				// Preserve momentum when jumping during a dash
-				Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-				_isDashing = false; // End the dash
-				_dashTimer = 0f; // Reset the dash timer
-			}
+			// Start input lock so holding into wall doesn’t cancel this
+			_isWallSliding = false;
+			_wallJumpLockTimer = WallJumpLockTime;
+		}
+		else if (_isDashing && Input.IsActionJustPressed("jump"))
+		{
+			// Preserve momentum when jumping during a dash
+			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+			_isDashing = false; // End the dash
+			_dashTimer = 0f; // Reset the dash timer
 		}
 	}
 
@@ -308,7 +324,7 @@ public partial class Player : CharacterBody2D
 		{
 			string nextAnim =
 				!IsOnFloor() ? (Velocity.Y < 0f ? "Jump" : "Fall") :
-				Mathf.Abs(Velocity.X) > 1f ? "Walk" : "Idle";
+				Mathf.Abs(Velocity.X) > 1f ? "Run" : "Idle";
 
 			if (_anim.CurrentAnimation != nextAnim)
 				_anim.Play(nextAnim);
@@ -379,25 +395,27 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void areaHazard(Node2D body)
+	public async void areaHazard(Node2D body)
 	{
 		TakeDamage(1);
+		await fade.FadeOut(0.25f);
+		Position = respawnPoint;
+		await fade.FadeIn(0.25f);
 	}
 
-	public void OnCollect(CollectableType type)
-	{
-		if (type == CollectableType.Sword)
-		{
+	public void OnCollect(CollectableType type) {
+		if (type == CollectableType.Sword) {
 			hasSword = true;
+			GlobalRoomChange.hasSword = hasSword;
 		}
-		else if (type == CollectableType.Dash)
-		{
+		else if (type == CollectableType.Dash) {
 			hasDash = true;
+			GlobalRoomChange.hasDash = hasDash;
 		}
-		else if (type == CollectableType.Walljump)
-		{
+		else if (type == CollectableType.Walljump) {
 			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
+			GlobalRoomChange.hasWalljump = hasWalljump;
 		}
 	}
 
@@ -423,5 +441,8 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-
+	public void SetCheckpoint(Vector2 globalPos) {
+		respawnPoint = globalPos;
+		GD.Print("Respawn Set");
+	}
 }

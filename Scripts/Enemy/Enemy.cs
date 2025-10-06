@@ -17,6 +17,9 @@ public partial class Enemy : CharacterBody2D
 	private Vector2 _rightLimit;
 	private bool _movingRight = true;
 	private bool _inHitBox = false;
+	
+	private CpuParticles2D bloodEmitter;
+	private CpuParticles2D sparkEmitter;
 
 	public override void _Ready()
 	{
@@ -34,6 +37,9 @@ public partial class Enemy : CharacterBody2D
 		var hitBox = GetNode<Area2D>("HitBox");
 		hitBox.BodyEntered += OnHitBoxBodyEntered;   // Physics bodies
 		hitBox.AreaEntered += OnHitBoxAreaEntered;   // Areas
+		
+		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
+		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -67,13 +73,17 @@ public partial class Enemy : CharacterBody2D
 	{
 		_currentHealth -= amount;
 		GD.Print($"Health: {_currentHealth}");
-		if (_currentHealth <= 0)
-			Die();
+		bloodEmitter.Restart();
+		sparkEmitter.Restart();
+		CheckDeath();
 	}
 
-	private void Die()
-	{
-		QueueFree(); // Remove enemy from scene
+	private async void CheckDeath() {
+		if (_currentHealth <= 0) {
+			_sprite.Visible = false;
+			await ToSignal(bloodEmitter, "finished");
+			QueueFree(); // Remove enemy from scene
+		}
 	}
 
 	// Called when the player enters the enemy's hitbox
