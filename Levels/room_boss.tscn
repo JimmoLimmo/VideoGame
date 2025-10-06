@@ -169,9 +169,9 @@ scroll_scale = Vector2(0.8, 0.8)
 
 [node name="BackgroundBlur" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y5lni")
-offset_left = -774.0
+offset_left = -775.0
 offset_top = -490.0
-offset_right = 2868.0
+offset_right = 2867.0
 offset_bottom = 1625.0
 color = Color(1, 1, 1, 0)
 
@@ -179,6 +179,11 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("3_8pjpn")]
 position = Vector2(1828, 1036)
+hasWalljump = true
+DashSpeed = 1200.0
+DashDuration = 0.15
+hasDash = true
+hasSword = true
 HudPath = NodePath("../Hud")
 
 [node name="Boss" parent="." instance=ExtResource("14_pfkkc")]
