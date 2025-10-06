@@ -23,18 +23,18 @@ public partial class Player : CharacterBody2D
 	[Export] public float WallSlideSpeed = 100.0f; // Speed of sliding down a wall
 	[Export] public float WallJumpForce = 600.0f; // Force applied when jumping off a wall
 	private float CurrentWallSlideSpeed = 980.0f; //
-	private bool hasWalljump = false;
+	[Export] private bool hasWalljump = false;
 
 	// Dash Settings
-	[Export] public float DashSpeed = 400.0f; // Speed during dash
+	[Export] public float DashSpeed = 1200.0f; // Speed during dash
 	[Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
 	[Export] public float DashCooldown = 0.5f; // Cooldown time between dashes
-	private bool hasDash = false;
+	[Export] private bool hasDash = false;
 
 	// Attack Variables
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
-	private bool hasSword = false;
+	[Export] private bool hasSword = false;
 
 	// Health Variables
 	private int _hp = 5;
@@ -64,7 +64,8 @@ public partial class Player : CharacterBody2D
 	// Initialization
 	public override void _Ready()
 	{
-		if(GlobalRoomChange.Activate) {
+		if (GlobalRoomChange.Activate)
+		{
 			GlobalPosition = GlobalRoomChange.PlayerPos;
 			if (GlobalRoomChange.PlayerJumpOnEnter) Velocity = new Vector2(0, JumpVelocity);
 			hasSword = GlobalRoomChange.hasSword;
@@ -72,9 +73,9 @@ public partial class Player : CharacterBody2D
 			hasWalljump = GlobalRoomChange.hasWalljump;
 			GlobalRoomChange.Activate = false;
 		}
-		
+
 		respawnPoint = Position;
-		
+
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
@@ -85,7 +86,7 @@ public partial class Player : CharacterBody2D
 		_hud = GetNodeOrNull<HUD>(HudPath);
 		if (_hud == null)
 			GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
-			
+
 		fade = GetNode<ScreenFader>("../ScreenFade");
 
 		// Defer HUD sync so HUD._Ready() has time to build its UI
@@ -200,18 +201,25 @@ public partial class Player : CharacterBody2D
 
 
 	// Jump Logic
-	private void HandleJump() {
-		if(IsOnFloor()) {
-			if (Input.IsActionJustPressed("jump")) {
+	private void HandleJump()
+	{
+		if (IsOnFloor())
+		{
+			if (Input.IsActionJustPressed("jump"))
+			{
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
-			} 
-		} else {
-			if(Input.IsActionJustReleased("jump")) {
+			}
+		}
+		else
+		{
+			if (Input.IsActionJustReleased("jump"))
+			{
 				Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 			}
 		}
-		
-		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
+
+		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump"))
+		{
 			// Jump away from the wall with a strong horizontal push
 			int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
@@ -403,16 +411,20 @@ public partial class Player : CharacterBody2D
 		await fade.FadeIn(0.25f);
 	}
 
-	public void OnCollect(CollectableType type) {
-		if (type == CollectableType.Sword) {
+	public void OnCollect(CollectableType type)
+	{
+		if (type == CollectableType.Sword)
+		{
 			hasSword = true;
 			GlobalRoomChange.hasSword = hasSword;
 		}
-		else if (type == CollectableType.Dash) {
+		else if (type == CollectableType.Dash)
+		{
 			hasDash = true;
 			GlobalRoomChange.hasDash = hasDash;
 		}
-		else if (type == CollectableType.Walljump) {
+		else if (type == CollectableType.Walljump)
+		{
 			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
 			GlobalRoomChange.hasWalljump = hasWalljump;
@@ -441,7 +453,8 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	public void SetCheckpoint(Vector2 globalPos) {
+	public void SetCheckpoint(Vector2 globalPos)
+	{
 		respawnPoint = globalPos;
 		GD.Print("Respawn Set");
 	}
