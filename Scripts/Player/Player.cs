@@ -9,26 +9,25 @@ public partial class Player : CharacterBody2D
 	public const float JumpVelocity = -1000.0f;
 
 	// Movement Variables
-	private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
-	private bool _isDashing = false; // Whether the player is currently dashing
-	private bool _hasAirDashed = false; // Tracks if the player has dashed in the air
-	private bool _isWallSliding = false; // Tracks if the player is sliding on a wall
-	private float _dashTimer = 0f; // Tracks remaining dash time
-	private float _dashCooldownTimer = 0f; // Tracks cooldown time
-	[Export] public float WallJumpLockTime = 0.1f; // lock duration in seconds
+	private Vector2 _dashDirection = Vector2.Zero;
+	private bool _isDashing = false;
+	private bool _hasAirDashed = false;
+	private bool _isWallSliding = false;
+	private float _dashTimer = 0f;
+	private float _dashCooldownTimer = 0f;
+	[Export] public float WallJumpLockTime = 0.1f;
 	private float _wallJumpLockTimer = 0f;
 
-
 	// Wall Slide Settings
-	[Export] public float WallSlideSpeed = 100.0f; // Speed of sliding down a wall
-	[Export] public float WallJumpForce = 600.0f; // Force applied when jumping off a wall
-	private float CurrentWallSlideSpeed = 980.0f; //
+	[Export] public float WallSlideSpeed = 100.0f;
+	[Export] public float WallJumpForce = 600.0f;
+	private float CurrentWallSlideSpeed = 980.0f;
 	[Export] private bool hasWalljump = false;
 
 	// Dash Settings
-	[Export] public float DashSpeed = 1200.0f; // Speed during dash
-	[Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
-	[Export] public float DashCooldown = 0.5f; // Cooldown time between dashes
+	[Export] public float DashSpeed = 1200.0f;
+	[Export] public float DashDuration = 0.2f;
+	[Export] public float DashCooldown = 0.5f;
 	[Export] private bool hasDash = false;
 
 	// Attack Variables
@@ -41,8 +40,7 @@ public partial class Player : CharacterBody2D
 	private bool _isDead = false;
 
 	// Node Paths
-	[Export] public NodePath SwordPath { get; set; } // Assign in Inspector
-	[Export] public NodePath HudPath { get; set; } // Assign in Inspector
+	[Export] public NodePath SwordPath { get; set; }
 
 	// Node References
 	private AnimationPlayer _anim;
@@ -51,11 +49,11 @@ public partial class Player : CharacterBody2D
 	private HUD _hud;
 	private ScreenFader fade;
 
-	// Damage Handling Crap
-	[Export] public float InvulnTime = 0.6f;     // seconds of invulnerability
-	[Export] public float HitstunTime = 0.15f;   // time you can't control the player
-	[Export] public float KnockbackForce = 260f; // pixels/sec knockback speed
-	[Export] public float KnockbackUpward = 120f;// upward component
+	// Damage Handling
+	[Export] public float InvulnTime = 0.6f;
+	[Export] public float HitstunTime = 0.15f;
+	[Export] public float KnockbackForce = 260f;
+	[Export] public float KnockbackUpward = 120f;
 	private bool _invulnerable = false;
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
@@ -83,13 +81,11 @@ public partial class Player : CharacterBody2D
 		if (_sword == null)
 			GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
 
-		_hud = GetNodeOrNull<HUD>(HudPath);
-		if (_hud == null)
-			GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
+		_hud = GetNode<HUD>("/root/HUD");
 
 		fade = GetNode<ScreenFader>("../ScreenFade");
 
-		// Defer HUD sync so HUD._Ready() has time to build its UI
+		// Defer HUD sync so HUD._Ready() builds first
 		CallDeferred(nameof(SyncHud));
 
 		var hazardBox = GetNode<Area2D>("player");
@@ -100,14 +96,12 @@ public partial class Player : CharacterBody2D
 
 	private void SyncHud()
 	{
-		_hud ??= GetNodeOrNull<HUD>(HudPath);
 		if (_hud == null)
 		{
-			GD.PushError($"[Player] Could not sync HUD; node still null at '{HudPath}'.");
+			GD.PushError("[Player] Could not find HUD autoload.");
 			return;
 		}
 
-		// Clamp to HUD capacity and apply initial value
 		_hp = Mathf.Min(_hp, _hud.MaxMasks);
 		_hud.SetHealth(_hp);
 	}
@@ -115,10 +109,9 @@ public partial class Player : CharacterBody2D
 	// Physics Process
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_isDead) return; // Disable controls if dead
+		if (_isDead) return;
 
 		_wallJumpLockTimer = Mathf.Max(0f, _wallJumpLockTimer - (float)delta);
-
 		HandleDashCooldown(delta);
 
 		if (_isDashing)
@@ -133,24 +126,21 @@ public partial class Player : CharacterBody2D
 		if (_isWallSliding && !_isDashing)
 			HandleWallSlide(delta);
 
-		HandleJump();         // Allow jumping regardless of dash
-		HandleDashInput();    // Still process new dash input
-		HandleAttack(delta);  // Allow attacking mid-air or mid-dash
-		HandleAnimations();   // Update animation
+		HandleJump();
+		HandleDashInput();
+		HandleAttack(delta);
+		HandleAnimations();
 
-		// decrement timers
 		if (_invulnerable)
 		{
 			_invulnTimer -= (float)delta;
 			if (_invulnTimer <= 0f)
 			{
 				_invulnerable = false;
-				_sprite.SelfModulate = Colors.White; // stop flicker
+				_sprite.SelfModulate = Colors.White;
 			}
 			else
 			{
-				// simple flicker (toggle alpha)
-				// 10 Hz blink:
 				bool on = ((int)(Time.GetTicksMsec() / 100) % 2) == 0;
 				_sprite.SelfModulate = new Color(1, 1, 1, on ? 0.5f : 1f);
 			}
@@ -159,27 +149,22 @@ public partial class Player : CharacterBody2D
 		if (_hitstunTimer > 0f)
 		{
 			_hitstunTimer -= (float)delta;
-
-			// During hitstun: no input, just apply gravity and keep current Velocity
 			Vector2 v = Velocity;
 			if (!IsOnFloor()) v += GetGravity() * (float)delta;
 			Velocity = v;
 			MoveAndSlide();
-			return; // skip normal controls this frame
+			return;
 		}
-
 	}
 
-	// Movement Logic
+	// Movement
 	private void HandleMovement(double delta)
 	{
-		// Respect wall-jump input lock
 		float inputX = (_wallJumpLockTimer > 0f)
 			? 0f
 			: Input.GetAxis("move_left", "move_right");
 
 		Vector2 velocity = Velocity;
-
 		if (!IsOnFloor() && !_isWallSliding)
 			velocity += GetGravity() * (float)delta;
 
@@ -199,45 +184,36 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-
-	// Jump Logic
+	// Jump
 	private void HandleJump()
 	{
 		if (IsOnFloor())
 		{
 			if (Input.IsActionJustPressed("jump"))
-			{
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
-			}
 		}
 		else
 		{
 			if (Input.IsActionJustReleased("jump"))
-			{
 				Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
-			}
 		}
 
 		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump"))
 		{
-			// Jump away from the wall with a strong horizontal push
-			int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
+			int dir = _sprite.FlipH ? 1 : -1;
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
-
-			// Start input lock so holding into wall doesn’t cancel this
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
 		}
 		else if (_isDashing && Input.IsActionJustPressed("jump"))
 		{
-			// Preserve momentum when jumping during a dash
 			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-			_isDashing = false; // End the dash
-			_dashTimer = 0f; // Reset the dash timer
+			_isDashing = false;
+			_dashTimer = 0f;
 		}
 	}
 
-	// Dash Logic
+	// Dash
 	private void HandleDashCooldown(double delta)
 	{
 		if (_dashCooldownTimer > 0f)
@@ -249,11 +225,10 @@ public partial class Player : CharacterBody2D
 		_dashTimer -= (float)delta;
 		if (_dashTimer <= 0f || !Input.IsActionPressed("dash"))
 		{
-			_isDashing = false; // End the dash
+			_isDashing = false;
 		}
 		else
 		{
-			// Only apply dash velocity if the player is still dashing
 			Velocity = _dashDirection * DashSpeed;
 			MoveAndSlide();
 		}
@@ -265,16 +240,13 @@ public partial class Player : CharacterBody2D
 		{
 			if (IsOnWall() && !IsOnFloor())
 			{
-				// Dash up the wall at a controlled speed
 				Vector2 upIntoWall = new Vector2((_sprite.FlipH ? -1 : 1) * 0.2f, -1f).Normalized();
 				StartDash(upIntoWall);
-
 			}
 			else if (IsOnFloor() || !_hasAirDashed)
 			{
 				StartDash(Input.GetVector("move_left", "move_right", "ui_up", "ui_down"));
-				if (!IsOnFloor())
-					_hasAirDashed = true; // Mark air dash as used
+				if (!IsOnFloor()) _hasAirDashed = true;
 			}
 		}
 	}
@@ -282,27 +254,21 @@ public partial class Player : CharacterBody2D
 	private void StartDash(Vector2 direction)
 	{
 		if (direction == Vector2.Zero)
-			direction = _sprite.FlipH ? Vector2.Left : Vector2.Right; // Default to facing direction
+			direction = _sprite.FlipH ? Vector2.Left : Vector2.Right;
 
 		_isDashing = true;
 		_dashTimer = DashDuration;
 		_dashCooldownTimer = DashCooldown;
-
-		// Scale the dash speed for wall dashing
 		_dashDirection = direction.Normalized();
-		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f); // Reduce speed for wall dashing
-
-		// _anim.Play("Dash"); // Play dash animation
+		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f);
 	}
 
-	// Wall Slide Logic
+	// Wall Slide
 	private void HandleWallSlide(double delta)
 	{
 		if (IsOnWall() && !IsOnFloor())
 		{
 			_isWallSliding = true;
-
-			// Stick to the wall and slide down slowly
 			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, CurrentWallSlideSpeed));
 		}
 		else
@@ -311,21 +277,21 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	// Attack Logic
+	// Attack
 	private void HandleAttack(double delta)
 	{
 		_attackTimer -= (float)delta;
 		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword)
 		{
 			_attackTimer = AttackCooldown;
-			_anim.Play("Sword"); // Animation calls AttackStart/AttackEnd
+			_anim.Play("Sword");
 		}
 	}
 
 	public void AttackStart() => _sword?.EnableHitbox();
 	public void AttackEnd() => _sword?.DisableHitbox();
 
-	// Animation Logic
+	// Animation
 	private void HandleAnimations()
 	{
 		if (_anim.CurrentAnimation != "Sword" || !_anim.IsPlaying())
@@ -339,10 +305,10 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	// Health Logic
+	// Health
 	public void TakeDamage(int dmg)
 	{
-		if (_isDead) return; // Ignore damage if already dead
+		if (_isDead) return;
 
 		_hp = Mathf.Max(0, _hp - dmg);
 		_hud?.SetHealth(_hp);
@@ -361,16 +327,11 @@ public partial class Player : CharacterBody2D
 
 	public void Die()
 	{
-		if (_isDead) return; // Prevent multiple death triggers
+		if (_isDead) return;
 		_isDead = true;
 
-		// Play the "Dead" animation
 		_anim.Play("Dead");
-
-		// Disable player controls
 		SetPhysicsProcess(false);
-
-		// Optionally, trigger a game-over sequence after the animation finishes
 		_anim.Connect("animation_finished", new Callable(this, nameof(OnDeathAnimationFinished)));
 	}
 
@@ -378,24 +339,20 @@ public partial class Player : CharacterBody2D
 	{
 		if (animName == "Dead")
 		{
-			// Trigger game-over logic (e.g., restart level, show game-over screen)
 			GD.Print("Game Over!");
-			GetTree().Paused = true; // Pause the game
+			GetTree().Paused = true;
 		}
 	}
 
-	// Reset States on Ground or Wall Contact
 	public override void _Process(double delta)
 	{
 		if (IsOnFloor())
-		{
-			_hasAirDashed = false; // Reset air dash when touching the ground
-		}
+			_hasAirDashed = false;
 
 		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing)
 		{
-			_isWallSliding = true;  // Enable wall sliding when touching a wall
-			_hasAirDashed = false;  // Reset air dash when touching a wall
+			_isWallSliding = true;
+			_hasAirDashed = false;
 		}
 		else if (!IsOnWall() || IsOnFloor())
 		{
@@ -435,21 +392,16 @@ public partial class Player : CharacterBody2D
 	{
 		if (_isDead || _invulnerable) return;
 
-		// 1) take damage
 		TakeDamage(dmg);
-
-		// 2) start i-frames + hitstun
 		_invulnerable = true;
 		_invulnTimer = InvulnTime;
 		_hitstunTimer = HitstunTime;
 
-		// 3) compute knockback (away from source, with a bit of upward kick)
 		Vector2 dir = (GlobalPosition - sourceGlobalPos).Normalized();
 		Vector2 kb = new Vector2(dir.X, 0).Normalized() * KnockbackForce;
-		kb.Y = -Mathf.Abs(KnockbackUpward); // negative = up
+		kb.Y = -Mathf.Abs(KnockbackUpward);
 		Velocity = kb;
 
-		// optional: immediately slide once so it feels snappy
 		MoveAndSlide();
 	}
 

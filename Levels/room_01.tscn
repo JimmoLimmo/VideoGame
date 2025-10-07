@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=4 uid="uid://blemgugjlqkjd"]
+[gd_scene load_steps=31 format=4 uid="uid://db4xhdqqynqbe"]
 
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="1_bkybe"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_dkn8l"]
