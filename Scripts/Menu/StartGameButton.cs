@@ -1,20 +1,20 @@
 using Godot;
-using System;
 
 public partial class StartGameButton : Button
 {
-    [Export] PackedScene sceneToSwtichTo;
+    [Export] private PackedScene sceneToSwtichTo;
 
     public override void _Ready()
     {
-        Pressed += onStartGameButtonPressed;
+        Pressed += OnStartGameButtonPressed;
     }
 
-    private void onStartGameButtonPressed()
+    private void OnStartGameButtonPressed()
     {
-        if (GetParent().GetParent() is MenuTab menuTab)
-        {
-            menuTab.loadSceneRequest(sceneToSwtichTo);
-        }
+        if (sceneToSwtichTo == null) return;
+
+        var tree = GetTree();
+        tree.Paused = false;                      // make sure we leave the title unpaused
+        tree.ChangeSceneToPacked(sceneToSwtichTo); // REPLACE the scene instead of AddChild
     }
 }
