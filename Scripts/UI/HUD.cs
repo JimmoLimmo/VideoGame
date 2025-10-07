@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class HUD : CanvasLayer
 {
@@ -16,15 +17,46 @@ public partial class HUD : CanvasLayer
 	private HBoxContainer _healthBox;
 	private readonly List<TextureRect> _maskIcons = new();
 
-	public override void _Ready()
+	public override async void _Ready()
 	{
-		_healthBox = GetNode<HBoxContainer>(HealthBoxPath);
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
+		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath)
+			?? FindChild("Health", true, false) as HBoxContainer;
+
+		if (_healthBox == null)
+		{
+			GD.PushError("[HUD] ERROR: Health container not found.");
+			return;
+		}
+
+		GD.Print($"[HUD] Initialized. Found {_healthBox.GetPath()}");
 		BuildMaskRow(MaxMasks);
-		SetHealth(MaxMasks); // start full
+		SetHealth(MaxMasks);
+
+		// Apply correct visibility for the starting scene
+		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
+	}
+
+	public void UpdateVisibilityFromGroup(RoomGroup group)
+	{
+		switch (group)
+		{
+			case RoomGroup.Title:
+				Visible = false;
+				break;
+			case RoomGroup.Overworld:
+			case RoomGroup.Boss:
+				Visible = true;
+				break;
+		}
+		GD.Print($"[HUD] Visibility updated for group: {group} -> Visible={Visible}");
 	}
 
 	private void BuildMaskRow(int count)
 	{
+		if (_healthBox == null) return;
+
 		foreach (var child in _healthBox.GetChildren())
 			(child as Node)?.QueueFree();
 		_maskIcons.Clear();
@@ -34,42 +66,46 @@ public partial class HUD : CanvasLayer
 			var icon = new TextureRect
 			{
 				StretchMode = TextureRect.StretchModeEnum.Scale,
-				CustomMinimumSize = new Vector2(28, 28), // tweak for your art
+				CustomMinimumSize = new Vector2(28, 28),
 				Size = new Vector2(size, size),
-				Texture = MaskEmpty
+				Texture = MaskEmpty,
+				MouseFilter = Control.MouseFilterEnum.Ignore
 			};
-			icon.MouseFilter = Control.MouseFilterEnum.Ignore;
 			_healthBox.AddChild(icon);
 			_maskIcons.Add(icon);
 		}
 	}
 
-public void SetHealth(int current)
-{
-	current = Mathf.Clamp(current, 0, MaxMasks);
-	if (_maskIcons.Count != MaxMasks)
-		BuildMaskRow(MaxMasks);
+	public void SetHealth(int current)
+	{
+		if (_healthBox == null) return;
 
-	for (int i = 0; i < MaxMasks; i++) {
-		_maskIcons[i].Texture = (i < current) ? MaskFull : MaskEmpty;
-		_maskIcons[i].Size = new Vector2(size, size);
+		current = Mathf.Clamp(current, 0, MaxMasks);
+		if (_maskIcons.Count != MaxMasks)
+			BuildMaskRow(MaxMasks);
+
+		for (int i = 0; i < MaxMasks; i++)
+		{
+			_maskIcons[i].Texture = (i < current) ? MaskFull : MaskEmpty;
+			_maskIcons[i].Size = new Vector2(size, size);
+		}
 	}
-}
-
 
 	public async void FlashDamage()
 	{
+		if (_healthBox == null) return;
+
 		var tween = CreateTween();
 		var baseMod = _healthBox.Modulate;
 		tween.TweenProperty(_healthBox, "modulate", new Color(1, 0.4f, 0.4f, 1), 0.05f);
 		tween.TweenProperty(_healthBox, "modulate", baseMod, 0.15f);
 		await ToSignal(tween, Tween.SignalName.Finished);
 	}
+
 	public void RebuildAndSet(int max, int current)
 	{
 		MaxMasks = max;
 		BuildMaskRow(MaxMasks);
 		SetHealth(current);
 	}
-
 }
