@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d30vj7qfwl6uj"]
 
 [ext_resource type="FontFile" uid="uid://d2hia3xtij0yu" path="res://Font/TIMES.TTF" id="1_73ird"]
-[ext_resource type="Texture2D" uid="uid://b6vsqjiappifj" path="res://missing_texture.png" id="1_m2pj5"]
+[ext_resource type="Texture2D" path="res://missing_texture.png" id="1_m2pj5"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_m2pj5"]
 font = ExtResource("1_73ird")
