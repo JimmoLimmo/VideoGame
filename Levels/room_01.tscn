@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=4 uid="uid://db4xhdqqynqbe"]
+[gd_scene load_steps=28 format=4 uid="uid://db4xhdqqynqbe"]
 
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="1_bkybe"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_dkn8l"]
@@ -8,9 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="8_y5lni"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_rntpy"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="10_2g3pj"]
-[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="11_ykuuq"]
-[ext_resource type="Texture2D" uid="uid://wvuujjx2gcte" path="res://Sprites/UI/Gear_Health.png" id="12_wlflr"]
-[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="13_i48qr"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_wlflr"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_i48qr"]
 
@@ -182,7 +179,6 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("8_y5lni")]
 position = Vector2(896, 1049)
-HudPath = NodePath("../Hud")
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -296,9 +292,6 @@ shape = SubResource("RectangleShape2D_ykuuq")
 
 [node name="Hud" parent="." instance=ExtResource("10_2g3pj")]
 visible = false
-script = ExtResource("11_ykuuq")
-MaskFull = ExtResource("12_wlflr")
-MaskEmpty = ExtResource("13_i48qr")
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("14_wlflr")]
 

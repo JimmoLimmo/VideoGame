@@ -1,16 +1,13 @@
-[gd_scene load_steps=34 format=4 uid="uid://dk01o0xsh57wl"]
+[gd_scene load_steps=31 format=4 uid="uid://dk01o0xsh57wl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
-[ext_resource type="PackedScene" uid="uid://c1kbf658k3yb" path="res://Scenes/Player/Player.tscn" id="3_vi02f"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_wdo57"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_ea4ct"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_2s52b"]
-[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="9_x3h4u"]
-[ext_resource type="Texture2D" uid="uid://wvuujjx2gcte" path="res://Sprites/UI/Gear_Health.png" id="10_ah08c"]
-[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="11_yrm54"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_vqukl"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_jerea"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="14_beo6d"]
@@ -203,7 +200,6 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("3_vi02f")]
 position = Vector2(-140, -106)
-HudPath = NodePath("../Hud")
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -334,10 +330,7 @@ texture = SubResource("GradientTexture2D_ofyad")
 
 [node name="Hud" parent="." instance=ExtResource("8_2s52b")]
 visible = false
-script = ExtResource("9_x3h4u")
 size = 50
-MaskFull = ExtResource("10_ah08c")
-MaskEmpty = ExtResource("11_yrm54")
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("12_vqukl")]
 
