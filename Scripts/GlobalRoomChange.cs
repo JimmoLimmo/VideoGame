@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public enum RoomGroup
 {
-    Title,
-    Overworld,
-    Boss
+	Title,
+	Overworld,
+	Boss
 }
 
 public partial class GlobalRoomChange : Node
