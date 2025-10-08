@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 public partial class Player : CharacterBody2D {
 	// Constants
 	public const float Speed = 700.0f;
-	public const float JumpVelocity = -1250.0f;
+	public const float JumpVelocity = -1500.0f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero;

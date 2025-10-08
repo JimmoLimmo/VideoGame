@@ -1,49 +1,63 @@
-[gd_scene load_steps=43 format=4 uid="uid://dvltqe00uspnr"]
+[gd_scene load_steps=37 format=4 uid="uid://x32noqlfbc2m"]
 
-[ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_iu71e"]
-[ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_kum27"]
-[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="3_1nl82"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="5_gvkpr"]
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="5_kum27"]
-[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_we7oa"]
-[ext_resource type="Shader" uid="uid://cpw60ms6btn2x" path="res://Scripts/Shader/blurTextureRect.gdshader" id="7_sseqj"]
-[ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="8_yxq45"]
-[ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_xf327"]
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="10_aqq4m"]
-[ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="11_bamjl"]
-[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="12_mbv8v"]
-[ext_resource type="PackedScene" uid="uid://c17p6nhy8jnwb" path="res://Scenes/Environment/SmallGear.tscn" id="13_iu71e"]
-[ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="13_y3o10"]
-[ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="15_1nl82"]
+[ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_6rrfu"]
+[ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_eqk5l"]
+[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="3_emd5a"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="6_p6njx"]
+[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="9_6v2ye"]
+[ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="12_2nqbu"]
+[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="13_5hn0a"]
+[ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
+[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_2cv0m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2a0kd"]
-size = Vector2(3585, 0)
+size = Vector2(0, 3542)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lybi4"]
-shader = ExtResource("2_kum27")
+shader = ExtResource("2_eqk5l")
 shader_parameter/blur_power = 0.08
 shader_parameter/iterations = 100.0
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_alaxt"]
+polygon = PackedVector2Array(191.736, -64.4628, 191.797, 191.797, -62, 191, -64, -64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_pvlks"]
+polygon = PackedVector2Array(191.736, -64.4628, 191.797, 191.797, -62, 191, -64, -64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ojjet"]
+polygon = PackedVector2Array(64, -64, 64.7713, 191.615, -62, 191, -64, -64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_3iqsu"]
+polygon = PackedVector2Array(-64, -64, 191.615, -64.7713, 191, 62, -64, 64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_3u35w"]
+polygon = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hty6v"]
-texture = ExtResource("5_gvkpr")
+texture = ExtResource("6_p6njx")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(-64, -64)
+0:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_alaxt")
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
 2:0/size_in_atlas = Vector2i(2, 2)
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(-64, -64)
+2:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_pvlks")
 2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
 4:0/size_in_atlas = Vector2i(1, 2)
 4:0/0 = 0
 4:0/0/texture_origin = Vector2i(0, -64)
+4:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_ojjet")
 4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.8498, 192.089, -63.8498, 191.909)
 5:1/0 = 0
+5:1/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_3u35w")
 5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 5:0/size_in_atlas = Vector2i(2, 1)
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(-64, 0)
+5:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_3iqsu")
 5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 191.816, -64.0448, 191.816, 64.3634, -64, 64)
 0:4/size_in_atlas = Vector2i(1, 2)
 0:4/0 = 0
@@ -51,11 +65,12 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_si834"]
 tile_size = Vector2i(128, 128)
+occlusion_layer_0/light_mask = 1
 physics_layer_0/collision_layer = 1
 sources/2 = SubResource("TileSetAtlasSource_hty6v")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iu71e"]
-texture = ExtResource("5_gvkpr")
+texture = ExtResource("6_p6njx")
 texture_region_size = Vector2i(128, 128)
 8:4/size_in_atlas = Vector2i(2, 1)
 8:4/0 = 0
@@ -69,7 +84,7 @@ physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_iu71e")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1noiq"]
-texture = ExtResource("5_gvkpr")
+texture = ExtResource("6_p6njx")
 texture_region_size = Vector2i(128, 128)
 0:2/0 = 0
 1:3/0 = 0
@@ -137,12 +152,6 @@ fill = 2
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_e7dl4"]
-size = Vector2(27, 519)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1nl82"]
-size = Vector2(169, 519)
-
 [sub_resource type="Gradient" id="Gradient_y5lni"]
 offsets = PackedFloat32Array(0.0188679, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
@@ -178,49 +187,27 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_u616v"]
-shader = ExtResource("7_sseqj")
-shader_parameter/blur_power = 0.0
-shader_parameter/iterations = 100.0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1hv4j"]
-texture = ExtResource("8_yxq45")
-texture_region_size = Vector2i(128, 128)
-0:4/0 = 0
-0:3/0 = 0
-0:2/0 = 0
-0:1/0 = 0
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-4:0/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_cacw8"]
-tile_size = Vector2i(128, 128)
-sources/0 = SubResource("TileSetAtlasSource_1hv4j")
-
 [node name="Room03" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -535.0
-offset_top = -1521.0
-offset_right = 8238.0
-offset_bottom = 1238.0
+offset_left = -630.0
+offset_top = -1122.0
+offset_right = 3926.0
+offset_bottom = 5224.0
 scale = Vector2(0.78, 0.835)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
 [node name="CharacterCamera" type="Camera2D" parent="."]
 position = Vector2(1149, -472)
 zoom = Vector2(0.75, 0.75)
-script = ExtResource("1_iu71e")
+script = ExtResource("1_6rrfu")
 playerPath = NodePath("../Player")
 boundsPath = NodePath("../CameraBounds/CameraCollsion")
 
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(2943.5, -474)
+position = Vector2(1098, 1530)
 shape = SubResource("RectangleShape2D_2a0kd")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -235,35 +222,16 @@ offset_right = 2147.0
 offset_bottom = 1138.0
 color = Color(1, 1, 1, 0)
 
-[node name="Player" parent="." instance=ExtResource("3_1nl82")]
-position = Vector2(3244, -177)
-
-[node name="Enemy" parent="." instance=ExtResource("5_kum27")]
-position = Vector2(3762, -89)
-Speed = 400.0
-LeftLimitPath = NodePath("LeftLimit")
-RightLimitPath = NodePath("RightLimit")
-
-[node name="LeftLimit" type="Marker2D" parent="Enemy"]
-position = Vector2(-814.008, 40)
-
-[node name="RightLimit" type="Marker2D" parent="Enemy"]
-position = Vector2(816, 26.6667)
-
-[node name="FactoryCrusher" parent="." instance=ExtResource("13_y3o10")]
-position = Vector2(2038, -28)
-upDuration = 1.25
-movementTime = 0.125
+[node name="Player" parent="." instance=ExtResource("3_emd5a")]
+position = Vector2(-186, -119)
 
 [node name="MidTiles" type="Node2D" parent="."]
-position = Vector2(1654, 867)
 
 [node name="Ground" type="TileMapLayer" parent="MidTiles"]
-tile_map_data = PackedByteArray("AAAAAPv/AgAEAAAAAADv//n/AgAFAAAAAADw//r/AgAFAAAAAADx//P/AgAFAAAAAADx//n/AgAFAAEAAADy/+//AgAAAAAAAADy//H/AgACAAAAAADy//T/AgAFAAAAAADy//n/AgAEAAAAAADz//n/AgAAAAAAAAD0/+//AgACAAAAAAD1//n/AgAEAAAAAAD2/+//AgAFAAAAAAD2//D/AgAFAAEAAAD2//n/AgAFAAAAAAD2//r/AgAFAAEAAAD3//D/AgAFAAAAAAD3//r/AgAFAAAAAAD4/+//AgAFAAEAAAD4//n/AgAFAAEAAAD5/+//AgACAAAAAAD5//n/AgACAAAAAAD6//v/AgAFAAAAAAD6//z/AgAFAAEAAAD7/+//AgAFAAAAAAD7//D/AgAFAAEAAAD7//n/AgAEAAAAAAD7//z/AgAFAAAAAAD8//D/AgAFAAAAAAD8//v/AgAFAAEAAAD9/+//AgAFAAAAAAD9//v/AgAEAAAAAAD+//D/AgAFAAAAAAD+//v/AgACAAAAAAD//+//AgAFAAAAAAAAAPD/AgAFAAAAAAAAAPn/AgACAAAAAAABAO//AgAFAAAAAAABAPH/AgAEAAAAAAABAPP/AgAFAAEAAAABAPT/AgAFAAAAAAABAPv/AgAFAAEAAAABAPz/AgAFAAEAAAACAPD/AgACAAAAAAACAPL/AgAAAAAAAAACAPn/AgAAAAAAAAADAO//AgAFAAAAAAADAPT/AgAFAAEAAAAEAPD/AgAEAAAAAAAEAPL/AgAFAAEAAAAEAPP/AgAEAAAAAAAEAPn/AgAFAAEAAAAEAPr/AgAEAAAAAAAEAPz/AgAFAAEAAAAFAO//AgAFAAEAAAAFAPD/AgAFAAAAAAAFAPn/AgAEAAAAAAAFAPv/AgAFAAAAAAAFAPz/AgAFAAEAAAAGAO//AgAFAAAAAAAGAPz/AgAFAAAAAAAHAPD/AgAFAAAAAAAHAPv/AgAFAAEAAAAIAO//AgAFAAAAAAAIAPv/AgACAAAAAAAIAPz/AgAFAAAAAAAJAPD/AgAFAAAAAAAKAO//AgAFAAAAAAAKAPn/AgAAAAAAAAAKAPv/AgAEAAAAAAALAPD/AgAFAAAAAAALAPz/AgAFAAEAAAAMAO//AgAFAAAAAAANAPD/AgAFAAEAAAAOAO//AgAEAAAAAAAPAO7/AgAEAAAAAAAPAPD/AgAFAAAAAAAQAO//AgAFAAAAAAARAPD/AgAFAAAAAAASAO//AgAFAAAAAAALAPv/AgAFAAEAAAAMAPn/AgACAAAAAAAOAPn/AgAFAAAAAAARAPn/AgAFAAAAAAAQAPn/AgAEAAAAAAAOAPr/AgAFAAEAAAAPAPr/AgAFAAEAAAASAPr/AgAFAAAAAAARAPr/AgAFAAEAAAATAPn/AgAFAAAAAAAVAPn/AgAAAAAAAAAUAPr/AgAFAAEAAAAWAPv/AgAFAAAAAAAVAPz/AgAFAAAAAAAVAPv/AgAFAAEAAAAYAPv/AgAFAAAAAAAaAPv/AgACAAAAAAAbAPn/AgAEAAAAAAAcAPn/AgAFAAAAAAAeAPn/AgAFAAAAAAAdAPr/AgAFAAAAAAAfAPr/AgAFAAAAAAAgAPn/AgAFAAAAAAAhAPr/AgAFAAAAAAAiAPn/AgAFAAEAAAAgAPX/AgAAAAAAAAAiAPb/AgAFAAAAAAAjAPn/AgAEAAAAAAAcAPr/AgAEAAAAAAAXAPz/AgAFAAAAAAAZAPz/AgAFAAEAAAAcAPz/AgAFAAEAAAAgAPP/AgAEAAAAAAAhAPL/AgAEAAAAAAAgAPH/AgAEAAAAAAAeAPD/AgAFAAAAAAAdAO//AgAFAAAAAAAcAPD/AgAFAAAAAAAbAO//AgAFAAAAAAAaAPD/AgAFAAAAAAAZAO//AgAFAAAAAAAZAPD/AgAFAAEAAAAYAO//AgAEAAAAAAAWAPD/AgAFAAAAAAAVAO//AgAFAAAAAAAUAPD/AgAFAAAAAAATAPD/AgAFAAEAAAAUAO//AgAFAAEAAAAXAO//AgAFAAEAAAAgAO//AgACAAAAAAAhAPH/AgAFAAEAAAAfAO//AgAFAAEAAAAhAPT/AgAFAAEAAADx//b/AgAFAAAAAADz//X/AgAEAAAAAADz//P/AgAFAAEAAADw//X/AgAFAAAAAADy//X/AgAFAAEAAADw//b/AgAFAAEAAAA=")
+tile_map_data = PackedByteArray("AAD+/wAAAgAAAAAAAAD//wIAAgAEAAAAAAD+/wMAAgAEAAAAAAD//wQAAgAEAAAAAAD+/wUAAgAEAAAAAAD//wYAAgAEAAAAAAD+/wgAAgAFAAAAAAD//wkAAgAEAAAAAAD+/woAAgAEAAAAAAD+/xEAAgAAAAAAAAD+/wcAAgAFAAEAAAD+/wkAAgAFAAEAAAD//wsAAgAFAAEAAAD+/wIAAgAFAAEAAAD+/xMAAgAFAAAAAAD+/xQAAgAEAAAAAAD//xUAAgAEAAAAAAD+/xYAAgAEAAAAAAD//xcAAgAEAAAAAAD//xkAAgAEAAAAAAD+/xoAAgAEAAAAAAD//xsAAgAEAAAAAAD+/xwAAgAEAAAAAAD//x0AAgAEAAAAAAAAAB4AAgAFAAAAAAABAB8AAgAFAAAAAAACAB4AAgAFAAAAAAADAB8AAgAFAAAAAAAEAB4AAgAFAAAAAAAFAB8AAgAFAAAAAAAGAB4AAgAFAAAAAAAHAB8AAgAFAAAAAAD//x8AAgAFAAAAAAD+/x4AAgAEAAAAAAD+/xkAAgAFAAEAAAD+/xgAAgAFAAEAAAD//xQAAgAFAAEAAAAAABEAAgAFAAAAAAAAABIAAgAFAAEAAAACABsAAgAFAAAAAAAEABsAAgAFAAAAAAAGABsAAgAFAAAAAAAKABgAAgAFAAAAAAAMABgAAgAFAAAAAAAOABgAAgAFAAAAAAAFABUAAgAFAAAAAAAHABUAAgAFAAAAAAAJABUAAgAFAAAAAAAMABEAAgAFAAAAAAACAA4AAgAFAAAAAAAEAA4AAgAFAAAAAAAGAA4AAgAFAAAAAAAIAAsAAgAFAAAAAAAKAAsAAgAFAAAAAAAMAAsAAgAFAAAAAAAEAAgAAgAFAAAAAAAGAAgAAgAFAAAAAAAIAAgAAgAFAAAAAAABAAUAAgAFAAAAAAADAAUAAgAFAAAAAAAFAAUAAgAFAAAAAAAKAAIAAgAFAAAAAAAMAAIAAgAFAAAAAAAJABIAAgAFAAAAAAALABIAAgAFAAAAAAAOABEAAgAFAAAAAAABABIAAgAFAAAAAAAHAA8AAgAFAAAAAAAJAAMAAgAFAAAAAAAIAB4AAgAFAAEAAAAJAB4AAgACAAAAAAALAB8AAgAFAAAAAAANAB8AAgAFAAAAAAAMAB4AAgAFAAAAAAALAB4AAgAFAAEAAAAOAB4AAgAFAAAAAAAQAB4AAgAEAAAAAAAPAB8AAgAFAAEAAAASABoAAgACAAAAAAARAB4AAgAAAAAAAAATAB4AAgAFAAAAAAATAB8AAgAFAAEAAAAUAB8AAgAFAAAAAAAVAB4AAgAFAAAAAAAWAB8AAgAFAAAAAAAXAB4AAgAFAAEAAAAUABsAAgAFAAAAAAASABgAAgAEAAAAAAATABcAAgAEAAAAAAASABYAAgAEAAAAAAATABUAAgAEAAAAAAASABQAAgAEAAAAAAATABkAAgAFAAEAAAATABQAAgAFAAEAAAASABMAAgAFAAAAAAASABEAAgACAAAAAAASAA8AAgAEAAAAAAATAA4AAgAEAAAAAAASAA0AAgAEAAAAAAATAAwAAgAEAAAAAAASAAsAAgAEAAAAAAATABAAAgAFAAEAAAATAAsAAgAFAAEAAAATAAkAAgAEAAAAAAASAAgAAgAEAAAAAAATAAcAAgAEAAAAAAASAAYAAgAEAAAAAAATAAUAAgAEAAAAAAASAAoAAgAFAAEAAAASAAUAAgAFAAEAAAASAAMAAgACAAAAAAD8/wAAAgAFAAAAAAD9/wEAAgAFAAEAAAD8//3/AgAFAAAAAAD+//z/AgACAAAAAAD9//z/AgAFAAEAAAD///r/AgAEAAAAAAAAAPn/AgAFAAAAAAACAPn/AgAFAAAAAAAEAPn/AgAFAAAAAAAGAPn/AgAFAAAAAAAIAPn/AgAFAAAAAAASAAEAAgAEAAAAAAATAAAAAgAEAAAAAAASAP//AgAEAAAAAAATAAIAAgAFAAEAAAATAP//AgAFAAEAAAATAP7/AgAFAAEAAAASAP3/AgAEAAAAAAATAP3/AgAFAAAAAAASAPz/AgAFAAAAAAASAPr/AgAEAAAAAAAKAPn/AgAFAAAAAAAMAPn/AgAFAAAAAAAOAPn/AgAFAAAAAAAQAPn/AgAFAAAAAAD9//v/AgAFAAAAAAD9//r/AgAFAAAAAAD///j/AgAEAAAAAAABAPj/AgAFAAAAAAADAPj/AgAFAAAAAAAFAPj/AgAFAAAAAAAHAPj/AgAFAAAAAAAJAPj/AgAFAAAAAAALAPj/AgAFAAAAAAANAPj/AgAFAAAAAAAPAPj/AgAFAAAAAAARAPj/AgAFAAAAAAASAPn/AgAFAAAAAAATAPj/AgAFAAEAAAATAPr/AgAFAAAAAAATAPv/AgAFAAEAAAAAAPj/AgAFAAEAAAD+//n/AgAFAAEAAAAOAAIAAgAFAAAAAAAAAAAAAgAFAAAAAAABAAEAAgAFAAAAAAACAAAAAgAFAAAAAAADAAEAAgAFAAAAAAAAAAEAAgAFAAEAAAD+/w0AAgAAAAAAAAD+/wwAAgAFAAAAAAA=")
 tile_set = SubResource("TileSet_si834")
 
 [node name="Damage" type="TileMapLayer" parent="MidTiles"]
-tile_map_data = PackedByteArray("AAD8//r/AAAIAAQAAAD+//r/AAAIAAQAAAAGAPr/AAAIAAQAAAAIAPr/AAAIAAQAAAAXAPr/AAAIAAQAAAAZAPr/AAAIAAQAAAA=")
 tile_set = SubResource("TileSet_kum27")
 
 [node name="DetailBack" type="TileMapLayer" parent="MidTiles"]
@@ -274,13 +242,8 @@ tile_set = SubResource("TileSet_j7rfr")
 
 [node name="Gears" type="Node2D" parent="."]
 
-[node name="SmallGear" parent="Gears" instance=ExtResource("13_iu71e")]
-position = Vector2(2039, 101)
-
-[node name="SmallGear2" parent="Gears" instance=ExtResource("13_iu71e")]
-position = Vector2(2038, -794)
-
 [node name="MidDropoff" type="Node2D" parent="."]
+visible = false
 
 [node name="T" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(2933.9, -1213.84)
@@ -332,46 +295,6 @@ texture = SubResource("GradientTexture2D_y73ib")
 
 [node name="Checkpoints" type="Node2D" parent="."]
 
-[node name="Checkpoint" parent="Checkpoints" instance=ExtResource("15_1nl82")]
-position = Vector2(1766, -174)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint"]
-position = Vector2(0, -116)
-shape = SubResource("RectangleShape2D_e7dl4")
-debug_color = Color(0, 0.621628, 0.291655, 0.42)
-
-[node name="Checkpoint2" parent="Checkpoints" instance=ExtResource("15_1nl82")]
-position = Vector2(2310.05, -174)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint2"]
-position = Vector2(0, -116)
-shape = SubResource("RectangleShape2D_e7dl4")
-debug_color = Color(0, 0.621628, 0.291655, 0.42)
-
-[node name="Checkpoint3" parent="Checkpoints" instance=ExtResource("15_1nl82")]
-position = Vector2(3052.95, -174)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint3"]
-position = Vector2(-13.4451, -116)
-shape = SubResource("RectangleShape2D_1nl82")
-debug_color = Color(0, 0.621628, 0.291655, 0.42)
-
-[node name="Checkpoint4" parent="Checkpoints" instance=ExtResource("15_1nl82")]
-position = Vector2(4466, -173)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint4"]
-position = Vector2(28.0002, -120)
-shape = SubResource("RectangleShape2D_1nl82")
-debug_color = Color(0, 0.621628, 0.291655, 0.42)
-
-[node name="Checkpoint5" parent="Checkpoints" instance=ExtResource("15_1nl82")]
-position = Vector2(5250, -174)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint5"]
-position = Vector2(-13.4451, -116)
-shape = SubResource("RectangleShape2D_1nl82")
-debug_color = Color(0, 0.621628, 0.291655, 0.42)
-
 [node name="Foreground" type="Parallax2D" parent="."]
 scroll_scale = Vector2(1.1, 1.1)
 scroll_offset = Vector2(106, 174)
@@ -385,47 +308,57 @@ rotation = -1.5708
 scale = Vector2(1.9425, 3.36786)
 texture = SubResource("GradientTexture2D_ff12f")
 
-[node name="LeftExit" parent="." instance=ExtResource("6_we7oa")]
-ConnectedRoom = "res://Levels/room_03.tscn"
-PlayerPos = Vector2(2328, -120)
+[node name="LeftExit" parent="." instance=ExtResource("9_6v2ye")]
+ConnectedRoom = "res://Levels/room_04.tscn"
+PlayerPos = Vector2(5926, -148)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
-position = Vector2(-240, -162)
+position = Vector2(-279, -130)
 shape = SubResource("RectangleShape2D_1h5ho")
 
-[node name="RightExit" parent="." instance=ExtResource("6_we7oa")]
-position = Vector2(6226, -122)
-ConnectedRoom = "res://Levels/room_05.tscn"
-PlayerPos = Vector2(-186, -120)
+[node name="LeftMiddleExit" parent="." instance=ExtResource("9_6v2ye")]
+position = Vector2(-87, 2141)
+ConnectedRoom = "res://Levels/room_04.tscn"
+PlayerPos = Vector2(5926, -148)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftMiddleExit"]
+position = Vector2(-146, -93)
+shape = SubResource("RectangleShape2D_1h5ho")
+
+[node name="RightExit" parent="." instance=ExtResource("9_6v2ye")]
+position = Vector2(2552, 3698)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
-position = Vector2(-217, -41)
+position = Vector2(-14, 15)
 shape = SubResource("RectangleShape2D_1h5ho")
 
 [node name="Lighting" type="Node2D" parent="."]
 
 [node name="TopLeftOcclude" type="LightOccluder2D" parent="Lighting"]
+visible = false
 position = Vector2(-251, 385)
 occluder = SubResource("OccluderPolygon2D_8a3ol")
 
 [node name="BottomHalfOcclude" type="LightOccluder2D" parent="Lighting"]
+visible = false
 position = Vector2(-256, 384)
 occluder = SubResource("OccluderPolygon2D_jdm6u")
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(-148, -94.9996)
+position = Vector2(-223, -126.973)
 rotation = 3.14159
-scale = Vector2(10.4947, 5.86323)
+scale = Vector2(10.4947, 4.11408)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light2" type="PointLight2D" parent="Lighting"]
-position = Vector2(5998.21, -128.656)
+position = Vector2(2565, 3741)
 scale = Vector2(8.25647, 4.92674)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Lighting"]
+visible = false
 occluder = SubResource("OccluderPolygon2D_1nl82")
 
 [node name="PointLight2D" type="PointLight2D" parent="Lighting/LightOccluder2D"]
@@ -436,27 +369,14 @@ energy = 0.72
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_h8xti")
 
-[node name="Parallax2D" type="Parallax2D" parent="."]
-scroll_scale = Vector2(1.2, 1.2)
-scroll_offset = Vector2(675, -154)
+[node name="ScreenFade" parent="." instance=ExtResource("12_2nqbu")]
 
-[node name="grayPipe" type="TileMapLayer" parent="Parallax2D"]
-visible = false
-light_mask = 2
-material = SubResource("ShaderMaterial_u616v")
-position = Vector2(-1772.5, -1086.5)
-scale = Vector2(1.1, 1.1)
-tile_map_data = PackedByteArray("AAAQAAIAAAAAAAAAAAARAAIAAAAAAAAAAAASAAIAAAAAAAAAAAATAAIAAAAAAAAAAAAUAAIAAAAAAAAAAAAVAAIAAAAAAAAAAAAWAAIAAAAAAAAAAAAXAAIAAAAAAAAAAAAYAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAOAAIAAAADAAAAAAAOAAMAAAAAAAEAAAAOAAQAAAAAAAEAAAAZAAIAAAAAAAIAAAA=")
-tile_set = SubResource("TileSet_cacw8")
-
-[node name="ScreenFade" parent="." instance=ExtResource("9_xf327")]
-
-[node name="Hud" parent="." instance=ExtResource("10_aqq4m")]
+[node name="Hud" parent="." instance=ExtResource("13_5hn0a")]
 visible = false
 size = 50
 
-[node name="CollectionOverlay" parent="." instance=ExtResource("11_bamjl")]
+[node name="CollectionOverlay" parent="." instance=ExtResource("14_qf33d")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("12_mbv8v")
+stream = ExtResource("15_2cv0m")
 volume_db = -10.306

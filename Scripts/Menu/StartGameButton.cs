@@ -25,6 +25,7 @@ public partial class StartGameButton : Button {
 		// switch scenes
 		tree.ChangeSceneToPacked(sceneToSwitchTo);
 
+		//TODO: Change to something else, not able to find whats needed.
 		// fade back in once new scene has loaded
 		//await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 //

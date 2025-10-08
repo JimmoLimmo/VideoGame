@@ -7,7 +7,7 @@ public partial class Enemy : CharacterBody2D
 	private Sprite2D _sprite;
 
 	[Export] public int MaxHealth = 15;
-	[Export] public float Speed = 100f;
+	[Export] public float Speed = 500f;
 	[Export] public NodePath LeftLimitPath;
 	[Export] public NodePath RightLimitPath;
 	[Export] public int ContactDamage = 1;
@@ -53,7 +53,7 @@ public partial class Enemy : CharacterBody2D
 				_movingRight = false;
 
 			_sprite.FlipH = false;
-			_anim.Play("Walk_right");
+			_anim.Play("Walk");
 		}
 		else
 		{
@@ -62,9 +62,10 @@ public partial class Enemy : CharacterBody2D
 				_movingRight = true;
 
 			_sprite.FlipH = true;
-			_anim.Play("Walk_left");
+			_anim.Play("Walk");
 		}
-
+		
+		if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
 		Velocity = velocity;
 		MoveAndSlide();
 	}
