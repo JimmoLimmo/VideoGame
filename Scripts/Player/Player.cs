@@ -59,6 +59,7 @@ public partial class Player : CharacterBody2D
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
 	private Vector2 respawnPoint;
+	private bool lockPlayer = false;
 
 	// Initialization
 	public override void _Ready()
@@ -110,7 +111,7 @@ public partial class Player : CharacterBody2D
 	// Physics Process
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_isDead) return;
+		if (_isDead || lockPlayer) return; // Disable controls if dead
 
 		_wallJumpLockTimer = Mathf.Max(0f, _wallJumpLockTimer - (float)delta);
 		HandleDashCooldown(delta);
@@ -366,10 +367,12 @@ public partial class Player : CharacterBody2D
 
 	public async void areaHazard(Node2D body)
 	{
+		lockPlayer = true;
 		TakeDamage(1);
 		await fade.FadeOut(0.25f);
 		Position = respawnPoint;
 		await fade.FadeIn(0.25f);
+		lockPlayer = false;
 	}
 
 	public void OnCollect(CollectableType type)
