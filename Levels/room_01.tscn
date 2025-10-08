@@ -178,7 +178,6 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("8_y5lni")]
 position = Vector2(952, 1005)
-hasSword = true
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)

@@ -296,7 +296,7 @@ public partial class Player : CharacterBody2D {
 			}
 		}
 		
-		if(_anim.Cur rentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+		if(_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}
