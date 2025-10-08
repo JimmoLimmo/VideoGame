@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://udqo0mq2cl0d"]
+[gd_scene load_steps=16 format=3 uid="uid://udqo0mq2cl0d"]
 
 [ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_evcib"]
 [ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="1_whvb5"]
@@ -10,6 +10,7 @@ height = 343.333
 
 [sub_resource type="Animation" id="Animation_ude3g"]
 resource_name = "Fall"
+length = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -20,11 +21,12 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [25]
 }
 
 [sub_resource type="Animation" id="Animation_evcib"]
 resource_name = "Idle"
+length = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -37,9 +39,38 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sword/SwordSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
 
-[sub_resource type="Animation" id="Animation_h54ih"]
-resource_name = "Jump"
+[sub_resource type="Animation" id="Animation_t26db"]
+resource_name = "IntoIdle"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [28, 29]
+}
+
+[sub_resource type="Animation" id="Animation_4wape"]
+resource_name = "IntoRun"
+length = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -50,7 +81,39 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [27]
+}
+
+[sub_resource type="Animation" id="Animation_h54ih"]
+resource_name = "Jump"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [22]
+}
+
+[sub_resource type="Animation" id="Animation_jmcll"]
+resource_name = "Peak"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [23]
 }
 
 [sub_resource type="Animation" id="Animation_lgeye"]
@@ -67,6 +130,18 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sword/SwordSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
 
 [sub_resource type="Animation" id="Animation_yn3cd"]
 resource_name = "Run"
@@ -79,17 +154,32 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0667, 0.133333, 0.2, 0.266667, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [7, 8, 9, 10, 11, 12]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sword/SwordSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0666667, 0.133333, 0.2, 0.266667, 0.333333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [6, 7, 8, 9, 10, 11]
+"values": [14, 15, 16, 17, 18, 19]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f4cuq"]
 _data = {
 &"Fall": SubResource("Animation_ude3g"),
 &"Idle": SubResource("Animation_evcib"),
+&"IntoIdle": SubResource("Animation_t26db"),
+&"IntoRun": SubResource("Animation_4wape"),
 &"Jump": SubResource("Animation_h54ih"),
+&"Peak": SubResource("Animation_jmcll"),
 &"RESET": SubResource("Animation_lgeye"),
 &"Run": SubResource("Animation_yn3cd")
 }
@@ -107,12 +197,12 @@ script = ExtResource("1_evcib")
 SwordPath = NodePath("Sword")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -23.3333)
 texture = ExtResource("1_whvb5")
-hframes = 6
-vframes = 2
+hframes = 7
+vframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 26.6667)
 shape = SubResource("CapsuleShape2D_whvb5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -131,12 +221,18 @@ position = Vector2(165, 3.33333)
 shape = SubResource("RectangleShape2D_yn3cd")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
+[node name="SwordSprite" type="Sprite2D" parent="Sword"]
+texture = ExtResource("1_whvb5")
+hframes = 7
+vframes = 5
+frame = 1
+
 [node name="player" type="Area2D" parent="."]
 position = Vector2(-21.6667, 1.66667)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
-position = Vector2(21.6667, -1.66667)
+position = Vector2(21.6667, 25)
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CapsuleShape2D_f4cuq")
 debug_color = Color(1, 0.203922, 0.203922, 0.419608)
