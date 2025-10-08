@@ -1,0 +1,169 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2eavggncq8ef"]
+
+[ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="2"]
+[ext_resource type="Script" uid="uid://bkua7gux1tl3o" path="res://Scenes/UI/InputMenu.cs" id="2_1b8im"]
+[ext_resource type="Script" uid="uid://clsnwqds3l3uk" path="res://Scripts/Menu/RebindButton.cs" id="3"]
+[ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scenes/UI/BackButton.cs" id="4"]
+
+[node name="InputMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("2_1b8im")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "INPUT REMAPPING"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="LeftColumn" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="MovementLabel" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer/LeftColumn"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "MOVEMENT"
+horizontal_alignment = 1
+
+[node name="RebindUp" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/LeftColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Move Up"
+script = ExtResource("3")
+ActionName = "move_up"
+
+[node name="RebindDown" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/LeftColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Move Down"
+script = ExtResource("3")
+ActionName = "move_down"
+
+[node name="RebindLeft" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/LeftColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Move Left"
+script = ExtResource("3")
+ActionName = "move_left"
+
+[node name="RebindRight" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/LeftColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Move Right"
+script = ExtResource("3")
+ActionName = "move_right"
+
+[node name="RightColumn" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="CombatLabel" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "COMBAT / ABILITIES"
+horizontal_alignment = 1
+
+[node name="RebindAttack" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Attack"
+script = ExtResource("3")
+ActionName = "attack"
+
+[node name="RebindDash" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Dash"
+script = ExtResource("3")
+ActionName = "dash"
+
+[node name="RebindJump" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Jump"
+script = ExtResource("3")
+ActionName = "jump"
+
+[node name="RebindHeal" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Heal"
+script = ExtResource("3")
+ActionName = "heal"
+
+[node name="RebindSpell1" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Spell 1"
+script = ExtResource("3")
+ActionName = "spell_1"
+
+[node name="RightColumn2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="CombatLabel" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn2"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "MISCELANEOUS "
+horizontal_alignment = 1
+
+[node name="RebindPause" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn2"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Pause"
+script = ExtResource("3")
+ActionName = "pause"
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Back"
+flat = true
+script = ExtResource("4")
