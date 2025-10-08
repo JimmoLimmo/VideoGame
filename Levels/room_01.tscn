@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_l5rdh"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_2g3pj"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="8_rntpy"]
-[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/player.tscn" id="8_y5lni"]
+[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="8_y5lni"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_rntpy"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="10_2g3pj"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_wlflr"]

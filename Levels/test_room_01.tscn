@@ -1,12 +1,10 @@
-[gd_scene load_steps=23 format=4 uid="uid://bqgy4uxus1twn"]
+[gd_scene load_steps=21 format=4 uid="uid://bqgy4uxus1twn"]
 
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="1_ryo1c"]
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_hlm3v"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="3_xu5hj"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="4_spxb4"]
-[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="5_nqu61"]
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="6_vonpj"]
-[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="7_np655"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="8_eypxs"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_gu0pg"]
 [ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Environment/BreakableWall.tscn" id="10_a4bw7"]
@@ -162,13 +160,10 @@ playerPath = NodePath("../Player")
 boundsPath = NodePath("../CameraBounds/CameraCollsion")
 
 [node name="Player" parent="." groups=["enemies"] instance=ExtResource("3_xu5hj")]
-position = Vector2(-74, 33)
-HudPath = NodePath("../Hud")
+position = Vector2(-181, 146)
 
 [node name="Hud" parent="." instance=ExtResource("4_spxb4")]
-script = ExtResource("5_nqu61")
 MaskFull = ExtResource("6_vonpj")
-MaskEmpty = ExtResource("7_np655")
 
 [node name="DoorArea2D" parent="." instance=ExtResource("8_eypxs")]
 position = Vector2(261, 42)
