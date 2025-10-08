@@ -508,8 +508,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Boss : CharacterBody2D
-{
+public partial class Boss : CharacterBody2D {
     // ========================= Tunables =========================
     [Export] public int MaxHealth = 1000;
 
@@ -626,41 +625,35 @@ public partial class Boss : CharacterBody2D
     private bool Enraged => _hp <= MaxHealth * 0.5f;
 
     // ========================= Helpers =========================
-    private void RefreshWorldGravity()
-    {
+    private void RefreshWorldGravity() {
         float g = (float)ProjectSettings.GetSetting("physics/2d/default_gravity");
         Vector2 v = ((Vector2)ProjectSettings.GetSetting("physics/2d/default_gravity_vector")).Normalized();
         _worldGravity = v * g * Mathf.Max(0f, GravityScale);
     }
 
-    private void ApplyGravityGroundAware(double dt)
-    {
+    private void ApplyGravityGroundAware(double dt) {
         if (!IsOnFloor() || Velocity.Y < 0f)
             Velocity += _worldGravity * (float)dt;
     }
-    private void ApplyGravityAlways(double dt)
-    {
+    private void ApplyGravityAlways(double dt) {
         Velocity += _worldGravity * (float)dt;
     }
 
     private bool HasAnim(string name) =>
         _anim != null && !string.IsNullOrEmpty(name) && _anim.HasAnimation(name);
 
-    private void SafePlay(string name)
-    {
+    private void SafePlay(string name) {
         if (!RunWithoutAnimations && HasAnim(name))
             _anim.Play(name);
     }
 
-    private bool AnimDone(string name)
-    {
+    private bool AnimDone(string name) {
         if (RunWithoutAnimations || !HasAnim(name)) return true;
         // consider finished when not playing OR switched off that clip
         return !_anim.IsPlaying() || _anim.CurrentAnimation != name;
     }
 
-    private void FacePlayer()
-    {
+    private void FacePlayer() {
         if (_player == null || _spriteRoot == null) return;
         bool faceLeft = _playerPos.X < GlobalPosition.X;
         _spriteRoot.Scale = new Vector2(faceLeft ? 1 : -1, 1);
@@ -668,8 +661,7 @@ public partial class Boss : CharacterBody2D
 
     private int FacingDir() => (_spriteRoot?.Scale.X ?? 1f) == 1f ? -1 : 1; // 1=right, -1=left mapping
 
-    private void Change(State s)
-    {
+    private void Change(State s) {
         if (LogStateChanges && s != _state)
             GD.Print($"[Boss] {_state} → {s}");
         _state = s;
@@ -678,8 +670,7 @@ public partial class Boss : CharacterBody2D
         _changedThisFrame = true;
     }
 
-    private void StartDecision(float delay = 0.35f)
-    {
+    private void StartDecision(float delay = 0.35f) {
         _decisionTimer = Enraged ? delay * 0.75f : delay; // faster decisions when enraged
         Change(State.Choose);
     }
@@ -691,15 +682,13 @@ public partial class Boss : CharacterBody2D
     private float DeltaYToPlayer() => (_playerPos.Y - GlobalPosition.Y);
 
     private bool InsideArena() => GlobalPosition.X >= ArenaLeftX && GlobalPosition.X <= ArenaRightX;
-    private void ClampArena()
-    {
+    private void ClampArena() {
         float x = Mathf.Clamp(GlobalPosition.X, ArenaLeftX, ArenaRightX);
         GlobalPosition = new Vector2(x, GlobalPosition.Y);
     }
 
     // ========================= Lifecycle =========================
-    public override void _Ready()
-    {
+    public override void _Ready() {
         _hp = MaxHealth;
         UpDirection = Vector2.Up;
 
@@ -718,8 +707,7 @@ public partial class Boss : CharacterBody2D
         _hurtbox = GetNodeOrNull<Area2D>("HurtBox");
         _hitbox = GetNodeOrNull<Area2D>("Hitbox");
 
-        if (_hitbox != null)
-        {
+        if (_hitbox != null) {
             _hitbox.BodyEntered += OnHitBoxBodyEntered;
             _hitbox.AreaEntered += OnHitBoxAreaEntered;
         }
@@ -729,8 +717,7 @@ public partial class Boss : CharacterBody2D
 
         if (PlayerPath != null && !PlayerPath.IsEmpty)
             _player = GetNodeOrNull<Player>(PlayerPath);
-        else
-        {
+        else {
             var players = GetTree().GetNodesInGroup("player");
             if (players.Count > 0) _player = players[0] as Player;
         }
@@ -741,21 +728,17 @@ public partial class Boss : CharacterBody2D
         FloorSnapLength = _defaultSnap;
     }
 
-    public override void _PhysicsProcess(double delta)
-    {
+    public override void _PhysicsProcess(double delta) {
         _changedThisFrame = false;
         _time += (float)delta;
 
         if (_player != null) _playerPos = _player.GlobalPosition;
 
-        if (WatchdogEnabled)
-        {
+        if (WatchdogEnabled) {
             bool transient = _state is State.Prep or State.Slash or State.Dash or State.Uppercut or State.Leap or State.Fall or State.Recover;
-            if (!transient)
-            {
+            if (!transient) {
                 _watchdog += (float)delta;
-                if (_watchdog > WatchdogSeconds)
-                {
+                if (_watchdog > WatchdogSeconds) {
                     GD.PushWarning($"[Boss] Watchdog in state: {_state}. Forcing Idle.");
                     Velocity = Vector2.Zero;
                     Change(State.Idle);
@@ -763,8 +746,7 @@ public partial class Boss : CharacterBody2D
             }
         }
 
-        switch (_state)
-        {
+        switch (_state) {
             case State.Ready: S_Ready(delta); break;
             case State.ReadyDrop: S_ReadyDrop(delta); break;
             case State.Idle: S_Idle(delta); break;
@@ -786,8 +768,7 @@ public partial class Boss : CharacterBody2D
 
         // Debug print (throttled)
         _debugTimer -= (float)delta;
-        if (_debugTimer <= 0f)
-        {
+        if (_debugTimer <= 0f) {
             GD.Print($"[Boss] State={_state} Attack={_currentAttack} Pos={GlobalPosition} Vel={Velocity} OnFloor={IsOnFloor()} Grav={_worldGravity}");
             _debugTimer = 0.25f;
         }
@@ -797,10 +778,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // ========================= States =========================
-    private void S_Ready(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Ready(double dt) {
+        if (_stateNew) {
             SafePlay(AIdle);
             _stateTimer = 0.5f;
         }
@@ -808,18 +787,15 @@ public partial class Boss : CharacterBody2D
         if (_stateTimer <= 0f) Change(State.ReadyDrop);
     }
 
-    private void S_ReadyDrop(double dt)
-    {
+    private void S_ReadyDrop(double dt) {
         if (_stateNew) SafePlay(AFall);
         ApplyGravityGroundAware(dt);
         MoveAndSlide();
         if (IsOnFloor()) Change(State.Idle);
     }
 
-    private void S_Idle(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Idle(double dt) {
+        if (_stateNew) {
             FacePlayer();
             SafePlay(AIdle);
             _decisionTimer = 0.35f;
@@ -836,10 +812,8 @@ public partial class Boss : CharacterBody2D
             StartDecision(0.2f);
     }
 
-    private void S_Move(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Move(double dt) {
+        if (_stateNew) {
             FacePlayer();
             SafePlay(AMove);
             _stateTimer = 0.9f;
@@ -856,10 +830,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // Weighted, distance-aware chooser with cooldowns
-    private void S_Choose(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Choose(double dt) {
+        if (_stateNew) {
             FacePlayer();
         }
 
@@ -898,8 +870,7 @@ public partial class Boss : CharacterBody2D
         addIfReady(Attack.Leap, wLeap);
         addIfReady(Attack.Roar, wRoar);
 
-        if (candidates.Count == 0)
-        {
+        if (candidates.Count == 0) {
             // fallback movement shuffle
             Change(State.Move);
             return;
@@ -910,8 +881,7 @@ public partial class Boss : CharacterBody2D
         foreach (var c in candidates) total += c.weight;
         float r = _rng.Randf() * total;
         Attack pick = Attack.Slash;
-        foreach (var c in candidates)
-        {
+        foreach (var c in candidates) {
             if ((r -= c.weight) <= 0f) { pick = c.atk; break; }
         }
 
@@ -921,14 +891,11 @@ public partial class Boss : CharacterBody2D
     }
 
     // Common windup/telegraph
-    private void S_Prep(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Prep(double dt) {
+        if (_stateNew) {
             FacePlayer();
             float prep = 0.22f;
-            switch (_currentAttack)
-            {
+            switch (_currentAttack) {
                 case Attack.Slash:
                     SafePlay(ASlashPrep);
                     prep = 0.24f;
@@ -962,8 +929,7 @@ public partial class Boss : CharacterBody2D
         if (_stateTimer > 0f) return;
 
         // Transition to the active part
-        switch (_currentAttack)
-        {
+        switch (_currentAttack) {
             case Attack.Slash: Change(State.Slash); break;
             case Attack.Dash: Change(State.Dash); break;
             case Attack.Uppercut: Change(State.Uppercut); break;
@@ -978,10 +944,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // Short HK-style sliding slash
-    private void S_Slash(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Slash(double dt) {
+        if (_stateNew) {
             SafePlay(ASlash);
             float speed = SlashSlideSpeed * (Enraged ? 1.15f : 1f);
             int dir = FacingDir();
@@ -993,18 +957,15 @@ public partial class Boss : CharacterBody2D
         MoveAndSlide();
 
         _stateTimer -= (float)dt;
-        if (_stateTimer <= 0f)
-        {
+        if (_stateTimer <= 0f) {
             Change(State.Recover);
             _stateTimer = 0.18f;
         }
     }
 
     // Long ground dash, stops at arena edge
-    private void S_Dash(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Dash(double dt) {
+        if (_stateNew) {
             SafePlay(ADash);
             int dir = FacingDir();
             float speed = DashSpeed * (Enraged ? 1.15f : 1f);
@@ -1019,8 +980,7 @@ public partial class Boss : CharacterBody2D
         bool hitRight = GlobalPosition.X >= ArenaRightX - 2f;
         _stateTimer -= (float)dt;
 
-        if (hitLeft || hitRight || _stateTimer <= 0f)
-        {
+        if (hitLeft || hitRight || _stateTimer <= 0f) {
             SafePlay(ADashStop);
             Change(State.Recover);
             _stateTimer = 0.25f;
@@ -1029,10 +989,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // Vertical pop with slight homing
-    private void S_Uppercut(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Uppercut(double dt) {
+        if (_stateNew) {
             SafePlay(AUppercut);
             int dir = _playerPos.X >= GlobalPosition.X ? 1 : -1;
             float vx = UppercutHoriSpeed * (Enraged ? 1.15f : 1f);
@@ -1050,8 +1008,7 @@ public partial class Boss : CharacterBody2D
         if (!IsOnFloor()) _airTime += (float)dt;
         if (!_leftGround && !IsOnFloor()) _leftGround = true;
 
-        if (_leftGround && !_colliderReenabledMidair && (_airTime > 0.06f || Velocity.Y > 0f))
-        {
+        if (_leftGround && !_colliderReenabledMidair && (_airTime > 0.06f || Velocity.Y > 0f)) {
             _col?.SetDeferred("disabled", false);
             _colliderReenabledMidair = true;
         }
@@ -1059,8 +1016,7 @@ public partial class Boss : CharacterBody2D
         if (!IsOnFloor() && Velocity.Y > 0f)
             Change(State.Fall);
 
-        if (_colliderReenabledMidair && IsOnFloor())
-        {
+        if (_colliderReenabledMidair && IsOnFloor()) {
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
@@ -1070,10 +1026,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // A forward leap that becomes a fall/slam
-    private void S_Leap(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Leap(double dt) {
+        if (_stateNew) {
             SafePlay(AJump);
             FloorSnapLength = 0f; _snapSuppressed = true;
             _leftGround = false; _airTime = 0f; _colliderReenabledMidair = false;
@@ -1092,8 +1046,7 @@ public partial class Boss : CharacterBody2D
         if (!IsOnFloor()) _airTime += (float)dt;
         if (!_leftGround && !IsOnFloor()) _leftGround = true;
 
-        if (_leftGround && !_colliderReenabledMidair && (_airTime > 0.06f || Velocity.Y > 0f))
-        {
+        if (_leftGround && !_colliderReenabledMidair && (_airTime > 0.06f || Velocity.Y > 0f)) {
             _col?.SetDeferred("disabled", false);
             _colliderReenabledMidair = true;
         }
@@ -1101,8 +1054,7 @@ public partial class Boss : CharacterBody2D
         if (!IsOnFloor() && Velocity.Y > 0f)
             Change(State.Fall);
 
-        if (_colliderReenabledMidair && IsOnFloor())
-        {
+        if (_colliderReenabledMidair && IsOnFloor()) {
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
@@ -1112,10 +1064,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // Generic airborne fall; lands into Recover
-    private void S_Fall(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Fall(double dt) {
+        if (_stateNew) {
             SafePlay(AFall);
             _landTimer = 0.08f;
             if (_col != null && _col.Disabled) _col.SetDeferred("disabled", false);
@@ -1125,11 +1075,9 @@ public partial class Boss : CharacterBody2D
         ApplyGravityAlways(dt);
         MoveAndSlide();
 
-        if (IsOnFloor())
-        {
+        if (IsOnFloor()) {
             _landTimer -= (float)dt;
-            if (_landTimer <= 0f)
-            {
+            if (_landTimer <= 0f) {
                 FloorSnapLength = _defaultSnap;
                 _snapSuppressed = false;
                 Change(State.Recover);
@@ -1140,10 +1088,8 @@ public partial class Boss : CharacterBody2D
     }
 
     // Brief post-attack delay → Choose next
-    private void S_Recover(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Recover(double dt) {
+        if (_stateNew) {
             // keep played anim; just time out
             if (_stateTimer <= 0f) _stateTimer = 0.2f;
         }
@@ -1156,10 +1102,8 @@ public partial class Boss : CharacterBody2D
             StartDecision(Enraged ? 0.15f : 0.25f);
     }
 
-    private void S_Hurt(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Hurt(double dt) {
+        if (_stateNew) {
             SafePlay(AStagger);
             int dir = _player != null && _playerPos.X < GlobalPosition.X ? 1 : -1;
             Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.25f);
@@ -1171,18 +1115,15 @@ public partial class Boss : CharacterBody2D
         MoveAndSlide();
 
         _stateTimer -= (float)dt;
-        if (_stateTimer <= 0f || AnimDone(AStagger))
-        {
+        if (_stateTimer <= 0f || AnimDone(AStagger)) {
             FloorSnapLength = _defaultSnap;
             Change(State.Recover);
             _stateTimer = 0.25f;
         }
     }
 
-    private void S_Die1(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Die1(double dt) {
+        if (_stateNew) {
             Velocity = Vector2.Zero;
             SafePlay(ADeath);
             _stateTimer = 1.0f;
@@ -1192,10 +1133,8 @@ public partial class Boss : CharacterBody2D
             Change(State.Die_2);
     }
 
-    private void S_Die2(double dt)
-    {
-        if (_stateNew)
-        {
+    private void S_Die2(double dt) {
+        if (_stateNew) {
             _col?.SetDeferred("disabled", true);
             _hurtbox?.SetDeferred("monitoring", false);
             _hitbox?.SetDeferred("monitoring", false);
@@ -1204,8 +1143,7 @@ public partial class Boss : CharacterBody2D
     }
 
     // ========================= Damage & Hitboxes =========================
-    public void TakeDamage(int dmg)
-    {
+    public void TakeDamage(int dmg) {
         if (_state is State.Die_1 or State.Die_2) return;
 
         _hp -= dmg;
@@ -1216,14 +1154,12 @@ public partial class Boss : CharacterBody2D
         else Change(State.Hurt);
     }
 
-    private void OnHitBoxBodyEntered(Node2D body)
-    {
+    private void OnHitBoxBodyEntered(Node2D body) {
         if (body is Player p)
             p.ApplyHit(ContactDamage, GlobalPosition);
     }
 
-    private void OnHitBoxAreaEntered(Area2D area)
-    {
+    private void OnHitBoxAreaEntered(Area2D area) {
         if (!area.IsInGroup("player_hurtbox")) return;
         if (area.GetParent() is Player p)
             p.ApplyHit(ContactDamage, GlobalPosition);
