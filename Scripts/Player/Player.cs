@@ -351,6 +351,7 @@ public partial class Player : CharacterBody2D {
 	}
 
 	public async void areaHazard(Node2D body) {
+		GD.Print(body);
 		lockPlayer = true;
 		TakeDamage(1);
 		await fade.FadeOut(0.5f);

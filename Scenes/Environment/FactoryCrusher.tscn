@@ -15,6 +15,21 @@ size = Vector2(256, 512)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_jc7cj"]
 polygon = PackedVector2Array(-128, -896, -128, -384, 128, -384, 128, -896)
 
+[sub_resource type="Animation" id="Animation_jc7cj"]
+resource_name = "Drop"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Top:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 25), Vector2(0, 384), Vector2(0, 384)]
+}
+
 [sub_resource type="Animation" id="Animation_tjs4c"]
 resource_name = "DropPrep"
 length = 0.6
@@ -40,7 +55,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.366667, 0.4, 0.433333, 0.466667, 0.5, 0.533333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, -512), Vector2(10, -502), Vector2(-5, -512), Vector2(7, -512), Vector2(-10, -522), Vector2(0, -512), Vector2(10, -502), Vector2(-5, -512), Vector2(7, -512), Vector2(-10, -522), Vector2(0, -512)]
+"values": [Vector2(0, -512), Vector2(5, -507), Vector2(-3, -512), Vector2(3, -512), Vector2(-5, -517), Vector2(0, -512), Vector2(10, -502), Vector2(-3, -512), Vector2(3, -512), Vector2(-5, -517), Vector2(0, -512)]
 }
 
 [sub_resource type="Animation" id="Animation_yo5wu"]
@@ -68,21 +83,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0, -512)]
-}
-
-[sub_resource type="Animation" id="Animation_jc7cj"]
-resource_name = "Drop"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Top:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0666667, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 25), Vector2(0, 384), Vector2(0, 384)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4cr11"]
@@ -147,7 +147,7 @@ region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
 
 [node name="Pipe3" type="Sprite2D" parent="Top/Pipes"]
-position = Vector2(0, -575)
+position = Vector2(0, -576)
 texture = ExtResource("1_d6asn")
 region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
