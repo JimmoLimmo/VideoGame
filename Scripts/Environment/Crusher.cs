@@ -5,11 +5,12 @@ using System.Collections.Generic;
 public partial class Crusher : Node {
 	[Export] public float upDuration = 1.0f;
 	[Export] public float downDuration = 1.0f;
-	[Export] public float movementTime = 0.25f;
+	[Export] public float movementTime = 0.5f;
 	
 	private StaticBody2D top;
 	private Area2D deathZone;
 	private Timer cycleTimer;
+	private AnimationPlayer animate;
 	
 	private bool isDown = false;
 	
@@ -19,6 +20,9 @@ public partial class Crusher : Node {
 		top = GetNode<StaticBody2D>("Top");
 		deathZone = GetNode<Area2D>("DeathZone");
 		cycleTimer = GetNode<Timer>("CycleTimer");
+		animate = GetNode<AnimationPlayer>("AnimationPlayer");
+		
+		top.Position = new Vector2(0, 50);
 		
 		cycleTimer.OneShot = true;
 		cycleTimer.Timeout += OnCycleTimeout;
@@ -44,22 +48,28 @@ public partial class Crusher : Node {
 		}
 	}
 	
-	private void OnCycleTimeout() {
-		Vector2 position;
+	private async void OnCycleTimeout() {
 		float nextStateDuration;
 		
 		if(isDown) {
-			position = new Vector2(0, 384);
+			Vector2 midPosition = new Vector2(0, 50);
+			Vector2 downPosition = new Vector2(0, 384);
 			nextStateDuration = upDuration;
+			
+			animate.Play("DropPrep");
+			await ToSignal(animate, AnimationPlayer.SignalName.AnimationFinished);
+			
+			animate.Play("Drop");
+			await ToSignal(animate, AnimationPlayer.SignalName.AnimationFinished);
 		} else {
-			position = new Vector2(0, 0);
+			Vector2 position = new Vector2(0, 50);
 			nextStateDuration = downDuration;
+			
+			var tween = GetTree().CreateTween();
+			tween.TweenProperty(top, "position", position, movementTime)
+				.SetTrans(Tween.TransitionType.Sine)
+				.SetEase(Tween.EaseType.InOut);
 		}
-		
-		var tween = GetTree().CreateTween();
-		tween.TweenProperty(top, "position", position, movementTime)
-			.SetTrans(Tween.TransitionType.Sine)
-			.SetEase(Tween.EaseType.InOut);
 		
 		cycleTimer.Start(nextStateDuration);
 		isDown = !isDown;
