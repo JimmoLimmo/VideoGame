@@ -1,8 +1,8 @@
-[gd_scene load_steps=31 format=4 uid="uid://dk01o0xsh57wl"]
+[gd_scene load_steps=32 format=4 uid="uid://dk01o0xsh57wl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
-[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
+[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="3_vi02f"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_wdo57"]
@@ -20,7 +20,7 @@ shader = ExtResource("2_beo6d")
 shader_parameter/blur_power = 0.08
 shader_parameter/iterations = 100.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o1q8o"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_beo6d"]
 texture = ExtResource("4_vyb1j")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
@@ -49,9 +49,9 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSet" id="TileSet_a0oyl"]
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 1
-sources/2 = SubResource("TileSetAtlasSource_o1q8o")
+sources/2 = SubResource("TileSetAtlasSource_beo6d")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_beo6d"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vi02f"]
 texture = ExtResource("4_vyb1j")
 texture_region_size = Vector2i(128, 128)
 0:2/0 = 0
@@ -98,29 +98,34 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_jg4gg"]
 tile_size = Vector2i(128, 128)
-sources/2 = SubResource("TileSetAtlasSource_beo6d")
+sources/2 = SubResource("TileSetAtlasSource_vi02f")
 
-[sub_resource type="Gradient" id="Gradient_o1q8o"]
+[sub_resource type="Gradient" id="Gradient_vyb1j"]
+offsets = PackedFloat32Array(0.72327, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vyb1j"]
+gradient = SubResource("Gradient_vyb1j")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_ma60x"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.798742, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_beo6d"]
-gradient = SubResource("Gradient_o1q8o")
+gradient = SubResource("Gradient_ma60x")
 fill = 2
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="Gradient" id="Gradient_el1si"]
-offsets = PackedFloat32Array(0.484277, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
-
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vi02f"]
-gradient = SubResource("Gradient_el1si")
+gradient = SubResource("Gradient_vyb1j")
 fill_from = Vector2(0, 1)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hljl5"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wdo57"]
 texture = ExtResource("5_ma60x")
 texture_region_size = Vector2i(128, 128)
 0:4/0 = 0
@@ -135,14 +140,14 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_4i1n6"]
 tile_size = Vector2i(128, 128)
-sources/0 = SubResource("TileSetAtlasSource_hljl5")
+sources/0 = SubResource("TileSetAtlasSource_wdo57")
 
-[sub_resource type="Gradient" id="Gradient_y5lni"]
+[sub_resource type="Gradient" id="Gradient_ea4ct"]
 offsets = PackedFloat32Array(0.0188679, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_hst8f"]
-gradient = SubResource("Gradient_y5lni")
+gradient = SubResource("Gradient_ea4ct")
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(1, 0.495726)
 
@@ -155,21 +160,20 @@ polygon = PackedVector2Array(-134, -771, 379, -769, 380, -1793, 2426, -1792, 242
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_beo6d"]
 polygon = PackedVector2Array(1152, -384, 1152, 2304, 384, 2304, 384, 3584, 2688, 3584, 2688, 3840, 128, 3840, -128, -97, -128, -384)
 
-[sub_resource type="Gradient" id="Gradient_r1pom"]
+[sub_resource type="Gradient" id="Gradient_2s52b"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ofyad"]
-gradient = SubResource("Gradient_r1pom")
+gradient = SubResource("Gradient_2s52b")
 
 [node name="Room02" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -767.0
+offset_left = -771.0
 offset_top = -1703.0
-offset_right = 4007.34
+offset_right = 4003.34
 offset_bottom = 1056.0
 scale = Vector2(0.78, 2.145)
 color = Color(0.147672, 0.147672, 0.147672, 1)
-metadata/_edit_use_anchors_ = true
 
 [node name="CharacterCamera" type="Camera2D" parent="."]
 position = Vector2(1149, -472)
@@ -216,6 +220,15 @@ tile_set = SubResource("TileSet_jg4gg")
 [node name="detailFront" type="TileMapLayer" parent="MidTiles"]
 position = Vector2(-1654, -867)
 tile_set = SubResource("TileSet_jg4gg")
+
+[node name="FactoryBreakawayFloor" parent="." instance=ExtResource("14_beo6d")]
+position = Vector2(1152, 0)
+
+[node name="RightDropoff" type="Sprite2D" parent="FactoryBreakawayFloor"]
+position = Vector2(-86.9498, 322.642)
+rotation = -1.5708
+scale = Vector2(10.0516, 45.1011)
+texture = SubResource("GradientTexture2D_vyb1j")
 
 [node name="MidDropoff" type="Node2D" parent="."]
 
@@ -290,6 +303,7 @@ texture = SubResource("GradientTexture2D_hst8f")
 
 [node name="RightExit" parent="." instance=ExtResource("6_wdo57")]
 position = Vector2(2429, 3777)
+ConnectedRoom = "res://Levels/room_03.tscn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(-20, -2)
@@ -337,6 +351,3 @@ size = 50
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_jerea")
 volume_db = -10.306
-
-[node name="FactoryBreakawayFloor" parent="." instance=ExtResource("14_beo6d")]
-position = Vector2(1152, 0)
