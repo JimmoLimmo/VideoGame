@@ -22,7 +22,6 @@ MusicManager="*res://Scenes/MusicManager.tscn"
 HUD="*res://Scenes/UI/HUD.tscn"
 InputManager="*res://Scripts/Menu/InputManager.cs"
 SettingsManager="*res://Scripts/Menu/SettingsManager.cs"
-SceneManager="res://Scenes/UI/SceneManager.cs"
 
 [display]
 
