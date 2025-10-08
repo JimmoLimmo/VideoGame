@@ -21,7 +21,6 @@ public partial class Player : CharacterBody2D {
 	// Wall Slide Settings
 	[Export] public float WallSlideSpeed = 100.0f;
 	[Export] public float WallJumpForce = 600.0f;
-	private float CurrentWallSlideSpeed = 980.0f;
 	[Export] private bool hasWalljump = false;
 
 	// Dash Settings
@@ -249,7 +248,9 @@ public partial class Player : CharacterBody2D {
 	private void HandleWallSlide(double delta) {
 		if (IsOnWall() && !IsOnFloor()) {
 			_isWallSliding = true;
-			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, CurrentWallSlideSpeed));
+			Velocity = hasWalljump ? 
+				new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed))
+				: new Vector2(0, Velocity.Y + GetGravity().Y * (float)delta);
 		}
 		else {
 			_isWallSliding = false;
@@ -368,7 +369,6 @@ public partial class Player : CharacterBody2D {
 			GlobalRoomChange.hasDash = hasDash;
 		}
 		else if (type == CollectableType.Walljump) {
-			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
 			GlobalRoomChange.hasWalljump = hasWalljump;
 		}
