@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=4 uid="uid://dk01o0xsh57wl"]
+[gd_scene load_steps=31 format=4 uid="uid://dk01o0xsh57wl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_ea4ct"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_2s52b"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_vqukl"]
-[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_jerea"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="14_beo6d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h2wd6"]
@@ -26,25 +25,24 @@ texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(-64, -64)
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(192.232, -64.2528, 191.909, 191.909, -63.9829, 191.949, -64, -64)
 2:0/size_in_atlas = Vector2i(2, 2)
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(-64, -64)
-2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(192.232, -64.2528, 191.909, 191.909, -63.9829, 191.949, -64, -64)
 4:0/size_in_atlas = Vector2i(1, 2)
 4:0/0 = 0
 4:0/0/texture_origin = Vector2i(0, -64)
-4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.8498, 192.089, -63.8498, 191.909)
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(64, -64, 64.2528, 192.232, -63.9829, 191.949, -64, -64)
 5:1/0 = 0
 5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 5:0/size_in_atlas = Vector2i(2, 1)
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(-64, 0)
-5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 191.816, -64.0448, 191.816, 64.3634, -64, 64)
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.232, -64.2528, 191.949, 63.9829, -64, 64)
 0:4/size_in_atlas = Vector2i(1, 2)
 0:4/0 = 0
 0:4/0/texture_origin = Vector2i(0, -64)
-0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.9866, 192.025, -64.0136, 192.041)
 
 [sub_resource type="TileSet" id="TileSet_a0oyl"]
 tile_size = Vector2i(128, 128)
@@ -203,7 +201,7 @@ color = Color(1, 1, 1, 0)
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("3_vi02f")]
-position = Vector2(-140, -106)
+position = Vector2(-138, -120)
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -318,6 +316,7 @@ position = Vector2(-227, -190)
 shape = SubResource("RectangleShape2D_kp4w0")
 
 [node name="Lighting" type="Node2D" parent="."]
+visible = false
 
 [node name="TopHalfOcclude" type="LightOccluder2D" parent="Lighting"]
 position = Vector2(-251, 385)
@@ -328,9 +327,9 @@ position = Vector2(-256, 384)
 occluder = SubResource("OccluderPolygon2D_beo6d")
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(-215.746, -193.089)
+position = Vector2(-217, -193.141)
 rotation = 3.14159
-scale = Vector2(14.6509, 5.86323)
+scale = Vector2(14.6509, 6.08637)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_ofyad")
 
@@ -344,10 +343,5 @@ texture = SubResource("GradientTexture2D_ofyad")
 
 [node name="Hud" parent="." instance=ExtResource("8_2s52b")]
 visible = false
-size = 50
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("12_vqukl")]
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("13_jerea")
-volume_db = -10.306

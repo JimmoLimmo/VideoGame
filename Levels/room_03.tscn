@@ -215,7 +215,7 @@ color = Color(1, 1, 1, 0)
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("3_u616v")]
-position = Vector2(-140, -106)
+position = Vector2(-139, -126)
 
 [node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
 position = Vector2(1276, -62)
@@ -287,6 +287,8 @@ shape = SubResource("RectangleShape2D_1h5ho")
 
 [node name="RightExit" parent="." instance=ExtResource("6_tuau3")]
 position = Vector2(2429, -190)
+ConnectedRoom = "res://Levels/room_04.tscn"
+PlayerPos = Vector2(-122, -153)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(-20, -2)
@@ -313,7 +315,7 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light2" type="PointLight2D" parent="Lighting"]
-position = Vector2(2504, -174)
+position = Vector2(2349, -175)
 scale = Vector2(15.1067, 6.57224)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")

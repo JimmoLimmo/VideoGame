@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://blemgugjlqkjd"]
+[gd_scene load_steps=27 format=4 uid="uid://blemgugjlqkjd"]
 
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="1_bkybe"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_dkn8l"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_rntpy"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="10_2g3pj"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_wlflr"]
-[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_i48qr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y5lni"]
 shader = ExtResource("8_rntpy")
@@ -282,7 +281,7 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="RightExit" parent="." instance=ExtResource("6_2g3pj")]
 position = Vector2(2429, 962)
 ConnectedRoom = "res://Levels/room_02.tscn"
-PlayerPos = Vector2(-140, -105)
+PlayerPos = Vector2(-138, -120)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(-20, -2)
@@ -294,8 +293,3 @@ shape = SubResource("RectangleShape2D_ykuuq")
 visible = false
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("14_wlflr")]
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("15_i48qr")
-volume_db = -10.306
-parameters/looping = true

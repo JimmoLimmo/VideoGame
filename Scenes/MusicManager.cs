@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 public enum BgmTrack { None, Title, Overworld, Boss }
 
-public partial class MusicManager : Node
-{
+public partial class MusicManager : Node {
+    // ---- Singleton instance ----
+    public static MusicManager Instance { get; private set; }
+
     private readonly Dictionary<BgmTrack, string> _paths = new()
     {
         { BgmTrack.Title,     "res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" },
@@ -14,16 +16,20 @@ public partial class MusicManager : Node
     };
 
     private AudioStreamPlayer _a, _b, _active, _inactive;
-
     private BgmTrack _current = BgmTrack.None;
     private BgmTrack _preBoss = BgmTrack.None;
+    private bool _isFading = false;
 
-    [Export] public double DefaultCrossfade = 0.6;
-    [Export] public float  StartGainDb      = -12f;
-    [Export] public float  FadeOutDb        = -24f;
+    [Export] public double DefaultCrossfade = 0.8;
+    [Export] public float StartGainDb = -12f;
+    [Export] public float FadeOutDb = -24f;
 
-    public override void _Ready()
-    {
+    // --- Autoload setup ---
+    public override void _EnterTree() {
+        Instance = this;
+    }
+
+    public override void _Ready() {
         _a = GetNode<AudioStreamPlayer>("A");
         _b = GetNode<AudioStreamPlayer>("B");
 
@@ -35,45 +41,51 @@ public partial class MusicManager : Node
         _active = _a;
         _inactive = _b;
 
-        this.ProcessMode = Node.ProcessModeEnum.Always;
+        ProcessMode = Node.ProcessModeEnum.Always;
     }
 
-    public async void Play(BgmTrack track, double crossfadeSeconds = -1.0)
-    {
+    // --- Main playback control ---
+    public async void Play(BgmTrack track, double crossfadeSeconds = -1.0) {
+        if (_isFading) return;
         if (track == BgmTrack.None) { Stop(); return; }
         if (track == _current && _active.Playing) return;
         if (crossfadeSeconds < 0) crossfadeSeconds = DefaultCrossfade;
 
-        if (!_paths.TryGetValue(track, out var path))
-        {
+        if (!_paths.TryGetValue(track, out var path)) {
             GD.PushWarning($"MusicManager: no path mapped for {track}.");
             return;
         }
+
         var stream = ResourceLoader.Load<AudioStream>(path);
-        if (stream == null) { GD.PushWarning($"MusicManager: failed to load {path}"); return; }
+        if (stream == null) {
+            GD.PushWarning($"MusicManager: failed to load {path}");
+            return;
+        }
+
+        GD.Print($"[MusicManager] Switching to {track} ({path})");
+
+        _isFading = true;
 
         _inactive.Stream = stream;
         _inactive.VolumeDb = StartGainDb;
         _inactive.Play();
 
-        if (_active.Playing && crossfadeSeconds > 0)
-        {
+        if (_active.Playing && crossfadeSeconds > 0) {
             await FadePair(_active, FadeOutDb, _inactive, 0f, crossfadeSeconds);
             _active.Stop();
             _active.VolumeDb = 0f;
         }
-        else
-        {
+        else {
             _active.Stop();
             _inactive.VolumeDb = 0f;
         }
 
         (_active, _inactive) = (_inactive, _active);
         _current = track;
+        _isFading = false;
     }
 
-    public async void Stop(double fadeSeconds = 0.4)
-    {
+    public async void Stop(double fadeSeconds = 0.4) {
         if (!_active.Playing) return;
         await Fade(_active, -30f, fadeSeconds);
         _active.Stop();
@@ -81,11 +93,9 @@ public partial class MusicManager : Node
         _current = BgmTrack.None;
     }
 
-    public void StartBoss(double crossfadeSeconds = -1.0)
-    {
-        // Guard in case you haven’t mapped the Boss path yet
-        if (!_paths.ContainsKey(BgmTrack.Boss))
-        {
+    // --- Boss track helpers ---
+    public void StartBoss(double crossfadeSeconds = -1.0) {
+        if (!_paths.ContainsKey(BgmTrack.Boss)) {
             GD.PushWarning("MusicManager: Boss track not mapped. Add it to _paths.");
             return;
         }
@@ -96,22 +106,20 @@ public partial class MusicManager : Node
         Play(BgmTrack.Boss, crossfadeSeconds);
     }
 
-    public void EndBoss(double crossfadeSeconds = -1.0)
-    {
+    public void EndBoss(double crossfadeSeconds = -1.0) {
         if (_preBoss != BgmTrack.None)
             Play(_preBoss, crossfadeSeconds);
     }
 
-    public bool IsPlaying(BgmTrack track)
-    {
+    // --- Status helpers ---
+    public bool IsPlaying(BgmTrack track) {
         return _current == track && _active != null && _active.Playing;
     }
 
     public BgmTrack CurrentTrack => _current;
 
-    // --- tween helpers ---
-    private Task Fade(AudioStreamPlayer p, float toDb, double seconds)
-    {
+    // --- Tween helpers ---
+    private Task Fade(AudioStreamPlayer p, float toDb, double seconds) {
         var tcs = new TaskCompletionSource();
         var tw = GetTree().CreateTween();
         tw.TweenProperty(p, "volume_db", toDb, seconds);
@@ -119,10 +127,9 @@ public partial class MusicManager : Node
         return tcs.Task;
     }
 
-    private async Task FadePair(AudioStreamPlayer from, float fromDb, AudioStreamPlayer to, float toDb, double seconds)
-    {
+    private async Task FadePair(AudioStreamPlayer from, float fromDb, AudioStreamPlayer to, float toDb, double seconds) {
         var t1 = GetTree().CreateTween(); t1.TweenProperty(from, "volume_db", fromDb, seconds);
-        var t2 = GetTree().CreateTween(); t2.TweenProperty(to,   "volume_db", toDb,   seconds);
+        var t2 = GetTree().CreateTween(); t2.TweenProperty(to, "volume_db", toDb, seconds);
         await ToSignal(t2, Tween.SignalName.Finished);
     }
 }
