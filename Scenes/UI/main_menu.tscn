@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d1h0os8of8lwj"]
+[gd_scene load_steps=9 format=3 uid="uid://d1h0os8of8lwj"]
 
 [ext_resource type="Script" uid="uid://bwrmaq58dyppy" path="res://Scripts/Menu/MainMenuManager.cs" id="1_4pqbp"]
 [ext_resource type="Script" uid="uid://dl4iwf2p4aoy7" path="res://Scripts/Menu/MenuTab.cs" id="2_gih0s"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="5_wqme5"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_jewm6"]
 [ext_resource type="AudioStream" uid="uid://cstmep0wvx18w" path="res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" id="7_gih0s"]
+[ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="8_k33u3"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -37,7 +38,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Start"
 script = ExtResource("3_k33u3")
-sceneToSwtichTo = ExtResource("4_gih0s")
+sceneToSwitchTo = ExtResource("4_gih0s")
 
 [node name="OptionsBtn" type="Button" parent="MenuTab/VBoxContainer"]
 layout_mode = 2
@@ -76,3 +77,5 @@ script = ExtResource("5_wqme5")
 stream = ExtResource("7_gih0s")
 volume_db = -6.832
 autoplay = true
+
+[node name="ScreenFade" parent="." instance=ExtResource("8_k33u3")]
