@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://ddti75ydnggyo"]
+[gd_scene load_steps=9 format=3 uid="uid://ddti75ydnggyo"]
 
 [ext_resource type="Script" uid="uid://8kb4v2coyq1t" path="res://Scripts/Environment/CrumbleFloor.cs" id="1_jo63a"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_nq5m8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yf1ft"]
 size = Vector2(512, 256)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_yf1ft"]
+polygon = PackedVector2Array(-256, 0, -256, 256, 256, 256, 256, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jo63a"]
 size = Vector2(281.39, 71)
@@ -69,6 +72,9 @@ region_rect = Rect2(256, 0, 256, 256)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsArea"]
 position = Vector2(0, 128)
 shape = SubResource("RectangleShape2D_yf1ft")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="PhysicsArea"]
+occluder = SubResource("OccluderPolygon2D_yf1ft")
 
 [node name="PlayerCollider" type="Area2D" parent="."]
 
