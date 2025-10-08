@@ -178,6 +178,7 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("8_y5lni")]
 position = Vector2(952, 1005)
+hasSword = true
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -281,7 +282,7 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="RightExit" parent="." instance=ExtResource("6_2g3pj")]
 position = Vector2(2429, 962)
 ConnectedRoom = "res://Levels/room_02.tscn"
-PlayerPos = Vector2(-140, -105)
+PlayerPos = Vector2(-138, -120)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(-20, -2)
