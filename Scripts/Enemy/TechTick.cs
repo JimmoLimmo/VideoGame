@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Enemy : CharacterBody2D
+public partial class TechTick : CharacterBody2D
 {
 	private AnimationPlayer _anim;
 	private Sprite2D _sprite;
