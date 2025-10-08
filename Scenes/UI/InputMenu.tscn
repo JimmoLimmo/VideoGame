@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://c2eavggncq8ef"]
 
 [ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="2"]
-[ext_resource type="Script" uid="uid://bkua7gux1tl3o" path="res://Scenes/UI/InputMenu.cs" id="2_1b8im"]
+[ext_resource type="Script" uid="uid://bkua7gux1tl3o" path="res://Scripts/UI/InputMenu.cs" id="2_1b8im"]
 [ext_resource type="Script" uid="uid://clsnwqds3l3uk" path="res://Scripts/Menu/RebindButton.cs" id="3"]
-[ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scenes/UI/BackButton.cs" id="4"]
+[ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scripts/UI/BackButton.cs" id="4"]
 
 [node name="InputMenu" type="Control"]
 layout_mode = 3
@@ -131,13 +131,13 @@ text = "Heal"
 script = ExtResource("3")
 ActionName = "heal"
 
-[node name="RebindSpell1" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+[node name="RebindSpell" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
 custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Spell 1"
+text = "Spell"
 script = ExtResource("3")
-ActionName = "spell_1"
+ActionName = "sword_throw"
 
 [node name="RightColumn2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -159,6 +159,13 @@ theme_override_font_sizes/font_size = 28
 text = "Pause"
 script = ExtResource("3")
 ActionName = "pause"
+
+[node name="ResetButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Reset"
+flat = true
 
 [node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)
