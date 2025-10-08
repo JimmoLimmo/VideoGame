@@ -30,7 +30,7 @@ public partial class Crusher : Node {
 	}
 	
 	public override void _Process(double delta) {
-		if(top.Position.Y > 100 && !isDown) {
+		if(top.Position.Y > 200 && !isDown) {
 			deathZone.Monitoring = true;
 			
 			var overlaps = deathZone.GetOverlappingBodies();
@@ -55,6 +55,7 @@ public partial class Crusher : Node {
 			Vector2 midPosition = new Vector2(0, 50);
 			Vector2 downPosition = new Vector2(0, 384);
 			nextStateDuration = upDuration;
+			isDown = !isDown;
 			
 			animate.Play("DropPrep");
 			await ToSignal(animate, AnimationPlayer.SignalName.AnimationFinished);
@@ -64,6 +65,7 @@ public partial class Crusher : Node {
 		} else {
 			Vector2 position = new Vector2(0, 50);
 			nextStateDuration = downDuration;
+			isDown = !isDown;
 			
 			var tween = GetTree().CreateTween();
 			tween.TweenProperty(top, "position", position, movementTime)
@@ -72,6 +74,5 @@ public partial class Crusher : Node {
 		}
 		
 		cycleTimer.Start(nextStateDuration);
-		isDown = !isDown;
 	}
 }
