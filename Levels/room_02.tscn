@@ -25,16 +25,21 @@ texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(-64, -64)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(192.232, -64.2528, 191.909, 191.909, -63.9829, 191.949, -64, -64)
 2:0/size_in_atlas = Vector2i(2, 2)
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(-64, -64)
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(192.232, -64.2528, 191.909, 191.909, -63.9829, 191.949, -64, -64)
 4:0/size_in_atlas = Vector2i(1, 2)
 4:0/0 = 0
 4:0/0/texture_origin = Vector2i(0, -64)
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(64, -64, 64.2528, 192.232, -63.9829, 191.949, -64, -64)
 5:1/0 = 0
+5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 5:0/size_in_atlas = Vector2i(2, 1)
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(-64, 0)
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.232, -64.2528, 191.949, 63.9829, -64, 64)
 0:4/size_in_atlas = Vector2i(1, 2)
 0:4/0 = 0
 0:4/0/texture_origin = Vector2i(0, -64)
@@ -196,7 +201,7 @@ color = Color(1, 1, 1, 0)
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("3_vi02f")]
-position = Vector2(-140, -106)
+position = Vector2(-138, -120)
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -311,6 +316,7 @@ position = Vector2(-227, -190)
 shape = SubResource("RectangleShape2D_kp4w0")
 
 [node name="Lighting" type="Node2D" parent="."]
+visible = false
 
 [node name="TopHalfOcclude" type="LightOccluder2D" parent="Lighting"]
 position = Vector2(-251, 385)
@@ -321,9 +327,9 @@ position = Vector2(-256, 384)
 occluder = SubResource("OccluderPolygon2D_beo6d")
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(-215.746, -193.089)
+position = Vector2(-217, -193.141)
 rotation = 3.14159
-scale = Vector2(14.6509, 5.86323)
+scale = Vector2(14.6509, 6.08637)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_ofyad")
 
