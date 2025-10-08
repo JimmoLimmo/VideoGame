@@ -179,7 +179,11 @@ color = Color(1, 1, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("3_8pjpn")]
 position = Vector2(1828, 1036)
+<<<<<<< HEAD
+hasWalljump = true
+=======
 DashSpeed = 1200.0
+>>>>>>> Jimmy
 DashDuration = 0.15
 HudPath = NodePath("../Hud")
 

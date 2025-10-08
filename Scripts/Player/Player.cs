@@ -17,6 +17,7 @@ public partial class Player : CharacterBody2D
 	private float _dashCooldownTimer = 0f;
 	[Export] public float WallJumpLockTime = 0.1f;
 	private float _wallJumpLockTimer = 0f;
+	private bool holdPlayer = false;
 
 	// Wall Slide Settings
 	[Export] public float WallSlideSpeed = 100.0f;
@@ -126,10 +127,12 @@ public partial class Player : CharacterBody2D
 		if (_isWallSliding && !_isDashing)
 			HandleWallSlide(delta);
 
-		HandleJump();
-		HandleDashInput();
-		HandleAttack(delta);
-		HandleAnimations();
+		if(!holdPlayer) {
+			HandleJump();         // Allow jumping regardless of dash
+			HandleDashInput();    // Still process new dash input
+			HandleAttack(delta);  // Allow attacking mid-air or mid-dash
+			HandleAnimations();   // Update animation
+		}
 
 		if (_invulnerable)
 		{
@@ -160,7 +163,8 @@ public partial class Player : CharacterBody2D
 	// Movement
 	private void HandleMovement(double delta)
 	{
-		float inputX = (_wallJumpLockTimer > 0f)
+		// Respect wall-jump input lock
+		float inputX = (_wallJumpLockTimer > 0f || holdPlayer)
 			? 0f
 			: Input.GetAxis("move_left", "move_right");
 
@@ -409,5 +413,12 @@ public partial class Player : CharacterBody2D
 	{
 		respawnPoint = globalPos;
 		GD.Print("Respawn Set");
+	}
+	
+	public async void HoldPlayer(float time) {
+		holdPlayer = true;
+		_anim.Play("Idle");
+		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
+		holdPlayer = false;
 	}
 }
