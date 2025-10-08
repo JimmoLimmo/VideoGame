@@ -163,9 +163,9 @@ gradient = SubResource("Gradient_r1pom")
 [node name="Room02" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -771.0
+offset_left = -767.0
 offset_top = -1703.0
-offset_right = 4003.34
+offset_right = 4007.34
 offset_bottom = 1056.0
 scale = Vector2(0.78, 2.145)
 color = Color(0.147672, 0.147672, 0.147672, 1)
