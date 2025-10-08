@@ -20,7 +20,7 @@ public partial class StartGameButton : Button {
 
         // fade out first
         if (_fade != null)
-            await _fade.FadeOut(0.25f);
+            await _fade.FadeOut(0.6f);
 
         // switch scenes
         tree.ChangeSceneToPacked(sceneToSwitchTo);

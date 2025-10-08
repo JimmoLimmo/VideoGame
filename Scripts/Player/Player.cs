@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 public partial class Player : CharacterBody2D {
 	// Constants
 	public const float Speed = 700.0f;
-	public const float JumpVelocity = -1000.0f;
+	public const float JumpVelocity = -1250.0f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero;
@@ -43,6 +43,10 @@ public partial class Player : CharacterBody2D {
 
 	// Node Paths
 	[Export] public NodePath SwordPath { get; set; }
+	
+	//Animation Variables
+	string nextAnimation = "";
+	string lastAnimation;
 
 	// Node References
 	private AnimationPlayer _anim;
@@ -60,6 +64,7 @@ public partial class Player : CharacterBody2D {
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
 	private Vector2 respawnPoint;
+	private bool lockPlayer = false;
 
 	// Initialization
 	public override void _Ready() {
@@ -106,7 +111,7 @@ public partial class Player : CharacterBody2D {
 
 	// Physics Process
 	public override void _PhysicsProcess(double delta) {
-		if (_isDead) return;
+		if (_isDead || lockPlayer) return; // Disable controls if dead
 
 		_wallJumpLockTimer = Mathf.Max(0f, _wallJumpLockTimer - (float)delta);
 		HandleDashCooldown(delta);
@@ -265,13 +270,35 @@ public partial class Player : CharacterBody2D {
 
 	// Animation
 	private void HandleAnimations() {
-		if (_anim.CurrentAnimation != "Sword" || !_anim.IsPlaying()) {
-			string nextAnim =
-				!IsOnFloor() ? (Velocity.Y < 0f ? "Jump" : "Fall") :
-				Mathf.Abs(Velocity.X) > 1f ? "Run" : "Idle";
-
-			if (_anim.CurrentAnimation != nextAnim)
-				_anim.Play(nextAnim);
+		if(hasSword) {
+			_sword.Visible = true;
+		} else {
+			_sword.Visible = false;
+		}
+		
+		if(Velocity.Y < -10f && Velocity.Y > -200f) {
+			nextAnimation = "Peak";
+		} else if(Velocity.Y < -200f) {
+			nextAnimation = "Jump";
+		} else if(Velocity.Y > 100f) {
+			nextAnimation = "Fall";
+		}  else if(Velocity.Y == 0 && Velocity.X != 0) {
+			if(lastAnimation == "Fall") {
+				nextAnimation = "IntoRun";
+			} else {
+				nextAnimation = "Run";
+			}
+		} else if(Velocity.Y == 0 && Velocity.X == 0) {
+			if(lastAnimation == "Fall") {
+				nextAnimation = "IntoIdle";
+			} else {
+				nextAnimation = "Idle";
+			}
+		}
+		
+		if(_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+			_anim.Play(nextAnimation);
+			lastAnimation = nextAnimation;
 		}
 	}
 
@@ -323,10 +350,12 @@ public partial class Player : CharacterBody2D {
 	}
 
 	public async void areaHazard(Node2D body) {
+		lockPlayer = true;
 		TakeDamage(1);
 		await fade.FadeOut(0.25f);
 		Position = respawnPoint;
 		await fade.FadeIn(0.25f);
+		lockPlayer = false;
 	}
 
 	public void OnCollect(CollectableType type) {
@@ -368,7 +397,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
-		_anim.Play("Idle");
+		_anim.Play("Idle"); //TODO: Move to handleAnimation
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;
 	}
