@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 public partial class Player : CharacterBody2D {
 	// Constants
 	public const float Speed = 700.0f;
-	public const float JumpVelocity = -1250.0f;
+	public const float JumpVelocity = -1500.0f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero;
@@ -352,10 +352,10 @@ public partial class Player : CharacterBody2D {
 	public async void areaHazard(Node2D body) {
 		lockPlayer = true;
 		TakeDamage(1);
-		await fade.FadeOut(0.25f);
+		await fade.FadeOut(0.5f);
 		Position = respawnPoint;
-		await fade.FadeIn(0.25f);
 		lockPlayer = false;
+		await fade.FadeIn(0.5f);
 	}
 
 	public void OnCollect(CollectableType type) {
