@@ -146,7 +146,7 @@ sources/0 = SubResource("TileSetAtlasSource_flkfy")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykuuq"]
 size = Vector2(46, 382)
 
-[node name="Room2" type="Node2D"]
+[node name="Room01" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -594.0
