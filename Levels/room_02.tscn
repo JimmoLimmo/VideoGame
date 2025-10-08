@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=4 uid="uid://dk01o0xsh57wl"]
+[gd_scene load_steps=31 format=4 uid="uid://dk01o0xsh57wl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_ea4ct"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_2s52b"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_vqukl"]
-[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_jerea"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="14_beo6d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h2wd6"]
@@ -340,7 +339,3 @@ texture = SubResource("GradientTexture2D_ofyad")
 visible = false
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("12_vqukl")]
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("13_jerea")
-volume_db = -10.306
