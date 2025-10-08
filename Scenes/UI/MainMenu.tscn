@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="3"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://blemgugjlqkjd" path="res://Levels/room_01.tscn" id="4_744d7"]
-[ext_resource type="Script" path="res://Scenes/UI/OptionsButton.cs" id="4_jex3y"]
+[ext_resource type="Script" uid="uid://bjyk53vwnwrfk" path="res://Scenes/UI/OptionsButton.cs" id="4_jex3y"]
 [ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="5"]
 
 [node name="MainMenu" type="Control"]

@@ -45,33 +45,26 @@ public partial class GlobalRoomChange : Node {
 	}
 
 	private static RoomGroup DetectGroup(Node scene) {
-		// Prefer explicit groups if present
 		if (scene.IsInGroup("music_title")) return RoomGroup.Title;
 		if (scene.IsInGroup("music_overworld")) return RoomGroup.Overworld;
 		if (scene.IsInGroup("music_boss")) return RoomGroup.Boss;
 
-		// --- Automatic fallback detection ---
 		string path = scene.SceneFilePath?.ToLower() ?? "";
-		string name = (string)scene.Name; // Convert StringName → string
-		name = name.ToLowerInvariant();
+		string name = scene.Name.ToString().ToLowerInvariant();
 
-		// Recognize menus/titles automatically
+
 		if (path.Contains("title") || path.Contains("menu") || name.Contains("menu") || name.Contains("title"))
 			return RoomGroup.Title;
 
-		// Recognize bosses
 		if (path.Contains("boss") || name.Contains("boss"))
 			return RoomGroup.Boss;
 
-		// Everything else defaults to Overworld
 		return RoomGroup.Overworld;
 	}
 
-
-	public static async void EnterRoom(string roomName, RoomGroup group) {
+	public static void EnterRoom(string roomName, RoomGroup group) {
 		bool isFirstRoom = string.IsNullOrEmpty(CurrentRoom);
 
-		// Only trigger when changing groups (prevents re-fires each frame)
 		if (group == CurrentGroup && !isFirstRoom)
 			return;
 
