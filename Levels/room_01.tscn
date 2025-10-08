@@ -281,7 +281,7 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="RightExit" parent="." instance=ExtResource("6_2g3pj")]
 position = Vector2(2429, 962)
 ConnectedRoom = "res://Levels/room_02.tscn"
-PlayerPos = Vector2(-140, -105)
+PlayerPos = Vector2(-138, -120)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(-20, -2)
