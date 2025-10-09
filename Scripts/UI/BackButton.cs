@@ -40,8 +40,19 @@ public partial class BackButton : Button {
 
 		await LoadScene(tree, targetScenePath, foundMenu);
 	}
-
 	private async Task LoadScene(SceneTree tree, string path, Node toRemove = null) {
+		// Remove popups in ANY menu currently in the tree
+		foreach (Node node in tree.Root.GetChildren()) {
+			if (node is Control control && control.HasNode("ConfirmationPopup")) {
+				var popup = control.GetNode<Popup>("ConfirmationPopup");
+				if (popup != null && popup.IsInsideTree()) {
+					GD.Print($"[BackButton] Closing lingering popup in {control.Name}");
+					popup.QueueFree();
+				}
+			}
+		}
+
+		// Load new menu
 		var scene = GD.Load<PackedScene>(path);
 		if (scene == null) {
 			GD.PushError($"[BackButton] Failed to load scene: {path}");
@@ -59,4 +70,6 @@ public partial class BackButton : Button {
 			toRemove.QueueFree();
 		}
 	}
+
+
 }

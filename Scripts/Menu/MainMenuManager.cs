@@ -7,7 +7,7 @@ public partial class MainMenuManager : Control {
     List<int> goBackList = new();
 
     public override void _Ready() {
-        var first = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/StartGameBtn");
+        var first = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/NewGameBtn");
         if (first != null)
             first.GrabFocus();
         else

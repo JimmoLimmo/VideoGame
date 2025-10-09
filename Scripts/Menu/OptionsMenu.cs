@@ -29,18 +29,32 @@ public partial class OptionsMenu : Control {
         _inputButton = GetNode<Button>("CenterContainer/VBoxContainer/InputButton");
         _backButton = GetNode<Button>("CenterContainer/VBoxContainer/BackButton");
 
+        // Populate dropdown
         _resolutionDropdown.AddItem("1280 × 720");
         _resolutionDropdown.AddItem("1920 × 1080");
         _resolutionDropdown.AddItem("2560 × 1440");
         _resolutionDropdown.Select(_settings.ResolutionIndex);
 
+        // Apply saved values
         _fullscreenCheck.ButtonPressed = _settings.Fullscreen;
         _masterSlider.Value = _settings.MasterVolume * 100f;
         _musicSlider.Value = _settings.MusicVolume * 100f;
         _sfxSlider.Value = _settings.SfxVolume * 100f;
 
+        // Hook up button signals
         _applyButton.Pressed += OnApplyPressed;
         _inputButton.Pressed += OnInputPressed;
+
+        // Automatically select a button once the scene is ready
+        CallDeferred(nameof(SelectDefault));
+    }
+
+    private void SelectDefault() {
+        // Choose whichever button you want selected first
+        if (IsInstanceValid(_applyButton)) {
+            _applyButton.GrabFocus();
+            GD.Print("[OptionsMenu] Default button focused: Apply");
+        }
     }
 
     private void OnApplyPressed() {

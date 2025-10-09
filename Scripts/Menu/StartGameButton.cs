@@ -15,6 +15,13 @@ public partial class StartGameButton : Button {
 
 		var tree = GetTree();
 
+		// ------------------------------------------------------------
+		// PREVENT REPEAT TRIGGER
+		// ------------------------------------------------------------
+		ReleaseFocus();           // stop receiving further ui_accept input
+		Disabled = true;          // ignore any more presses
+		FocusMode = FocusModeEnum.None;
+		GetViewport().SetInputAsHandled();
 		// --------------------------------------------
 		// 1) Fade out
 		// --------------------------------------------

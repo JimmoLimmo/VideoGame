@@ -131,13 +131,13 @@ text = "Heal"
 script = ExtResource("3")
 ActionName = "heal"
 
-[node name="RebindSpell1" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
+[node name="RebindSpell" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer/RightColumn"]
 custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Spell 1"
+text = "Spell"
 script = ExtResource("3")
-ActionName = "spell_1"
+ActionName = "sword_throw"
 
 [node name="RightColumn2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -159,6 +159,13 @@ theme_override_font_sizes/font_size = 28
 text = "Pause"
 script = ExtResource("3")
 ActionName = "pause"
+
+[node name="ResetButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Reset"
+flat = true
 
 [node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)
