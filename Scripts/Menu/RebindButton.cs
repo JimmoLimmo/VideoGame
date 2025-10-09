@@ -1,73 +1,100 @@
 using Godot;
+using System.Globalization;
+using System.Linq;
 
 public partial class RebindButton : Button {
     [Export] public string ActionName { get; set; } = "";
 
     private bool _waitingForInput = false;
+    private TextInfo _textInfo = CultureInfo.CurrentCulture.TextInfo;
 
     public override void _Ready() {
         UpdateButtonLabel();
         Pressed += OnPressed;
+
+        // Listen for reset signal from InputManager
+        var im = GetNodeOrNull<InputManager>("/root/InputManager");
+        if (im != null)
+            im.BindingsUpdated += UpdateButtonLabel;
+    }
+
+    public override void _ExitTree() {
+        // Disconnect when removed (prevents disposed-object errors)
+        var im = GetNodeOrNull<InputManager>("/root/InputManager");
+        if (im != null)
+            im.BindingsUpdated -= UpdateButtonLabel;
     }
 
     private void OnPressed() {
-        GD.Print($"[RebindButton] Waiting for new input for '{ActionName}'");
-        Text = $"Press any key/button for {ActionName}...";
+        if (_waitingForInput) return;
+
+        string prettyName = _textInfo.ToTitleCase(ActionName.Replace("_", " "));
+        GD.Print($"[RebindButton] Waiting for new input for '{prettyName}'");
+
+        Text = $"Press any key or button for {prettyName}...";
         _waitingForInput = true;
     }
 
     public override void _Input(InputEvent @event) {
         if (!_waitingForInput) return;
 
-        // Handle keyboard keys
+        // --- Keyboard ---
         if (@event is InputEventKey keyEvent && keyEvent.Pressed) {
-            if (keyEvent.Keycode == Key.Escape) { // cancel
+            if (keyEvent.Keycode == Key.Escape) {
                 GD.Print("[RebindButton] Rebinding canceled.");
                 UpdateButtonLabel();
                 _waitingForInput = false;
                 return;
             }
-
             ApplyNewBinding(keyEvent, OS.GetKeycodeString(keyEvent.Keycode));
         }
 
-        // Handle gamepad buttons
+        // --- Gamepad button ---
         else if (@event is InputEventJoypadButton joyButton && joyButton.Pressed) {
-            ApplyNewBinding(joyButton, $"JoyBtn {joyButton.ButtonIndex}");
+            ApplyNewBinding(joyButton, $"Button {joyButton.ButtonIndex}");
         }
 
-        // Handle joystick axes (e.g. triggers)
+        // --- Joystick axis / trigger ---
         else if (@event is InputEventJoypadMotion motion && Mathf.Abs(motion.AxisValue) > 0.5f) {
-            ApplyNewBinding(motion, $"JoyAxis {motion.Axis} {(motion.AxisValue > 0 ? "+" : "-")}");
+            string dir = motion.AxisValue > 0 ? "+" : "–";
+            ApplyNewBinding(motion, $"Axis {motion.Axis}{dir}");
         }
     }
 
     private void ApplyNewBinding(InputEvent evt, string label) {
         InputMap.ActionEraseEvents(ActionName);
         InputMap.ActionAddEvent(ActionName, evt);
-        Text = $"{ActionName}: {label}";
+
+        string prettyName = _textInfo.ToTitleCase(ActionName.Replace("_", " "));
+        Text = $"{prettyName}: {label}";
         _waitingForInput = false;
 
-        // Automatically save via InputManager autoload
+        // Save through InputManager autoload
         var im = GetNodeOrNull<InputManager>("/root/InputManager");
         im?.SaveBindings();
 
-        GD.Print($"[RebindButton] '{ActionName}' rebound to {label} and saved.");
+        GD.Print($"[RebindButton] '{prettyName}' rebound to {label} and saved.");
     }
 
-
-    private void UpdateButtonLabel() {
+    public void UpdateButtonLabel() {
+        string prettyName = _textInfo.ToTitleCase(ActionName.Replace("_", " "));
         var events = InputMap.ActionGetEvents(ActionName);
-        foreach (var e in events) {
-            if (e is InputEventKey key)
-                Text = $"{ActionName}: {OS.GetKeycodeString(key.Keycode)}";
-            else if (e is InputEventJoypadButton joy)
-                Text = $"{ActionName}: JoyBtn {joy.ButtonIndex}";
-            else if (e is InputEventJoypadMotion motion)
-                Text = $"{ActionName}: JoyAxis {motion.Axis}";
+
+        if (events.Count == 0) {
+            Text = $"{prettyName}: None";
+            return;
         }
 
-        if (events.Count == 0)
-            Text = $"{ActionName}: None";
+        // Use first binding for display
+        var e = events.First();
+        string bindingText = e switch {
+            InputEventKey key => OS.GetKeycodeString(key.Keycode),
+            InputEventJoypadButton jb => $"Button {jb.ButtonIndex}",
+            InputEventJoypadMotion jm => $"Axis {jm.Axis}",
+            InputEventMouseButton mb => $"Mouse {mb.ButtonIndex}",
+            _ => "None"
+        };
+
+        Text = $"{prettyName}: {bindingText}";
     }
 }

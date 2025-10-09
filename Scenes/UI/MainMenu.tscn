@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://ba44x8ph62b3p"]
+[gd_scene load_steps=10 format=3 uid="uid://ba44x8ph62b3p"]
 
 [ext_resource type="Script" uid="uid://bwrmaq58dyppy" path="res://Scripts/Menu/MainMenuManager.cs" id="1"]
-[ext_resource type="Script" uid="uid://brxmvjgsn0dss" path="res://Scripts/Menu/StartGameButton.cs" id="2"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="3"]
+[ext_resource type="Script" uid="uid://l147b2xslerl" path="res://Scenes/UI/NewGameBtn.cs" id="3_744d7"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://blemgugjlqkjd" path="res://Levels/room_01.tscn" id="4_744d7"]
 [ext_resource type="Script" uid="uid://bjyk53vwnwrfk" path="res://Scripts/UI/OptionsButton.cs" id="4_jex3y"]
+[ext_resource type="Script" uid="uid://g0caqsgckllm" path="res://Scenes/UI/ContinueBtn.cs" id="4_kl3t2"]
 [ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="5"]
+[ext_resource type="PackedScene" uid="uid://bjqbi5kd08bsb" path="res://Scenes/UI/ConfirmationPopup.tscn" id="9_ynupv"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -45,11 +47,18 @@ theme_override_font_sizes/font_size = 48
 text = "Temp Title"
 horizontal_alignment = 1
 
-[node name="StartGameBtn" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="NewGameBtn" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "Start Game"
-script = ExtResource("2")
+text = "New Game"
+script = ExtResource("3_744d7")
 sceneToSwitchTo = ExtResource("4_744d7")
+confirmationPopupPath = NodePath("../../../ConfirmationPopup")
+
+[node name="ContinueBtn" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+script = ExtResource("4_kl3t2")
+confirmationPopupPath = NodePath("../../../ConfirmationPopup")
 
 [node name="OptionsBtn" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
@@ -60,5 +69,8 @@ script = ExtResource("4_jex3y")
 layout_mode = 2
 text = "Quit"
 script = ExtResource("3")
+confirmationPopupPath = NodePath("../../../ConfirmationPopup")
 
 [node name="ScreenFade" parent="." instance=ExtResource("4")]
+
+[node name="ConfirmationPopup" parent="." instance=ExtResource("9_ynupv")]
