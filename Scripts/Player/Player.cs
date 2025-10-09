@@ -135,8 +135,9 @@ public partial class Player : CharacterBody2D {
 			HandleJump();         // Allow jumping regardless of dash
 			HandleDashInput();    // Still process new dash input
 			HandleAttack(delta);  // Allow attacking mid-air or mid-dash
-			HandleAnimations();   // Update animation
 		}
+		
+		HandleAnimations();   // Update animation
 
 		if (_invulnerable) {
 			_invulnTimer -= (float)delta;
@@ -285,7 +286,9 @@ public partial class Player : CharacterBody2D {
 			_sword.Visible = false;
 		}
 		
-		if(Velocity.Y < -10f && Velocity.Y > -200f) {
+		if(holdPlayer) {
+			nextAnimation = ("Stagger");
+		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		} else if(Velocity.Y < -200f) {
 			nextAnimation = "Jump";
@@ -403,7 +406,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
-		_anim.Play("Stagger"); //TODO: Move to handleAnimation
+		
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;
 	}

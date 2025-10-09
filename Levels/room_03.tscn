@@ -217,10 +217,6 @@ color = Color(1, 1, 1, 0)
 [node name="Player" parent="." instance=ExtResource("3_u616v")]
 position = Vector2(-139, -126)
 
-[node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
-position = Vector2(1276, -62)
-scale = Vector2(5.345, 5.345)
-
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
 
@@ -349,3 +345,7 @@ size = 50
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_qlb0f")
 volume_db = -10.306
+
+[node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
+position = Vector2(1127, -120)
+rotation = -0.890118

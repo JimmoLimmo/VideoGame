@@ -37,20 +37,15 @@ public partial class Sword : Area2D
 		
 		foreach(Area2D area in areas) {
 			if(_hitEnemies.Add(area)) {
-				GD.Print("Hit " + area.Name);
 				
 				Node current = area;
 				while(current != null && !current.HasMethod("TakeDamage")) {
 					current = current.GetParent();
-					GD.Print("Check next");
 				}
 				
 				if(current == null) {
-					GD.Print("null");
 					continue;
 				}
-				
-				GD.Print("Hit Node: " + current.Name);
 				
 				if(current.HasMethod("TakeDamage")) {
 					current.CallDeferred("TakeDamage", Damage);
