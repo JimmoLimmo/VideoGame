@@ -4,6 +4,7 @@
 
 [node name="ConfirmationPopup" type="Popup"]
 size = Vector2i(400, 200)
+visible = true
 script = ExtResource("1_nkjrg")
 
 [node name="Panel" type="Panel" parent="."]
