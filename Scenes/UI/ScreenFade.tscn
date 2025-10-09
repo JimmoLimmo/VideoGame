@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://37u71xd2t6a6" path="res://Scripts/UI/ScreenFader.cs" id="1_2kumr"]
 
 [node name="ScreenFade" type="CanvasLayer" node_paths=PackedStringArray("FadeRect")]
+layer = 100
 script = ExtResource("1_2kumr")
 FadeRect = NodePath("ColorRect")
 
