@@ -15,7 +15,7 @@ public partial class ContinueBtn : Button {
 		// 	_popup?.ShowPopup("No save data found.");
 		// 	return;
 		// }
-		_popup?.ShowInfo("No Save Data Found.");
+		_popup?.ShowPopup("No Save Data Found.", null, false);
 		return;
 		// TODO: Load save data once SaveSystem is complete.
 	}

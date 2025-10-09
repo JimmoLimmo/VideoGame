@@ -12,16 +12,8 @@ public partial class NewGameBtn : Button {
 		_popup = GetNodeOrNull<ConfirmationPopup>(confirmationPopupPath);
 	}
 
-	private async void OnPressed() {
-		// if (SaveSystem.HasSaveData()) {
-		// 	_popup?.ShowPopup(
-		// 		"Start a new game?\nExisting save data will be lost.",
-		// 		async () => await StartNewGame()
-		// 	);
-		// }
-		// else {
-		// 	await StartNewGame();
-		// }
+	private void OnPressed() {
+		// Swap to OK/YesNo later when save system lands
 		_popup?.ShowPopup(
 			"Start a New Game?\nExisting Save Data Will Be Lost.",
 			async () => await StartNewGame()
@@ -33,24 +25,20 @@ public partial class NewGameBtn : Button {
 		Disabled = true;
 
 		var tree = GetTree();
-		tree.Root.GuiDisableInput = true; //  freeze UI input temporarily
 
+		// Use global fader instance (autoload pattern)
 		var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
-		if (fader != null)
-			await fader.FadeOut(0.5f);
+		if (fader != null) await fader.FadeOut(0.5f);
 
 		tree.ChangeSceneToPacked(sceneToSwitchTo);
 
+		// Let the new scene settle
 		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
 		GlobalRoomChange.ForceUpdate();
 
-		if (fader != null)
-			await fader.FadeIn(0.5f, true);
-
-		tree.Root.GuiDisableInput = false; // re-enable after fade
+		if (fader != null) await fader.FadeIn(0.5f, true);
 		Disabled = false;
 	}
-
 }

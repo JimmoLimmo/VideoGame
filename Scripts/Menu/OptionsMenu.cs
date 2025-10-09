@@ -14,6 +14,9 @@ public partial class OptionsMenu : Control {
     private Button _backButton;
 
     public override void _Ready() {
+        FocusMode = FocusModeEnum.All;
+        MouseFilter = MouseFilterEnum.Stop;
+
         _settings = GetNodeOrNull<SettingsManager>("/root/SettingsManager");
         if (_settings == null) {
             GD.PushWarning("[OptionsMenu] SettingsManager not found in autoload.");
@@ -29,32 +32,25 @@ public partial class OptionsMenu : Control {
         _inputButton = GetNode<Button>("CenterContainer/VBoxContainer/InputButton");
         _backButton = GetNode<Button>("CenterContainer/VBoxContainer/BackButton");
 
-        // Populate dropdown
         _resolutionDropdown.AddItem("1280 × 720");
         _resolutionDropdown.AddItem("1920 × 1080");
         _resolutionDropdown.AddItem("2560 × 1440");
         _resolutionDropdown.Select(_settings.ResolutionIndex);
 
-        // Apply saved values
         _fullscreenCheck.ButtonPressed = _settings.Fullscreen;
         _masterSlider.Value = _settings.MasterVolume * 100f;
         _musicSlider.Value = _settings.MusicVolume * 100f;
         _sfxSlider.Value = _settings.SfxVolume * 100f;
 
-        // Hook up button signals
         _applyButton.Pressed += OnApplyPressed;
         _inputButton.Pressed += OnInputPressed;
 
-        // Automatically select a button once the scene is ready
-        CallDeferred(nameof(SelectDefault));
+        CallDeferred(nameof(RegrabFocus));
     }
 
-    private void SelectDefault() {
-        // Choose whichever button you want selected first
-        if (IsInstanceValid(_applyButton)) {
-            _applyButton.GrabFocus();
-            GD.Print("[OptionsMenu] Default button focused: Apply");
-        }
+    private void RegrabFocus() {
+        _applyButton?.GrabFocus();
+        GD.Print("[OptionsMenu] Focus set to Apply");
     }
 
     private void OnApplyPressed() {
@@ -74,22 +70,21 @@ public partial class OptionsMenu : Control {
 
     private async void OnInputPressed() {
         var tree = GetTree();
-
-        // Load InputMenu scene
         var inputScene = GD.Load<PackedScene>("res://Scenes/UI/InputMenu.tscn");
         if (inputScene == null) {
-            GD.PushError("[OptionsMenu] Failed to load InputMenu scene!");
+            GD.PushError("[OptionsMenu] Failed to load InputMenu.tscn");
             return;
         }
 
         var inputMenu = inputScene.Instantiate<Control>();
         tree.Root.AddChild(inputMenu);
-
         await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
-        // Remove this OptionsMenu so only InputMenu shows
-        QueueFree();
+        // Make sure new menu has focus
+        if (inputMenu.HasMethod("RegrabFocus"))
+            inputMenu.CallDeferred("RegrabFocus");
 
+        QueueFree(); // remove old options
         GD.Print("[OptionsMenu] Switched to InputMenu.");
     }
 }

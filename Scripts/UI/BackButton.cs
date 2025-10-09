@@ -11,48 +11,40 @@ public partial class BackButton : Button {
 		Node current = this;
 		Control foundMenu = null;
 
-		// Walk up the tree until we find a node with one of the known menu names
+		// Find the menu root (MainMenu / OptionsMenu / InputMenu)
 		while (current != null) {
-			if (current is Control control) {
-				string name = control.Name.ToString().ToLowerInvariant();
-
-				if (name.Contains("optionsmenu") || name.Contains("inputmenu") || name.Contains("mainmenu")) {
-					foundMenu = control;
+			if (current is Control c) {
+				string n = c.Name.ToString().ToLowerInvariant();
+				if (n.Contains("optionsmenu") || n.Contains("inputmenu") || n.Contains("mainmenu")) {
+					foundMenu = c;
 					break;
 				}
 			}
 			current = current.GetParent();
 		}
 
-		string targetScenePath = "res://Scenes/UI/MainMenu.tscn";
-
+		string target = "res://Scenes/UI/MainMenu.tscn";
 		if (foundMenu != null) {
-			string name = foundMenu.Name.ToString().ToLowerInvariant();
-
-			if (name.Contains("optionsmenu"))
-				targetScenePath = "res://Scenes/UI/MainMenu.tscn";
-			else if (name.Contains("inputmenu"))
-				targetScenePath = "res://Scenes/UI/OptionsMenu.tscn";
-		}
-		else {
-			GD.PushWarning("[BackButton] Could not find menu root — defaulting to MainMenu.");
+			string n = foundMenu.Name.ToString().ToLowerInvariant();
+			if (n.Contains("optionsmenu")) target = "res://Scenes/UI/MainMenu.tscn";
+			else if (n.Contains("inputmenu")) target = "res://Scenes/UI/OptionsMenu.tscn";
 		}
 
-		await LoadScene(tree, targetScenePath, foundMenu);
+		await LoadScene(tree, target, foundMenu);
 	}
+
 	private async Task LoadScene(SceneTree tree, string path, Node toRemove = null) {
-		// Remove popups in ANY menu currently in the tree
+		// Clean up any lingering ConfirmationPopup anywhere
 		foreach (Node node in tree.Root.GetChildren()) {
-			if (node is Control control && control.HasNode("ConfirmationPopup")) {
-				var popup = control.GetNode<Popup>("ConfirmationPopup");
+			if (node is Control c && c.HasNode("ConfirmationPopup")) {
+				var popup = c.GetNode<Popup>("ConfirmationPopup");
 				if (popup != null && popup.IsInsideTree()) {
-					GD.Print($"[BackButton] Closing lingering popup in {control.Name}");
+					GD.Print($"[BackButton] Closing lingering popup in {c.Name}");
 					popup.QueueFree();
 				}
 			}
 		}
 
-		// Load new menu
 		var scene = GD.Load<PackedScene>(path);
 		if (scene == null) {
 			GD.PushError($"[BackButton] Failed to load scene: {path}");
@@ -65,11 +57,12 @@ public partial class BackButton : Button {
 
 		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
+		if (newScene.HasMethod("RegrabFocus"))
+			newScene.CallDeferred("RegrabFocus");
+
 		if (toRemove != null && toRemove.IsInsideTree()) {
 			GD.Print($"[BackButton] Removing {toRemove.Name}");
 			toRemove.QueueFree();
 		}
 	}
-
-
 }
