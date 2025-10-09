@@ -1,12 +1,12 @@
-[gd_scene load_steps=43 format=4 uid="uid://dvltqe00uspnr"]
+[gd_scene load_steps=40 format=4 uid="uid://dvltqe00uspnr"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_iu71e"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_kum27"]
-[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/player.tscn" id="3_1nl82"]
+[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="3_1nl82"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="5_gvkpr"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="5_kum27"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_we7oa"]
-[ext_resource type="Shader" path="res://Scripts/Shader/blurTextureRect.gdshader" id="7_sseqj"]
+[ext_resource type="Shader" uid="uid://cpw60ms6btn2x" path="res://Scripts/Shader/blurTextureRect.gdshader" id="7_sseqj"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="8_yxq45"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_xf327"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="10_aqq4m"]
@@ -166,18 +166,6 @@ polygon = PackedVector2Array(6518, -413, 6516, 35, -267, 28, -266, -413, 1398, -
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_cukd5"]
 gradient = SubResource("Gradient_r1pom")
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_1nl82"]
-polygon = PackedVector2Array(808, -1053, 1008, -1053, 3659, 107, 3115, 398, 639, 413, -435, 66, -379, -588)
-
-[sub_resource type="Gradient" id="Gradient_f4wdb"]
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_h8xti"]
-gradient = SubResource("Gradient_f4wdb")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 1)
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u616v"]
 shader = ExtResource("7_sseqj")
 shader_parameter/blur_power = 0.0
@@ -200,7 +188,7 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 sources/0 = SubResource("TileSetAtlasSource_1hv4j")
 
-[node name="Room03" type="Node2D"]
+[node name="Room04" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -535.0
@@ -424,17 +412,6 @@ position = Vector2(5998.21, -128.656)
 scale = Vector2(8.25647, 4.92674)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
-
-[node name="LightOccluder2D" type="LightOccluder2D" parent="Lighting"]
-occluder = SubResource("OccluderPolygon2D_1nl82")
-
-[node name="PointLight2D" type="PointLight2D" parent="Lighting/LightOccluder2D"]
-position = Vector2(899, -1032)
-scale = Vector2(91.2891, 58.6484)
-color = Color(0.695015, 0.34221, 0.102818, 1)
-energy = 0.72
-shadow_enabled = true
-texture = SubResource("GradientTexture2D_h8xti")
 
 [node name="Parallax2D" type="Parallax2D" parent="."]
 scroll_scale = Vector2(1.2, 1.2)
