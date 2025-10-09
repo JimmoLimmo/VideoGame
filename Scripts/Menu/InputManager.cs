@@ -104,6 +104,19 @@ public partial class InputManager : Node {
             var arr = kv.Value;
             if (!InputMap.HasAction(action)) continue;
 
+            // If no events were stored for this action, restore defaults
+            if (arr.Count == 0) {
+                if (action.StartsWith("ui_text_"))
+                    continue; // Skip engine/editor text actions
+
+                GD.PushWarning($"[InputManager] Action '{action}' had no bindings, restoring default.");
+                if (_defaultBindings.ContainsKey(action)) {
+                    foreach (var e in _defaultBindings[action])
+                        InputMap.ActionAddEvent(action, (InputEvent)e.Duplicate());
+                }
+            }
+
+
             InputMap.ActionEraseEvents(action);
 
             foreach (var eDict in arr) {
@@ -153,11 +166,34 @@ public partial class InputManager : Node {
     // ------------------------------------------------------------
     // Restore defaults correctly
     // ------------------------------------------------------------
-    public void ResetToDefaults() {
-        GD.Print("[InputManager] Resetting to captured project defaults...");
-        RestoreDefaults();
-        SaveBindings(); // also triggers signal
+    // ------------------------------------------------------------
+    // Safe Reset & Restore
+    // ------------------------------------------------------------
+    public async void ResetToDefaults() {
+        GD.Print("[InputManager] Resetting to true project defaults...");
+
+        // 1. Reload all input definitions from project settings
+        InputMap.LoadFromProjectSettings();
+
+        // 2. Rebuild the internal cache of defaults for consistency
+        _defaultBindings.Clear();
+        foreach (string action in InputMap.GetActions()) {
+            var arr = new Godot.Collections.Array<InputEvent>();
+            foreach (var e in InputMap.ActionGetEvents(action))
+                arr.Add((InputEvent)e.Duplicate());
+            _defaultBindings[action] = arr;
+        }
+
+        // 3. Wait one frame for stability (Godot 4 syntax)
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
+        // 4. Save & emit event so UI refreshes and JSON is accurate
+        SaveBindings();
+        EmitSignal(SignalName.BindingsUpdated);
+
+        GD.Print("[InputManager] Defaults restored, saved, and synchronized.");
     }
+
 
     private void RestoreDefaults() {
         // Clear all existing bindings first

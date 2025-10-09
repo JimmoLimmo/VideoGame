@@ -15,20 +15,43 @@ public partial class InputMenu : Control {
 		_backButton.Pressed += OnBackPressed;
 		_resetButton.Pressed += OnResetPressed;
 
+		// Connect InputManager signal → UI refresh
+		_inputManager.Connect(InputManager.SignalName.BindingsUpdated, new Callable(this, nameof(OnBindingsUpdated)));
+
 		UpdateButtonLabels();
+
+		// Default selection for controller/keyboard
+		CallDeferred(nameof(SelectDefaultButton));
 	}
 
-	private async void OnResetPressed() {
-		_inputManager.ResetToDefaults();
+	private void SelectDefaultButton() {
+		if (IsInstanceValid(_backButton)) {
+			_backButton.GrabFocus();
+			GD.Print("[InputMenu] Default button focused: Back");
+		}
+	}
 
-		// wait one frame before updating UI
+	// --------------------------------------------------------------------
+	// Called whenever InputManager updates bindings (load/reset/rebind)
+	// --------------------------------------------------------------------
+	private async void OnBindingsUpdated() {
+		// Give Godot one frame to finish updating InputMap
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-
 		UpdateButtonLabels();
+		GD.Print("[InputMenu] BindingsUpdated signal received → UI refreshed.");
+	}
+
+	// --------------------------------------------------------------------
+	// Reset Bindings
+	// --------------------------------------------------------------------
+	private void OnResetPressed() {
+		_inputManager.ResetToDefaults();
 		GD.Print("[InputMenu] Reset pressed — defaults restored and saved.");
 	}
 
-
+	// --------------------------------------------------------------------
+	// Back Button → Returns to Options Menu
+	// --------------------------------------------------------------------
 	private async void OnBackPressed() {
 		var tree = GetTree();
 		var scene = GD.Load<PackedScene>("res://Scenes/UI/OptionsMenu.tscn");
@@ -50,9 +73,9 @@ public partial class InputMenu : Control {
 		GD.Print("[InputMenu] Switched back to OptionsMenu.");
 	}
 
-	// ------------------------------------------------------------
+	// --------------------------------------------------------------------
 	// Label helpers
-	// ------------------------------------------------------------
+	// --------------------------------------------------------------------
 	private void UpdateButtonLabels() {
 		foreach (var node in GetTree().GetNodesInGroup("rebind_buttons")) {
 			if (node is Button btn && btn.HasMeta("ActionName")) {

@@ -45,14 +45,27 @@ public partial class GlobalRoomChange : Node {
 	// --------------------------------------------------------------------
 	// ForceUpdate — call this after ChangeSceneToPacked() to sync HUD/music
 	// --------------------------------------------------------------------
-	public static void ForceUpdate() {
+	public static async void ForceUpdate() {
 		var tree = Engine.GetMainLoop() as SceneTree;
-		var scene = tree?.CurrentScene;
-		if (scene != null)
-			UpdateScene(scene);
-		else
-			GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but no current scene found.");
+		if (tree == null) {
+			GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but SceneTree missing.");
+			return;
+		}
+
+		// Wait a frame if the current scene isn't ready yet
+		if (tree.CurrentScene == null) {
+			await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+		}
+
+		var scene = tree.CurrentScene;
+		if (scene == null) {
+			GD.PushWarning("[GlobalRoomChange] ForceUpdate() still no scene after waiting — aborting.");
+			return;
+		}
+
+		UpdateScene(scene);
 	}
+
 
 	// --------------------------------------------------------------------
 	// Internal helpers
