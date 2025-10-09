@@ -2,8 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public partial class HUD : CanvasLayer
-{
+public partial class HUD : CanvasLayer {
 	[Export] public int MaxMasks { get; set; } = 5;
 	[Export] public int size = 150;
 
@@ -17,15 +16,16 @@ public partial class HUD : CanvasLayer
 	private HBoxContainer _healthBox;
 	private readonly List<TextureRect> _maskIcons = new();
 
-	public override async void _Ready()
-	{
+	// --------------------------------------------------------------------
+	// Node lifecycle
+	// --------------------------------------------------------------------
+	public override async void _Ready() {
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 
 		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath)
 			?? FindChild("Health", true, false) as HBoxContainer;
 
-		if (_healthBox == null)
-		{
+		if (_healthBox == null) {
 			GD.PushError("[HUD] ERROR: Health container not found.");
 			return;
 		}
@@ -34,14 +34,27 @@ public partial class HUD : CanvasLayer
 		BuildMaskRow(MaxMasks);
 		SetHealth(MaxMasks);
 
+		// Connect to room group changes
+		GlobalRoomChange.RoomGroupChanged += OnRoomGroupChanged;
+
 		// Apply correct visibility for the starting scene
 		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
 	}
 
-	public void UpdateVisibilityFromGroup(RoomGroup group)
-	{
-		switch (group)
-		{
+	public override void _ExitTree() {
+		// Clean up event subscription to prevent leaks
+		GlobalRoomChange.RoomGroupChanged -= OnRoomGroupChanged;
+	}
+
+	// --------------------------------------------------------------------
+	// Visibility
+	// --------------------------------------------------------------------
+	private void OnRoomGroupChanged(RoomGroup group) {
+		UpdateVisibilityFromGroup(group);
+	}
+
+	public void UpdateVisibilityFromGroup(RoomGroup group) {
+		switch (group) {
 			case RoomGroup.Title:
 				Visible = false;
 				break;
@@ -53,18 +66,18 @@ public partial class HUD : CanvasLayer
 		GD.Print($"[HUD] Visibility updated for group: {group} -> Visible={Visible}");
 	}
 
-	private void BuildMaskRow(int count)
-	{
+	// --------------------------------------------------------------------
+	// Health Display
+	// --------------------------------------------------------------------
+	private void BuildMaskRow(int count) {
 		if (_healthBox == null) return;
 
 		foreach (var child in _healthBox.GetChildren())
 			(child as Node)?.QueueFree();
 		_maskIcons.Clear();
 
-		for (int i = 0; i < count; i++)
-		{
-			var icon = new TextureRect
-			{
+		for (int i = 0; i < count; i++) {
+			var icon = new TextureRect {
 				StretchMode = TextureRect.StretchModeEnum.Scale,
 				CustomMinimumSize = new Vector2(28, 28),
 				Size = new Vector2(size, size),
@@ -76,23 +89,20 @@ public partial class HUD : CanvasLayer
 		}
 	}
 
-	public void SetHealth(int current)
-	{
+	public void SetHealth(int current) {
 		if (_healthBox == null) return;
 
 		current = Mathf.Clamp(current, 0, MaxMasks);
 		if (_maskIcons.Count != MaxMasks)
 			BuildMaskRow(MaxMasks);
 
-		for (int i = 0; i < MaxMasks; i++)
-		{
+		for (int i = 0; i < MaxMasks; i++) {
 			_maskIcons[i].Texture = (i < current) ? MaskFull : MaskEmpty;
 			_maskIcons[i].Size = new Vector2(size, size);
 		}
 	}
 
-	public async void FlashDamage()
-	{
+	public async void FlashDamage() {
 		if (_healthBox == null) return;
 
 		var tween = CreateTween();
@@ -102,10 +112,16 @@ public partial class HUD : CanvasLayer
 		await ToSignal(tween, Tween.SignalName.Finished);
 	}
 
-	public void RebuildAndSet(int max, int current)
-	{
+	public void RebuildAndSet(int max, int current) {
 		MaxMasks = max;
 		BuildMaskRow(MaxMasks);
 		SetHealth(current);
+	}
+
+	// --------------------------------------------------------------------
+	// Manual refresh helper (optional)
+	// --------------------------------------------------------------------
+	public void RefreshVisibility() {
+		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
 	}
 }
