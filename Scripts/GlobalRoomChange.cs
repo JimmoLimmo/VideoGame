@@ -1,13 +1,12 @@
 using Godot;
 using System.Collections.Generic;
 
-public enum RoomGroup {
-	Title,
-	Overworld,
-	Boss
-}
+public enum RoomGroup { Title, Overworld, Boss }
 
 public partial class GlobalRoomChange : Node {
+	// --------------------------------------------------------------------
+	// Public static fields / properties
+	// --------------------------------------------------------------------
 	public static bool Activate { get; set; } = false;
 	public static Vector2 PlayerPos { get; set; } = new Vector2();
 	public static bool PlayerJumpOnEnter { get; set; } = false;
@@ -18,14 +17,20 @@ public partial class GlobalRoomChange : Node {
 
 	public static Dictionary<string, bool> destroyedWalls = new();
 
-	public static void MarkWallBroken(string wallId) => destroyedWalls[wallId] = true;
-	public static bool IsWallBroken(string wallId) => destroyedWalls.ContainsKey(wallId) && destroyedWalls[wallId];
-
 	public static string CurrentRoom { get; private set; } = "";
 	public static RoomGroup CurrentGroup { get; private set; } = RoomGroup.Title;
 
 	private Node _lastScene;
 
+	// --------------------------------------------------------------------
+	// C# event (replaces [Signal])
+	// --------------------------------------------------------------------
+	public delegate void RoomGroupChangedEventHandler(RoomGroup group);
+	public static event RoomGroupChangedEventHandler RoomGroupChanged;
+
+	// --------------------------------------------------------------------
+	// Node lifecycle
+	// --------------------------------------------------------------------
 	public override void _Ready() {
 		ProcessMode = Node.ProcessModeEnum.Always;
 	}
@@ -34,7 +39,25 @@ public partial class GlobalRoomChange : Node {
 		var scene = GetTree().CurrentScene;
 		if (scene == _lastScene || scene == null) return;
 		_lastScene = scene;
+		UpdateScene(scene);
+	}
 
+	// --------------------------------------------------------------------
+	// ForceUpdate — call this after ChangeSceneToPacked() to sync HUD/music
+	// --------------------------------------------------------------------
+	public static void ForceUpdate() {
+		var tree = Engine.GetMainLoop() as SceneTree;
+		var scene = tree?.CurrentScene;
+		if (scene != null)
+			UpdateScene(scene);
+		else
+			GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but no current scene found.");
+	}
+
+	// --------------------------------------------------------------------
+	// Internal helpers
+	// --------------------------------------------------------------------
+	private static void UpdateScene(Node scene) {
 		RoomGroup group = DetectGroup(scene);
 
 		string roomName = !string.IsNullOrEmpty(scene.SceneFilePath)
@@ -52,27 +75,36 @@ public partial class GlobalRoomChange : Node {
 		string path = scene.SceneFilePath?.ToLower() ?? "";
 		string name = scene.Name.ToString().ToLowerInvariant();
 
-
 		if (path.Contains("title") || path.Contains("menu") || name.Contains("menu") || name.Contains("title"))
 			return RoomGroup.Title;
-
 		if (path.Contains("boss") || name.Contains("boss"))
 			return RoomGroup.Boss;
 
 		return RoomGroup.Overworld;
 	}
 
+	// --------------------------------------------------------------------
+	// Public API
+	// --------------------------------------------------------------------
+	public static void MarkWallBroken(string wallId) => destroyedWalls[wallId] = true;
+	public static bool IsWallBroken(string wallId) => destroyedWalls.ContainsKey(wallId) && destroyedWalls[wallId];
+
 	public static void EnterRoom(string roomName, RoomGroup group) {
 		bool isFirstRoom = string.IsNullOrEmpty(CurrentRoom);
-
 		if (group == CurrentGroup && !isFirstRoom)
 			return;
 
 		CurrentRoom = roomName;
 		CurrentGroup = group;
 
+		// Notify listeners (HUD, etc.)
+		RoomGroupChanged?.Invoke(group);
+
 		var mm = (Engine.GetMainLoop() as SceneTree)?.Root?.GetNodeOrNull<MusicManager>("MusicManager");
-		if (mm == null) return;
+		if (mm == null) {
+			GD.PushWarning("[GlobalRoomChange] MusicManager not found.");
+			return;
+		}
 
 		GD.Print($"[GlobalRoomChange] Entered room: {roomName} (Group: {group})");
 
