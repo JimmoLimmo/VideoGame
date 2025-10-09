@@ -20,35 +20,28 @@ public partial class NewGameBtn : Button {
 	}
 
 	private async Task StartNewGame() {
-		var tree = GetTree();
-
-		// Release UI focus cleanly via viewport
-		GetViewport().GuiReleaseFocus();
-		tree.Root.GuiDisableInput = true;
+		ReleaseFocus();
 		Disabled = true;
 
+		var tree = GetTree();
 		var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
 		if (fader != null)
-			await fader.FadeOut(0.5f);
-
-		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+			await fader.FadeOut(0.4f);
 
 		tree.ChangeSceneToPacked(sceneToSwitchTo);
 
-		for (int i = 0; i < 3; i++)
-			await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+		// Give the new scene a moment to fully initialize (HUD, overlays, etc.)
+		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
 		GlobalRoomChange.ForceUpdate();
 
 		if (fader != null)
-			await fader.FadeIn(0.5f, true);
+			await fader.FadeIn(0.4f, true);
 
-		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-		tree.Root.GuiDisableInput = false;
 		Disabled = false;
-
-		CallDeferred(nameof(QueueFree));
 	}
+
 
 
 }
