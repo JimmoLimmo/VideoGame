@@ -2,35 +2,72 @@ using Godot;
 using System.Threading.Tasks;
 
 public partial class StartGameButton : Button {
-	[Export] private PackedScene sceneToSwitchTo;
-	private ScreenFader _fade;
+	[Export] private PackedScene sceneToSwitchTo; // Assign your first gameplay / overworld scene in the Inspector
+	private bool _isTransitioning = false;
 
 	public override void _Ready() {
 		Pressed += OnStartGameButtonPressed;
-		_fade = GetTree().CurrentScene?.GetNodeOrNull<ScreenFader>("ScreenFade");
-		if (_fade == null)
-			GD.PushWarning("[StartGameButton] ScreenFade node not found. Fade will be skipped.");
 	}
 
 	private async void OnStartGameButtonPressed() {
-		if (sceneToSwitchTo == null) return;
+		if (_isTransitioning) return;
+		_isTransitioning = true;
 
 		var tree = GetTree();
-		tree.Paused = false;
 
-		// fade out first
-		if (_fade != null)
-			await _fade.FadeOut(0.6f);
+		// --------------------------------------------
+		// 1) Fade out
+		// --------------------------------------------
+		var fader = tree.CurrentScene?.GetNodeOrNull<ScreenFader>("ScreenFade");
+		if (fader != null)
+			await fader.FadeOut(0.5f);
 
-		// switch scenes
+		// --------------------------------------------
+		// 2) Remove leftover menus (MainMenu, OptionsMenu, InputMenu, etc.)
+		// --------------------------------------------
+		// Defer freeing menus to the next idle frame (prevents freeing this script's parent mid-call)
+		var menusToFree = new Godot.Collections.Array<Node>();
+		foreach (Node child in tree.Root.GetChildren()) {
+			string lower = child.Name.ToString().ToLowerInvariant();
+			if (lower.Contains("menu")) {
+				menusToFree.Add(child);
+				GD.Print($"[StartGameButton] Queuing menu for removal: {child.Name}");
+			}
+		}
+		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+		foreach (var menu in menusToFree)
+			if (menu.IsInsideTree())
+				menu.QueueFree();
+
+
+		// --------------------------------------------
+		// 3) Load gameplay scene
+		// --------------------------------------------
+		if (sceneToSwitchTo == null) {
+			GD.PushError("[StartGameButton] No gameplay scene assigned!");
+			_isTransitioning = false;
+			return;
+		}
+
+		tree.Paused = false; // Just in case menu paused the tree
 		tree.ChangeSceneToPacked(sceneToSwitchTo);
 
-		//TODO: Change to something else, not able to find whats needed.
-		// fade back in once new scene has loaded
-		//await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-//
-		//var newFade = tree.CurrentScene?.GetNodeOrNull<ScreenFader>("ScreenFade");
-		//if (newFade != null)
-			//await newFade.FadeIn(0.55f);
+		// Wait one frame so the new scene is ready
+		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+
+		// --------------------------------------------
+		// 4) Immediately sync HUD and music
+		// --------------------------------------------
+		GlobalRoomChange.ForceUpdate(); // calls EnterRoom and triggers HUD/music setup
+
+		// --------------------------------------------
+		// 5) Fade in after loading
+		// --------------------------------------------
+		var newFader = tree.CurrentScene?.GetNodeOrNull<ScreenFader>("ScreenFade");
+		if (newFader != null)
+			await newFader.FadeIn(0.5f, true);
+
+		GD.Print("[StartGameButton] Game started successfully.");
+		_isTransitioning = false;
 	}
 }
