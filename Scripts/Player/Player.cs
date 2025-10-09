@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 
 public partial class Player : CharacterBody2D {
 	// Constants
-	public const float Speed = 700.0f;
-	public const float JumpVelocity = -1500.0f;
+	[Export] public float Speed = 700.0f;
+	[Export] public float JumpVelocity = -1250.0f;
+	[Export] public float fallAcceleration = 2.5f;
 
 	// Movement Variables
 	private Vector2 _dashDirection = Vector2.Zero;
@@ -19,8 +20,8 @@ public partial class Player : CharacterBody2D {
 	private bool holdPlayer = false;
 
 	// Wall Slide Settings
-	[Export] public float WallSlideSpeed = 100.0f;
-	[Export] public float WallJumpForce = 600.0f;
+	[Export] public float WallSlideSpeed = 400.0f;
+	[Export] public float WallJumpForce = 1000.0f;
 	[Export] private bool hasWalljump = false;
 
 	// Dash Settings
@@ -162,8 +163,12 @@ public partial class Player : CharacterBody2D {
 			: Input.GetAxis("move_left", "move_right");
 
 		Vector2 velocity = Velocity;
-		if (!IsOnFloor() && !_isWallSliding)
-			velocity += GetGravity() * (float)delta;
+		int div = 1;
+		
+		if (!IsOnFloor() && !_isWallSliding) {
+			velocity += Velocity.Y > 0 ? GetGravity() * (float)delta * fallAcceleration : GetGravity() * (float)delta;
+			div = 7;
+		}
 
 		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
@@ -172,7 +177,7 @@ public partial class Player : CharacterBody2D {
 			_sword?.SetFacingLeft(facingLeft);
 		}
 		else {
-			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed);
+			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed/div);
 		}
 
 		Velocity = velocity;
@@ -186,7 +191,7 @@ public partial class Player : CharacterBody2D {
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
 		}
 		else {
-			if (Input.IsActionJustReleased("jump"))
+			if (Input.IsActionJustReleased("jump") && Velocity.Y < 0)
 				Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 		}
 
@@ -195,8 +200,7 @@ public partial class Player : CharacterBody2D {
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
-		}
-		else if (_isDashing && Input.IsActionJustPressed("jump")) {
+		} else if (_isDashing && Input.IsActionJustPressed("jump")) {
 			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
 			_isDashing = false;
 			_dashTimer = 0f;
@@ -246,11 +250,9 @@ public partial class Player : CharacterBody2D {
 
 	// Wall Slide
 	private void HandleWallSlide(double delta) {
-		if (IsOnWall() && !IsOnFloor()) {
+		if (IsOnWall() && !IsOnFloor() && hasWalljump) {
 			_isWallSliding = true;
-			Velocity = hasWalljump ? 
-				new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed))
-				: new Vector2(0, Velocity.Y + GetGravity().Y * (float)delta);
+			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
 		}
 		else {
 			_isWallSliding = false;
@@ -341,11 +343,10 @@ public partial class Player : CharacterBody2D {
 		if (IsOnFloor())
 			_hasAirDashed = false;
 
-		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing) {
+		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
 			_isWallSliding = true;
 			_hasAirDashed = false;
-		}
-		else if (!IsOnWall() || IsOnFloor()) {
+		} else if (!IsOnWall() || IsOnFloor()) {
 			_isWallSliding = false;
 		}
 	}
@@ -392,7 +393,6 @@ public partial class Player : CharacterBody2D {
 
 	public void SetCheckpoint(Vector2 globalPos) {
 		respawnPoint = globalPos;
-		GD.Print("Respawn Set");
 	}
 
 	public async void HoldPlayer(float time) {
