@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_c8iti"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
-[ext_resource type="PackedScene" uid="uid://udqo0mq2cl0d" path="res://Scenes/Player/Player.tscn" id="3_u616v"]
+[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/Player.tscn" id="3_u616v"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="4_cp1p4"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_f4wdb"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_h8xti"]

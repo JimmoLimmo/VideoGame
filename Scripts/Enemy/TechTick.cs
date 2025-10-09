@@ -7,7 +7,7 @@ public partial class TechTick : CharacterBody2D
 	private Sprite2D _sprite;
 
 	[Export] public int MaxHealth = 15;
-	[Export] public float Speed = 500f;
+	[Export] public float Speed = 400;
 	[Export] public NodePath LeftLimitPath;
 	[Export] public NodePath RightLimitPath;
 	[Export] public int ContactDamage = 1;

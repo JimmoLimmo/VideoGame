@@ -7,7 +7,7 @@
 size = Vector2(256, 37)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yo5wu"]
-size = Vector2(192, 130)
+size = Vector2(192, 123)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6asn"]
 size = Vector2(21.5, 128)
@@ -88,7 +88,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, -512)]
+"values": [Vector2(0, -448)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4cr11"]
@@ -126,7 +126,7 @@ shape = SubResource("RectangleShape2D_jc7cj")
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
-position = Vector2(0, -67)
+position = Vector2(0, -63.5)
 shape = SubResource("RectangleShape2D_yo5wu")
 debug_color = Color(0.991916, 0, 0.259192, 0.42)
 
@@ -140,7 +140,7 @@ region_enabled = true
 region_rect = Rect2(0, 1152, 255, 64)
 
 [node name="Head" type="Sprite2D" parent="Top"]
-position = Vector2(0, -512)
+position = Vector2(0, -448)
 texture = ExtResource("1_d6asn")
 region_enabled = true
 region_rect = Rect2(256, 1156, 256, 128)
