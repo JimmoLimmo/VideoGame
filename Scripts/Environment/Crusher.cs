@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 public partial class Crusher : Node {
+	
 	[Export] public float upDuration = 1.0f;
 	[Export] public float downDuration = 1.0f;
 	[Export] public float movementTime = 0.5f;
@@ -30,7 +31,7 @@ public partial class Crusher : Node {
 	}
 	
 	public override void _Process(double delta) {
-		if(top.Position.Y > 200 && !isDown) {
+		if(top.Position.Y > 150 && !isDown) {
 			deathZone.Monitoring = true;
 			
 			var overlaps = deathZone.GetOverlappingBodies();
@@ -38,6 +39,7 @@ public partial class Crusher : Node {
 			foreach(PhysicsBody2D body in overlaps) {
 				if(body is Player player) {
 					if(bodiesHit.Add(player)) {
+						player.Position = new Vector2(top.GlobalPosition.X, player.Position.Y);
 						player.areaHazard(deathZone);
 					}
 				}
@@ -71,6 +73,8 @@ public partial class Crusher : Node {
 			tween.TweenProperty(top, "position", position, movementTime)
 				.SetTrans(Tween.TransitionType.Sine)
 				.SetEase(Tween.EaseType.InOut);
+				
+			top.CollisionLayer = 1;
 		}
 		
 		cycleTimer.Start(nextStateDuration);
