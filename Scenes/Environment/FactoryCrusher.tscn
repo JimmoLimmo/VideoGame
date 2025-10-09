@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bmrx72adb6qla"]
+[gd_scene load_steps=13 format=3 uid="uid://bmrx72adb6qla"]
 
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_d6asn"]
 [ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_jc7cj"]
@@ -7,10 +7,16 @@
 size = Vector2(256, 37)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yo5wu"]
-size = Vector2(256, 221)
+size = Vector2(192, 130)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6asn"]
-size = Vector2(256, 512)
+size = Vector2(21.5, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tjs4c"]
+size = Vector2(211.75, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4cr11"]
+size = Vector2(136.75, 379.5)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_jc7cj"]
 polygon = PackedVector2Array(-128, -896, -128, -384, 128, -384, 128, -896)
@@ -55,7 +61,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.366667, 0.4, 0.433333, 0.466667, 0.5, 0.533333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, -512), Vector2(5, -507), Vector2(-3, -512), Vector2(3, -512), Vector2(-5, -517), Vector2(0, -512), Vector2(10, -502), Vector2(-3, -512), Vector2(3, -512), Vector2(-5, -517), Vector2(0, -512)]
+"values": [Vector2(0, -448), Vector2(5, -443), Vector2(-3, -448), Vector2(3, -448), Vector2(-5, -453), Vector2(0, -448), Vector2(10, -443), Vector2(-3, -448), Vector2(3, -448), Vector2(-5, -453), Vector2(0, -448)]
 }
 
 [sub_resource type="Animation" id="Animation_yo5wu"]
@@ -98,12 +104,19 @@ movementTime = 0.75
 
 [node name="Bottom" type="StaticBody2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="Bottom"]
+[node name="LeftCaution" type="Sprite2D" parent="Bottom"]
 z_index = 1
-position = Vector2(0, -91)
+position = Vector2(-64, -27)
 texture = ExtResource("1_d6asn")
 region_enabled = true
-region_rect = Rect2(512, 1028, 256, 256)
+region_rect = Rect2(513, 1156, 128, 128)
+
+[node name="RightCaution" type="Sprite2D" parent="Bottom"]
+z_index = 1
+position = Vector2(64, -27)
+texture = ExtResource("1_d6asn")
+region_enabled = true
+region_rect = Rect2(896, 1156, 128, 128)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Bottom"]
 position = Vector2(0, 18.5)
@@ -113,7 +126,7 @@ shape = SubResource("RectangleShape2D_jc7cj")
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
-position = Vector2(0, -112.5)
+position = Vector2(0, -67)
 shape = SubResource("RectangleShape2D_yo5wu")
 debug_color = Color(0.991916, 0, 0.259192, 0.42)
 
@@ -130,7 +143,7 @@ region_rect = Rect2(0, 1152, 255, 64)
 position = Vector2(0, -512)
 texture = ExtResource("1_d6asn")
 region_enabled = true
-region_rect = Rect2(256, 1028, 256, 256)
+region_rect = Rect2(256, 1156, 256, 128)
 
 [node name="Pipes" type="Node2D" parent="Top"]
 
@@ -153,9 +166,20 @@ region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
-visible = false
-position = Vector2(0, -640)
+position = Vector2(-117, -448.5)
 shape = SubResource("RectangleShape2D_d6asn")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Top"]
+position = Vector2(117, -448)
+shape = SubResource("RectangleShape2D_d6asn")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Top"]
+position = Vector2(0, -472)
+shape = SubResource("RectangleShape2D_tjs4c")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Top"]
+position = Vector2(-1.375, -707.25)
+shape = SubResource("RectangleShape2D_4cr11")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Top"]
 visible = false
@@ -163,14 +187,11 @@ occluder = SubResource("OccluderPolygon2D_jc7cj")
 
 [node name="CycleTimer" type="Timer" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="PipeGuide" type="Sprite2D" parent="."]
 position = Vector2(0, -452)
 texture = ExtResource("1_d6asn")
 region_enabled = true
 region_rect = Rect2(0, 897, 256, 127)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(0, -419)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
