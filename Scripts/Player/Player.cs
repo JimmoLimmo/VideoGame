@@ -25,7 +25,7 @@ public partial class Player : CharacterBody2D {
 	[Export] private bool hasWalljump = false;
 
 	// Dash Settings
-	[Export] public float DashSpeed = 1200.0f;
+	[Export] public float DashSpeed = 2000.0f;
 	[Export] public float DashDuration = 0.2f;
 	[Export] public float DashCooldown = 0.5f;
 	[Export] private bool hasDash = false;
@@ -34,6 +34,7 @@ public partial class Player : CharacterBody2D {
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
+	private Node2D attackSprites;
 
 	// Health Variables
 	private int _hp = 5;
@@ -50,6 +51,7 @@ public partial class Player : CharacterBody2D {
 
 	// Node References
 	private AnimationPlayer _anim;
+	private AnimationPlayer swordAnimator;
 	private Sprite2D _sprite;
 	private Sword _sword;
 	private HUD _hud;
@@ -80,11 +82,14 @@ public partial class Player : CharacterBody2D {
 		respawnPoint = Position;
 
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
+		swordAnimator = GetNode<AnimationPlayer>("SwordAnimation");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
 		_sword = GetNodeOrNull<Sword>(SwordPath);
 		if (_sword == null)
 			GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
+		attackSprites = GetNode<Node2D>("AttackSprites");
+		if(hasSword) _sword.Visible = true;
 
 		_hud = GetNode<HUD>("/root/HUD");
 
@@ -165,7 +170,7 @@ public partial class Player : CharacterBody2D {
 		Vector2 velocity = Velocity;
 		int div = 1;
 		
-		if (!IsOnFloor() && !_isWallSliding) {
+		if (!IsOnFloor() && !_isWallSliding && !_isDashing) {
 			velocity += Velocity.Y > 0 ? GetGravity() * (float)delta * fallAcceleration : GetGravity() * (float)delta;
 			div = 7;
 		}
@@ -174,6 +179,7 @@ public partial class Player : CharacterBody2D {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
 			_sprite.FlipH = facingLeft;
+			attackSprites.Scale = new Vector2(facingLeft ? -1: 1, 1);
 			_sword?.SetFacingLeft(facingLeft);
 		}
 		else {
@@ -264,7 +270,7 @@ public partial class Player : CharacterBody2D {
 		_attackTimer -= (float)delta;
 		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword) {
 			_attackTimer = AttackCooldown;
-			_anim.Play("Sword");
+			swordAnimator.Play("Swing");
 		}
 	}
 
@@ -397,7 +403,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
-		_anim.Play("Idle"); //TODO: Move to handleAnimation
+		_anim.Play("Stagger"); //TODO: Move to handleAnimation
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;
 	}

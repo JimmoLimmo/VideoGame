@@ -7,13 +7,12 @@ public partial class Crusher : Node {
 	[Export] public float upDuration = 1.0f;
 	[Export] public float downDuration = 1.0f;
 	[Export] public float movementTime = 0.5f;
+	[Export] public bool isDown = false;
 	
 	private StaticBody2D top;
 	private Area2D deathZone;
 	private Timer cycleTimer;
 	private AnimationPlayer animate;
-	
-	private bool isDown = false;
 	
 	private HashSet<PhysicsBody2D> bodiesHit = new HashSet<PhysicsBody2D>();
 	
