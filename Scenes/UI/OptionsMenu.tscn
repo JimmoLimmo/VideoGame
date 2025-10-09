@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cxsfp1i7wyt3l" path="res://Scripts/Menu/OptionsMenu.cs" id="1"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="2"]
 [ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="3"]
-[ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scenes/UI/BackButton.cs" id="4"]
+[ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scripts/UI/BackButton.cs" id="4"]
 
 [node name="OptionsMenu" type="Control"]
 layout_mode = 3
