@@ -3,33 +3,57 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public partial class HUD : CanvasLayer {
+	// ------------------------------------------------------------
+	// CONFIG
+	// ------------------------------------------------------------
 	[Export] public int MaxMasks { get; set; } = 5;
 	[Export(PropertyHint.Range, "16,256,1")] public int MaskSize { get; set; } = 64;
 
-	[ExportCategory("Textures")]
+	[ExportCategory("Health Textures")]
 	[Export] public Texture2D MaskFull { get; set; }
 	[Export] public Texture2D MaskEmpty { get; set; }
 
+	[ExportCategory("Soul Textures")]
+	[Export] public Texture2D ManaVesselBG { get; set; }
+	[Export] public Texture2D ManaVesselFill { get; set; }
+
 	[ExportCategory("Nodes")]
 	[Export] public NodePath HealthBoxPath { get; set; } = "Root/TopLeft/Health";
+	[Export] public NodePath ManaContainerPath { get; set; } = "Root/TopLeft/ManaContainer/ManaFill";
 
+	// ------------------------------------------------------------
+	// STATE
+	// ------------------------------------------------------------
 	private HBoxContainer _healthBox;
 	private readonly List<TextureRect> _maskIcons = new();
+	private TextureRect _manaFill;
+	private float _currentManaRatio = 1f;
+	private float _targetManaRatio = 1f;
+
 	private bool _built = false;
+	private bool _initPass = true;
 
 	// ------------------------------------------------------------
-	// Lifecycle
+	// GODOT
 	// ------------------------------------------------------------
 	public override void _Ready() {
-		// Autoloads start before most scenes exist — so we don’t build here.
 		GlobalRoomChange.RoomGroupChanged += OnRoomGroupChanged;
 		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
 	}
 
 	public override void _Process(double delta) {
-		// Try once per frame until built successfully
 		if (!_built)
 			TryBuildHUD();
+		else if (_initPass)
+			_initPass = false;
+
+		// Smooth mana fill animation
+		if (_manaFill != null) {
+			_currentManaRatio = Mathf.Lerp(_currentManaRatio, _targetManaRatio, (float)delta * 5f);
+			if (_manaFill.Material is ShaderMaterial shaderMat)
+				shaderMat.SetShaderParameter("fill_ratio", _currentManaRatio);
+
+		}
 	}
 
 	public override void _ExitTree() {
@@ -37,102 +61,107 @@ public partial class HUD : CanvasLayer {
 	}
 
 	// ------------------------------------------------------------
-	// Initialization (autoload-safe)
+	// BUILD
 	// ------------------------------------------------------------
 	private void TryBuildHUD() {
-		if (_built)
-			return;
+		if (_built) return;
 
-		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath)
-			?? FindChild("Health", true, false) as HBoxContainer;
+		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath);
+		_manaFill = GetNodeOrNull<TextureRect>(ManaContainerPath);
+		if (_healthBox == null || _manaFill == null) return;
 
-		if (_healthBox == null)
-			return; // still waiting for a valid scene that has it
+		BuildMaskRow(_healthBox, _maskIcons, MaxMasks, MaskEmpty);
+		SetHealth(GlobalRoomChange.health);
+		SetMana(GlobalRoomChange.mana, instant: true);
 
-		GD.Print($"[HUD] Initialized: {_healthBox.GetPath()}");
-		BuildMaskRow(MaxMasks);
-		SetHealth(MaxMasks);
+		GD.Print("[HUD] Initialized (Hollow Knight style)");
 		_built = true;
 	}
 
-	// ------------------------------------------------------------
-	// Visibility
-	// ------------------------------------------------------------
-	private void OnRoomGroupChanged(RoomGroup group) => UpdateVisibilityFromGroup(group);
-
-	public void UpdateVisibilityFromGroup(RoomGroup group) {
-		Visible = group == RoomGroup.Overworld || group == RoomGroup.Boss;
-	}
-
-	// ------------------------------------------------------------
-	// Health mask management
-	// ------------------------------------------------------------
-	private void BuildMaskRow(int count) {
-		if (_healthBox == null) return;
-
-		foreach (var c in _healthBox.GetChildren())
-			c.QueueFree();
-		_maskIcons.Clear();
-
+	private void BuildMaskRow(HBoxContainer box, List<TextureRect> list, int count, Texture2D tex) {
+		foreach (var c in box.GetChildren()) c.QueueFree();
+		list.Clear();
 		for (int i = 0; i < count; i++) {
 			var icon = new TextureRect {
+				Texture = tex,
 				StretchMode = TextureRect.StretchModeEnum.KeepCentered,
 				CustomMinimumSize = new Vector2(MaskSize, MaskSize),
-				Texture = MaskEmpty,
 				MouseFilter = Control.MouseFilterEnum.Ignore
 			};
-			_healthBox.AddChild(icon);
-			_maskIcons.Add(icon);
+			box.AddChild(icon);
+			list.Add(icon);
 		}
 	}
 
-	public async void SetHealth(int current) {
-		if (!_built || _maskIcons.Count == 0) return;
+	// ------------------------------------------------------------
+	// HEALTH
+	// ------------------------------------------------------------
+	private async void AnimateIcons(List<TextureRect> icons, int current, Texture2D full, Texture2D empty) {
+		current = Mathf.Clamp(current, 0, icons.Count);
 
-		current = Mathf.Clamp(current, 0, MaxMasks);
-
-		for (int i = 0; i < _maskIcons.Count; i++) {
-			var icon = _maskIcons[i];
+		for (int i = 0; i < icons.Count; i++) {
+			var icon = icons[i];
 			var shouldBeFull = i < current;
-			var targetTex = shouldBeFull ? MaskFull : MaskEmpty;
-
-			if (icon.Texture == targetTex)
-				continue;
+			var targetTex = shouldBeFull ? full : empty;
+			if (icon.Texture == targetTex) continue;
 
 			icon.Texture = targetTex;
+			if (_initPass) continue;
 
-			// Animate the change — little pop/pulse
 			var tween = GetTree().CreateTween();
 			tween.TweenProperty(icon, "scale", new Vector2(1.25f, 1.25f), 0.1f)
-				 .SetTrans(Tween.TransitionType.Back)
-				 .SetEase(Tween.EaseType.Out);
+				.SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
 			tween.TweenProperty(icon, "scale", Vector2.One, 0.1f)
-				 .SetTrans(Tween.TransitionType.Back)
-				 .SetEase(Tween.EaseType.In);
-
+				.SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.In);
 			await ToSignal(tween, Tween.SignalName.Finished);
 		}
 	}
 
+	public void SetHealth(int current) {
+		if (!_built) return;
+		AnimateIcons(_maskIcons, current, MaskFull, MaskEmpty);
+	}
+
 	// ------------------------------------------------------------
-	// Flash / helper
+	// MANA (Soul Vessel)
+	// ------------------------------------------------------------
+	public void SetMana(int current, bool instant = false) {
+		if (!_built || _manaFill == null) return;
+		int max = Mathf.Max(1, GlobalRoomChange.maxMana);
+		_targetManaRatio = Mathf.Clamp((float)current / max, 0, 1);
+		if (instant) _currentManaRatio = _targetManaRatio;
+	}
+
+	// Gradual soul drain when healing (focus)
+	public async Task DrainManaForHeal(int cost, float duration = 1.0f) {
+		if (!_built) return;
+		float startRatio = _currentManaRatio;
+		float endRatio = Mathf.Clamp(startRatio - ((float)cost / GlobalRoomChange.maxMana), 0f, 1f);
+
+		var timer = GetTree().CreateTimer(duration);
+		while (timer.TimeLeft > 0) {
+			float t = 1f - (float)(timer.TimeLeft / duration);
+			_targetManaRatio = Mathf.Lerp(startRatio, endRatio, t);
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		}
+		_targetManaRatio = endRatio;
+		GlobalRoomChange.mana = Mathf.RoundToInt(endRatio * GlobalRoomChange.maxMana);
+	}
+
+	// ------------------------------------------------------------
+	// VISIBILITY / HELPERS
 	// ------------------------------------------------------------
 	public async Task FlashDamage() {
 		if (!_built || _healthBox == null) return;
-
 		var tween = GetTree().CreateTween();
 		tween.TweenProperty(_healthBox, "modulate", new Color(1, 0.4f, 0.4f, 1), 0.05f);
 		tween.TweenProperty(_healthBox, "modulate", Colors.White, 0.15f);
 		await ToSignal(tween, Tween.SignalName.Finished);
 	}
 
-	public void RebuildAndSet(int max, int current) {
-		MaxMasks = max;
-		if (_built) {
-			BuildMaskRow(MaxMasks);
-			SetHealth(current);
-		}
-	}
+	private void OnRoomGroupChanged(RoomGroup group) => UpdateVisibilityFromGroup(group);
 
-	public void RefreshVisibility() => UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
+	public void UpdateVisibilityFromGroup(RoomGroup group) {
+		Visible = group == RoomGroup.Overworld || group == RoomGroup.Boss;
+	}
 }
