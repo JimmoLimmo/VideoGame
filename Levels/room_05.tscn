@@ -1,13 +1,14 @@
-[gd_scene load_steps=39 format=4 uid="uid://x32noqlfbc2m"]
+[gd_scene load_steps=40 format=4 uid="uid://x32noqlfbc2m"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_6rrfu"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_eqk5l"]
-[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/Player.tscn" id="3_emd5a"]
+[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/player.tscn" id="3_emd5a"]
 [ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="4_pvlks"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="6_p6njx"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="6_p6njx"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="9_6v2ye"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="11_ojjet"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="12_2nqbu"]
+[ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="12_3iqsu"]
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="13_5hn0a"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_2cv0m"]
@@ -153,7 +154,8 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSet" id="TileSet_si834"]
 tile_size = Vector2i(128, 128)
 occlusion_layer_0/light_mask = 1
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 3
+physics_layer_0/collision_mask = 3
 sources/2 = SubResource("TileSetAtlasSource_ojjet")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3u35w"]
@@ -375,7 +377,7 @@ tile_map_data = PackedByteArray("AAAEABgAAgACAAgAAAAHABoAAgACAAgAAAAFAA8AAgACAAg
 tile_set = SubResource("TileSet_si834")
 
 [node name="Player" parent="." instance=ExtResource("3_emd5a")]
-position = Vector2(3975, 3587)
+position = Vector2(3515, 381)
 
 [node name="FactoryCrusher" parent="." instance=ExtResource("4_pvlks")]
 position = Vector2(2047, 3711)
@@ -538,7 +540,7 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light2" type="PointLight2D" parent="Lighting"]
-position = Vector2(4018, 3599)
+position = Vector2(4120, 3587)
 scale = Vector2(8.25647, 4.92674)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
@@ -561,3 +563,6 @@ size = 50
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("15_2cv0m")
 volume_db = -10.306
+
+[node name="MechMosquito" parent="." instance=ExtResource("12_3iqsu")]
+position = Vector2(2276, 1896)

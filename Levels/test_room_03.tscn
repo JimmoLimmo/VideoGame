@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="6_dyub4"]
 [ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="7_3n24a"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_dyub4"]
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="11_3n24a"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="11_3n24a"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="12_3n24a"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y07lf"]

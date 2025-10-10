@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://ddti75ydnggyo"]
 
 [ext_resource type="Script" uid="uid://8kb4v2coyq1t" path="res://Scripts/Environment/CrumbleFloor.cs" id="1_jo63a"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_nq5m8"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="1_nq5m8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yf1ft"]
 size = Vector2(512, 256)

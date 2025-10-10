@@ -4,13 +4,13 @@
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
 [ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/player.tscn" id="3_u616v"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="4_cp1p4"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_f4wdb"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="4_f4wdb"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_h8xti"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_tuau3"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_qkxc1"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_2l3ox"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_qlb0f"]
-[ext_resource type="Shader" uid="uid://cpw60ms6btn2x" path="res://Scripts/Shader/blurTextureRect.gdshader" id="15_u616v"]
+[ext_resource type="Shader" path="res://Scripts/Shader/blurTextureRect.gdshader" id="15_u616v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2a0kd"]
 size = Vector2(0, 0)
