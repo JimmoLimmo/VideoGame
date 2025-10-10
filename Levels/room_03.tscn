@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_c8iti"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
-[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/player.tscn" id="3_u616v"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_u616v"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="4_cp1p4"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="4_f4wdb"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_h8xti"]
@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_qkxc1"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_2l3ox"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_qlb0f"]
-[ext_resource type="Shader" path="res://Scripts/Shader/blurTextureRect.gdshader" id="15_u616v"]
+[ext_resource type="Shader" uid="uid://cpw60ms6btn2x" path="res://Scripts/Shader/blurTextureRect.gdshader" id="15_u616v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2a0kd"]
 size = Vector2(0, 0)
@@ -216,6 +216,10 @@ color = Color(1, 1, 1, 0)
 [node name="Player" parent="." instance=ExtResource("3_u616v")]
 position = Vector2(-139, -126)
 
+[node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
+position = Vector2(1024, 54)
+rotation = -1.35961
+
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
 
@@ -340,7 +344,3 @@ tile_set = SubResource("TileSet_cacw8")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_qlb0f")
 volume_db = -10.306
-
-[node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
-position = Vector2(1127, -120)
-rotation = -0.890118

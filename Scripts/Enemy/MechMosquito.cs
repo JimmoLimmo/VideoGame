@@ -6,6 +6,8 @@ public partial class MechMosquito : CharacterBody2D {
 	
 	[Export] public int maxHealth = 15;
 	[Export] public float speed = 300;
+	[Export] public float angleVariationDegrees = 15f;
+	[Export] public float noiseSpeed = 200f;
 	[Export] public float dashRadius = 400;
 	[Export] public float dashDistance = 700;
 	[Export] public float dashSpeed = 700;
@@ -17,10 +19,12 @@ public partial class MechMosquito : CharacterBody2D {
 	private bool dashing = false;
 	private float dashTracker = 0;
 	private float dashTimer;
+	private float noiseOffset;
 	private Vector2 lastPos;
 	private Vector2 breakPos;
 	private Vector2 startPos;
 	private Vector2 dashDirection;
+	private FastNoiseLite noise = new FastNoiseLite();
 	
 	private Sprite2D sprite;
 	private Area2D hitBox;
@@ -35,6 +39,8 @@ public partial class MechMosquito : CharacterBody2D {
 		dashTimer = dashBreak;
 		lastPos = Position;
 		startPos = Position;
+		noise.Seed = (int)GD.Randi();
+		noiseOffset = GD.Randf() * 1000f;
 		
 		hitBox = GetNode<Area2D>("HitBox");
 		aggroArea = GetNode<Area2D>("AggroArea");
@@ -51,10 +57,11 @@ public partial class MechMosquito : CharacterBody2D {
 		
 		if(dashTimer < dashBreak) dashTimer += 1 * (float)delta;
 		
-		GD.Print(dashTimer);
+		float t = (float)Time.GetTicksMsec() / 1000f;
+		float noiseValue = noise.GetNoise1D(t * noiseSpeed + noiseOffset);
+		float angleOffset = Mathf.DegToRad(noiseValue * angleVariationDegrees);
 		
 		if(isActive && dashTimer >= dashBreak) {
-			GD.Print("Dashing: " + dashing + ", Dash Length: " + dashTracker);
 			CharacterBody2D player = GetNode<CharacterBody2D>("../Player");
 			
 			Vector2 toPlayer = player.GlobalPosition - GlobalPosition;
@@ -78,10 +85,16 @@ public partial class MechMosquito : CharacterBody2D {
 				Rotation = direction.Angle();
 			}
 		} else {
+			Vector2 movePos = startPos;
+			Vector2 toPos = movePos - GlobalPosition;
+			Vector2 direction = toPos.Normalized();
+			
+			velocity = direction * speed * (float)delta * 50;
 		}
 		
+		Vector2 randomizedVelocity = velocity.Rotated(angleOffset);
 		lastPos = Position;
-		Velocity = velocity;
+		Velocity = randomizedVelocity;
 		MoveAndSlide();
 	}
 	
