@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_2hkqn"]
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="13_lk57d"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="13_lk57d"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_2hkqn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]

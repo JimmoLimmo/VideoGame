@@ -306,8 +306,9 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		}
-		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
+		} else if(_isWallSliding && Velocity.Y > 0) {
+			nextAnimation = ("Wallslide");
+		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
 		else if (Velocity.Y < -200f) {
