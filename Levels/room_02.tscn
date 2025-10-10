@@ -1,13 +1,12 @@
-[gd_scene load_steps=31 format=4 uid="uid://dk01o0xsh57wl"]
+[gd_scene load_steps=30 format=4 uid="uid://dk01o0xsh57wl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
-[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/Player.tscn" id="3_vi02f"]
+[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_wdo57"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_ea4ct"]
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_2s52b"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_vqukl"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="14_beo6d"]
 
@@ -243,7 +242,7 @@ scale = Vector2(18.7429, 20.0996)
 texture = SubResource("GradientTexture2D_beo6d")
 
 [node name="BottomDropoff3" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(2868, 1362)
+position = Vector2(2878, 1362)
 rotation = -1.5708
 scale = Vector2(42.5201, 45.3929)
 texture = SubResource("GradientTexture2D_beo6d")
@@ -340,8 +339,5 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_ofyad")
 
 [node name="ScreenFade" parent="." instance=ExtResource("7_ea4ct")]
-
-[node name="Hud" parent="." instance=ExtResource("8_2s52b")]
-visible = false
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("12_vqukl")]

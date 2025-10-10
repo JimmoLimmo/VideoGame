@@ -74,3 +74,4 @@ confirmationPopupPath = NodePath("../../../ConfirmationPopup")
 [node name="ScreenFade" parent="." instance=ExtResource("4")]
 
 [node name="ConfirmationPopup" parent="." instance=ExtResource("9_ynupv")]
+visible = false
