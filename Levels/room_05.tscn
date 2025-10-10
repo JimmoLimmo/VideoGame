@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 [gd_scene load_steps=40 format=4 uid="uid://x32noqlfbc2m"]
+=======
+[gd_scene load_steps=39 format=4 uid="uid://x32noqlfbc2m"]
+>>>>>>> Aidan
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_6rrfu"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_eqk5l"]
@@ -9,8 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="11_ojjet"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="12_2nqbu"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="12_3iqsu"]
+<<<<<<< HEAD
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="13_5hn0a"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
+=======
+[ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
+>>>>>>> Aidan
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_2cv0m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2a0kd"]
@@ -560,9 +568,12 @@ texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="ScreenFade" parent="." instance=ExtResource("12_2nqbu")]
 
+<<<<<<< HEAD
 [node name="Hud" parent="." instance=ExtResource("13_5hn0a")]
 visible = false
 
+=======
+>>>>>>> Aidan
 [node name="CollectionOverlay" parent="." instance=ExtResource("14_qf33d")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

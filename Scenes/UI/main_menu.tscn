@@ -6,6 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://blemgugjlqkjd" path="res://Levels/room_01.tscn" id="4_gih0s"]
 [ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="5_wqme5"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_jewm6"]
+<<<<<<< HEAD
+=======
+[ext_resource type="Script" path="res://Scripts/Menu/ContinueButton.cs" id="7_continue"]
+>>>>>>> Aidan
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="8_k33u3"]
 
 [node name="MainMenu" type="Control" groups=["music_title"]]
@@ -35,10 +39,17 @@ theme_override_font_sizes/font_size = 30
 text = "Game"
 horizontal_alignment = 1
 
+[node name="ContinueBtn" type="Button" parent="MenuTab/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Continue"
+script = ExtResource("7_continue")
+defaultScene = ExtResource("4_gih0s")
+
 [node name="StartGameBtn" type="Button" parent="MenuTab/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Start"
+text = "New Game"
 script = ExtResource("3_k33u3")
 sceneToSwitchTo = ExtResource("4_gih0s")
 

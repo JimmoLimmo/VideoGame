@@ -162,6 +162,16 @@ public partial class HUD : CanvasLayer {
 	private void OnRoomGroupChanged(RoomGroup group) => UpdateVisibilityFromGroup(group);
 
 	public void UpdateVisibilityFromGroup(RoomGroup group) {
+<<<<<<< HEAD
 		Visible = group == RoomGroup.Overworld || group == RoomGroup.Boss;
+=======
+		bool shouldBeVisible = group == RoomGroup.Overworld || group == RoomGroup.Boss;
+		Visible = shouldBeVisible;
+		
+		// Force a rebuild if the HUD should be visible but isn't built
+		if (shouldBeVisible && !_built) {
+			TryBuildHUD();
+		}
+>>>>>>> Aidan
 	}
 }

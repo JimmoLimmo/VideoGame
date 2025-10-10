@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://swordteleportupgrade"]
+
+[ext_resource type="Script" uid="uid://clrllxlkifg7a" path="res://Scripts/Level/Collectable.cs" id="1_col"]
+[ext_resource type="Texture2D" uid="uid://buihi5p6wvfhf" path="res://Sprites/Interactables/sword_item.png" id="2_sword"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(24, 24)
+
+[node name="SwordTeleportUpgrade" type="Area2D"]
+script = ExtResource("1_col")
+Type = 3
+PickupTexture = ExtResource("2_sword")
+ItemName = "Sword Teleport"
+keybindDesc = "Press <button> to throw and teleport to sword"
+Description = "You can now throw your sword and teleport to it!"
+SaveID = "sword_teleport_upgrade"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_sword")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")

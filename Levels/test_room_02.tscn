@@ -4,9 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="1_abewm"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="2_w4q1f"]
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_y07lf"]
+<<<<<<< HEAD
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="4_4de1t"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="4_y07lf"]
 [ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="5_abewm"]
+=======
+[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="4_y07lf"]
+>>>>>>> Aidan
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="5_n27c8"]
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="6_dyub4"]
 [ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="7_3n24a"]
@@ -105,12 +109,15 @@ boundsPath = NodePath("../CameraBounds/CameraCollsion")
 
 [node name="Player" parent="." groups=["enemies"] instance=ExtResource("2_w4q1f")]
 position = Vector2(293, 42)
+<<<<<<< HEAD
 HudPath = NodePath("../Hud")
 
 [node name="Hud" parent="." instance=ExtResource("4_4de1t")]
 script = ExtResource("5_abewm")
 MaskFull = ExtResource("6_dyub4")
 MaskEmpty = ExtResource("7_3n24a")
+=======
+>>>>>>> Aidan
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("5_n27c8")]
 

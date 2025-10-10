@@ -14,6 +14,10 @@ public partial class GlobalRoomChange : Node {
 	public static bool hasSword;
 	public static bool hasDash;
 	public static bool hasWalljump;
+<<<<<<< HEAD
+=======
+	public static bool hasClawTeleport;
+>>>>>>> Aidan
 
 	public static int health = 5;
 	public static int mana = 0;
@@ -107,6 +111,10 @@ public partial class GlobalRoomChange : Node {
 
 	public static void EnterRoom(string roomName, RoomGroup group) {
 		bool isFirstRoom = string.IsNullOrEmpty(CurrentRoom);
+<<<<<<< HEAD
+=======
+		
+>>>>>>> Aidan
 		if (group == CurrentGroup && !isFirstRoom)
 			return;
 

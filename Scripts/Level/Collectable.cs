@@ -15,12 +15,27 @@ public partial class Collectable : Area2D {
 	[Export] public string keybindDesc = "Press <button> to use";
 	[Export] public string Description = "You Got an Item!";
 	[Export] public double WaitTime = 2;
+<<<<<<< HEAD
+=======
+	[Export] public string SaveID = ""; // Unique ID for save system
+>>>>>>> Aidan
 
 	private bool canDismiss = false;
 
 	public override void _Ready() {
 		BodyEntered += OnBodyEntered;
 		ProcessMode = Node.ProcessModeEnum.Always;
+<<<<<<< HEAD
+=======
+		
+		// Check if already collected via save system
+		if (!string.IsNullOrEmpty(SaveID) && SaveManager.HasCollectedItem(SaveID)) {
+			QueueFree();
+			return;
+		}
+		
+		// Legacy checks for compatibility
+>>>>>>> Aidan
 		if (GlobalRoomChange.hasSword == true && Type == CollectableType.Sword) QueueFree();
 		else if (GlobalRoomChange.hasDash == true && Type == CollectableType.Dash) QueueFree();
 		else if (GlobalRoomChange.hasWalljump == true && Type == CollectableType.Walljump) QueueFree();
@@ -30,6 +45,14 @@ public partial class Collectable : Area2D {
 		if (body is Player player) {
 			player.OnCollect(Type);
 
+<<<<<<< HEAD
+=======
+			// Add to save system if SaveID is set
+			if (!string.IsNullOrEmpty(SaveID)) {
+				SaveManager.AddCollectedItem(SaveID);
+			}
+
+>>>>>>> Aidan
 			ShowPickupOverlay();
 		}
 	}
@@ -58,7 +81,11 @@ public partial class Collectable : Area2D {
 				actionType = "jump";
 				break;
 			case CollectableType.Throw:
+<<<<<<< HEAD
 				actionType = "sword_throw";
+=======
+				actionType = "claw_throw";
+>>>>>>> Aidan
 				break;
 		}
 		
@@ -115,6 +142,13 @@ public partial class Collectable : Area2D {
 	}
 
 	public override void _Input(InputEvent @event) {
+<<<<<<< HEAD
+=======
+		// Safety check: don't process if not in tree
+		if (!IsInsideTree() || IsQueuedForDeletion())
+			return;
+			
+>>>>>>> Aidan
 		if (GetTree().Paused && canDismiss) {
 			if (@event.IsActionPressed("ui_accept")) ClearPickupOverlay();
 		}
