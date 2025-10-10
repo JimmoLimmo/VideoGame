@@ -51,6 +51,12 @@ visible = false
 [node name="SparkEmitter" type="CPUParticles2D" parent="."]
 visible = false
 
+[node name="ShockwaveSpawnLeft" type="Marker2D" parent="."]
+position = Vector2(-180, -20)
+
+[node name="ShockwaveSpawnRight" type="Marker2D" parent="."]
+position = Vector2(180, -20)
+
 [node name="MateriaTimer" type="Timer" parent="."]
 wait_time = 0.15
 one_shot = true

@@ -559,6 +559,13 @@ public partial class Boss : CharacterBody2D {
     [Export] public bool LogStateChanges = true;
     [Export] public bool WatchdogEnabled = true;
     [Export] public float WatchdogSeconds = 6.0f;
+    // --- Shockwave Integration ---
+    [ExportGroup("Projectiles")]
+    [Export] public PackedScene ShockwaveScene;
+
+    private Marker2D _spawnLeft;
+    private Marker2D _spawnRight;
+
 
     // ========================= Internals =========================
     private float _time = 0f;
@@ -775,6 +782,33 @@ public partial class Boss : CharacterBody2D {
 
         // keep inside arena
         ClampArena();
+    }
+
+    // ================================================
+    //  Spawn shockwaves on ground slam
+    // ================================================
+    private void SpawnShockwaves() {
+        if (ShockwaveScene == null) {
+            GD.PrintErr("[Boss] No ShockwaveScene assigned!");
+            return;
+        }
+
+        Vector2 leftPos = _spawnLeft?.GlobalPosition ?? (GlobalPosition + new Vector2(-150, 0));
+        Vector2 rightPos = _spawnRight?.GlobalPosition ?? (GlobalPosition + new Vector2(150, 0));
+
+        var waveL = ShockwaveScene.Instantiate<Node2D>();
+        var waveR = ShockwaveScene.Instantiate<Node2D>();
+        GetTree().CurrentScene.AddChild(waveL);
+        GetTree().CurrentScene.AddChild(waveR);
+
+        waveL.GlobalPosition = leftPos;
+        waveR.GlobalPosition = rightPos;
+
+        // If your Shockwave script has Setup(direction)
+        waveL.Call("Setup", -1);
+        waveR.Call("Setup", 1);
+
+        GD.Print("[Boss] Spawned shockwaves!");
     }
 
     // ========================= States =========================
@@ -1017,12 +1051,14 @@ public partial class Boss : CharacterBody2D {
             Change(State.Fall);
 
         if (_colliderReenabledMidair && IsOnFloor()) {
+            SpawnShockwaves(); // <<< NEW
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
             _snapSuppressed = false;
-            Velocity = new Vector2(0, 0);
+            Velocity = Vector2.Zero;
         }
+
     }
 
     // A forward leap that becomes a fall/slam
@@ -1055,12 +1091,14 @@ public partial class Boss : CharacterBody2D {
             Change(State.Fall);
 
         if (_colliderReenabledMidair && IsOnFloor()) {
+            SpawnShockwaves(); // <<< NEW
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
             _snapSuppressed = false;
             Velocity = Vector2.Zero;
         }
+
     }
 
     // Generic airborne fall; lands into Recover
