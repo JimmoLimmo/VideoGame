@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2jl12xy2svgx"]
+[gd_scene load_steps=4 format=3 uid="uid://d2jl12xy2svgx"]
 
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="1_deo2m"]
 [ext_resource type="Texture2D" uid="uid://b8d8w2j0y505" path="res://Sprites/Interactables/JumpPowerUp.png" id="1_m0s1j"]
-[ext_resource type="Texture2D" uid="uid://b6vsqjiappifj" path="res://missing_texture.png" id="2_y8lg2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_deo2m"]
 radius = 8.0
@@ -12,10 +11,9 @@ radius = 8.0
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("1_deo2m")
 Type = 1
-PickupTexture = ExtResource("2_y8lg2")
 ItemName = "Dash"
-keybindDesc = "Press C to use."
-Description = "Dash over deep pits and away from danger."
+keybindDesc = "Press and Hold <button> to dash."
+Description = "Propel yourself over deep pits and away from danger. Release the button early to end the dash."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_deo2m")

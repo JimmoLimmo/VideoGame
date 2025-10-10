@@ -36,7 +36,6 @@ public partial class TechTick : CharacterBody2D
 		// Connect Area2D hitbox signal 
 		var hitBox = GetNode<Area2D>("HitBox");
 		hitBox.BodyEntered += OnHitBoxBodyEntered;   // Physics bodies
-		hitBox.AreaEntered += OnHitBoxAreaEntered;   // Areas
 		
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
 		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
@@ -73,7 +72,6 @@ public partial class TechTick : CharacterBody2D
 	public void TakeDamage(int amount)
 	{
 		_currentHealth -= amount;
-		GD.Print($"Health: {_currentHealth}");
 		bloodEmitter.Restart();
 		sparkEmitter.Restart();
 		CheckDeath();
@@ -88,32 +86,12 @@ public partial class TechTick : CharacterBody2D
 	}
 
 	// Called when the player enters the enemy's hitbox
-	// 	private void OnHitBoxEntered(Node body)
-	// 	{
-	// 		GD.Print($"Hitbox entered by: {body.Name}");
-	// 		// if (body.IsInGroup("player") && body is Player player)
-	// 		if (body is Player player)
-	// 		{
-	// 			GD.Print("Player detected! Applying damage.");
-	// 			player.TakeDamage(ContactDamage);
-	// 		}
-	// 	}
-	// }
 	private void OnHitBoxBodyEntered(Node2D body)
 	{
 		// If the Player body (CharacterBody2D) enters, allow damage
-		if (body is Player p)
+		if (body is Player p) {
+			GD.Print("1");
 			p.ApplyHit(ContactDamage, GlobalPosition);
+		}
 	}
-
-	private void OnHitBoxAreaEntered(Area2D area)
-	{
-		// Ignore swords and other areas; only hurt the player’s HURTBOX
-		if (!area.IsInGroup("player_hurtbox")) return;
-
-		if (area.GetParent() is Player p)
-			p.ApplyHit(ContactDamage, GlobalPosition);
-	}
-
-
 }
