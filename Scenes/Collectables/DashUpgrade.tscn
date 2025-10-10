@@ -11,6 +11,7 @@ radius = 8.0
 
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("1_deo2m")
+SaveID = ""
 Type = 1
 PickupTexture = ExtResource("2_y8lg2")
 ItemName = "Dash"

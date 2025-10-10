@@ -10,6 +10,7 @@ size = Vector2(29, 48)
 
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("1_vxrlw")
+SaveID = ""
 Type = 2
 PickupTexture = ExtResource("2_s4xt4")
 ItemName = "Wall Spikes"

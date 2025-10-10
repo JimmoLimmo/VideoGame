@@ -34,6 +34,12 @@ public partial class Player : CharacterBody2D
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
 	private bool hasSword = false;
+	private bool hasSwordTeleport = false;
+	
+	// Sword Teleport Variables
+	[Export] public PackedScene ThrowableSwordScene { get; set; }
+	private ThrowableSword _activeThrownSword;
+	private bool _swordIsThrown = false;
 
 	// Health Variables
 	private int _hp = 5;
@@ -61,6 +67,12 @@ public partial class Player : CharacterBody2D
 	// Initialization
 	public override void _Ready()
 	{
+		// Stop any menu audio that might still be playing when entering the level
+		AudioManager.StopMenuAudio();
+		
+		// Clean up any lingering menu UI elements
+		AudioManager.CleanupMenuUI();
+
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
@@ -291,15 +303,64 @@ public partial class Player : CharacterBody2D
 	private void HandleAttack(double delta)
 	{
 		_attackTimer -= (float)delta;
-		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword)
+		
+		// Handle normal sword attack
+		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword && !_swordIsThrown)
 		{
 			_attackTimer = AttackCooldown;
 			_anim.Play("Sword"); // Animation calls AttackStart/AttackEnd
+		}
+		
+		// Handle sword throwing (only if teleport upgrade is available)
+		if (Input.IsActionJustPressed("sword_throw") && _attackTimer <= 0f && hasSword && hasSwordTeleport && !_swordIsThrown)
+		{
+			ThrowSword();
 		}
 	}
 
 	public void AttackStart() => _sword?.EnableHitbox();
 	public void AttackEnd() => _sword?.DisableHitbox();
+	
+	private void ThrowSword()
+	{
+		if (ThrowableSwordScene == null || _swordIsThrown) return;
+		
+		_attackTimer = AttackCooldown;
+		_swordIsThrown = true;
+		
+		// Hide the regular sword
+		if (_sword != null)
+		{
+			_sword.Visible = false;
+		}
+		
+		// Create throwable sword
+		_activeThrownSword = ThrowableSwordScene.Instantiate<ThrowableSword>();
+		GetTree().CurrentScene.AddChild(_activeThrownSword);
+		
+		// Position it at the player's sword position
+		Vector2 swordOffset = new Vector2(_sprite.FlipH ? -30 : 30, -10);
+		_activeThrownSword.GlobalPosition = GlobalPosition + swordOffset;
+		
+		// Determine throw direction based on player facing
+		Vector2 throwDirection = _sprite.FlipH ? Vector2.Left : Vector2.Right;
+		_activeThrownSword.ThrowInDirection(throwDirection);
+		
+		// Connect to the sword's destruction to know when to show our sword again
+		_activeThrownSword.TreeExiting += OnThrownSwordDestroyed;
+	}
+	
+	private void OnThrownSwordDestroyed()
+	{
+		_swordIsThrown = false;
+		_activeThrownSword = null;
+		
+		// Show the regular sword again
+		if (_sword != null && hasSword)
+		{
+			_sword.Visible = true;
+		}
+	}
 
 	// Animation Logic
 	private void HandleAnimations()
@@ -399,6 +460,10 @@ public partial class Player : CharacterBody2D
 			CurrentWallSlideSpeed = WallSlideSpeed;
 			hasWalljump = true;
 		}
+		else if (type == CollectableType.SwordTeleport)
+		{
+			hasSwordTeleport = true;
+		}
 	}
 
 	public void ApplyHit(int dmg, Vector2 sourceGlobalPos)
@@ -434,6 +499,7 @@ public partial class Player : CharacterBody2D
 			HasSword = hasSword,
 			HasDash = hasDash,
 			HasWalljump = hasWalljump,
+			HasSwordTeleport = hasSwordTeleport,
 			PlayerPosition = GlobalPosition
 		};
 	}
@@ -446,6 +512,7 @@ public partial class Player : CharacterBody2D
 		hasSword = data.HasSword;
 		hasDash = data.HasDash;
 		hasWalljump = data.HasWalljump;
+		hasSwordTeleport = data.HasSwordTeleport;
 
 		// Update relevant nodes/UI
 		_hud?.SetHealth(_hp);
@@ -471,6 +538,14 @@ public partial class Player : CharacterBody2D
 		var data = SaveManager.Load();
 		if (data != null)
 			ApplySaveData(data);
+	}
+
+	// Helper used for deferred application from external code (reads cached save)
+	public void ApplySaveDataFromManager(bool setPosition = true)
+	{
+		var data = SaveManager.GetCurrentSave();
+		if (data != null)
+			ApplySaveData(data, setPosition);
 	}
 
 

@@ -10,6 +10,7 @@ size = Vector2(12, 27)
 
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("2_v0dgo")
+SaveID = ""
 PickupTexture = ExtResource("1_muhdk")
 ItemName = "Sword"
 keybindDesc = "Press X to use."

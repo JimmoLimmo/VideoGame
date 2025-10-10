@@ -26,8 +26,26 @@ public partial class MainMenuManager : Control
 
     public void onSwapScene(PackedScene loadScene)
     {
-        GetTree().Root.AddChild(loadScene.Instantiate());
-        QueueFree();
+        // Stop any currently playing audio before scene transition
+        AudioManager.StopAllAudio();
+
+        // Instantiate the requested scene and replace the current scene cleanly.
+        var newScene = loadScene.Instantiate() as Node;
+        if (newScene == null)
+        {
+            GD.PrintErr("MainMenuManager: failed to instantiate scene in onSwapScene");
+            return;
+        }
+
+        var current = GetTree().CurrentScene;
+        GetTree().Root.AddChild(newScene);
+        try { GetTree().CurrentScene = newScene; } catch { }
+
+        // Free the previous current scene if present to avoid stacking
+        try { if (current != null) current.QueueFree(); } catch { }
+
+        // Free the main menu manager's scene (this control) so the new scene becomes the only visible scene
+        try { QueueFree(); } catch { }
     }
 
 }
