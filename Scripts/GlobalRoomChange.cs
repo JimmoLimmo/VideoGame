@@ -15,6 +15,8 @@ public partial class GlobalRoomChange : Node {
 	public static bool hasDash;
 	public static bool hasWalljump;
 
+	public static int health = 5;
+
 	public static Dictionary<string, bool> destroyedWalls = new();
 
 	public static string CurrentRoom { get; private set; } = "";
