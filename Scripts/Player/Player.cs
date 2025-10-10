@@ -144,9 +144,9 @@ public partial class Player : CharacterBody2D {
 			HandleDashInput();
 			HandleAttack(delta);
 			HandleAnimations();
-			HandleHeal(delta);
 		}
 
+		HandleHeal(delta);
 		UpdateInvulnerability(delta);
 		UpdateHitstun(delta);
 	}
