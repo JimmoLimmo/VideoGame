@@ -31,25 +31,20 @@ public partial class Sword : Area2D {
 	public void HitCheck() {
 		Monitoring = true;
 		var areas = GetOverlappingAreas();
-
-		foreach (Area2D area in areas) {
-			if (_hitEnemies.Add(area)) {
-				GD.Print("Hit " + area.Name);
-
+		
+		foreach(Area2D area in areas) {
+			if(_hitEnemies.Add(area)) {
+				
 				Node current = area;
 				while (current != null && !current.HasMethod("TakeDamage")) {
 					current = current.GetParent();
-					GD.Print("Check next");
 				}
-
-				if (current == null) {
-					GD.Print("null");
+				
+				if(current == null) {
 					continue;
 				}
-
-				GD.Print("Hit Node: " + current.Name);
-
-				if (current.HasMethod("TakeDamage")) {
+				
+				if(current.HasMethod("TakeDamage")) {
 					current.CallDeferred("TakeDamage", Damage);
 				}
 				var player = GetParentOrNull<Player>();

@@ -297,19 +297,43 @@ public partial class Player : CharacterBody2D {
 	// Animation Control
 	// -------------------------------
 	private void HandleAnimations() {
-		if (hasSword) _sword.Visible = true;
-		else _sword.Visible = false;
+		if (hasSword) {
+			_sword.Visible = true;
+		}
+		else {
+			_sword.Visible = false;
+		}
 
-		if (Velocity.Y < -10f && Velocity.Y > -200f) nextAnimation = "Peak";
-		else if (Velocity.Y < -200f) nextAnimation = "Jump";
-		else if (Velocity.Y > 100f) nextAnimation = "Fall";
-		else if (Velocity.Y == 0 && Velocity.X != 0)
-			nextAnimation = (lastAnimation == "Fall") ? "IntoRun" : "Run";
-		else if (Velocity.Y == 0 && Velocity.X == 0)
-			nextAnimation = (lastAnimation == "Fall") ? "IntoIdle" : "Idle";
+		if (holdPlayer) {
+			nextAnimation = ("Stagger");
+		}
+		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
+			nextAnimation = "Peak";
+		}
+		else if (Velocity.Y < -200f) {
+			nextAnimation = "Jump";
+		}
+		else if (Velocity.Y > 100f) {
+			nextAnimation = "Fall";
+		}
+		else if (Velocity.Y == 0 && Velocity.X != 0) {
+			if (lastAnimation == "Fall") {
+				nextAnimation = "IntoRun";
+			}
+			else {
+				nextAnimation = "Run";
+			}
+		}
+		else if (Velocity.Y == 0 && Velocity.X == 0) {
+			if (lastAnimation == "Fall") {
+				nextAnimation = "IntoIdle";
+			}
+			else {
+				nextAnimation = "Idle";
+			}
+		}
 
-		if (_anim.CurrentAnimation != nextAnimation &&
-			(!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}
@@ -477,7 +501,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
-		_anim.Play("Stagger");
+
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;
 	}

@@ -12,7 +12,7 @@ public partial class Collectable : Area2D {
 	[Export] public CollectableType Type { get; set; } = CollectableType.Sword;
 	[Export] public Texture2D PickupTexture;
 	[Export] public string ItemName = "Item";
-	[Export] public string keybindDesc = "Press <Button> to use";
+	[Export] public string keybindDesc = "Press <button> to use";
 	[Export] public string Description = "You Got an Item!";
 	[Export] public double WaitTime = 2;
 
@@ -44,9 +44,44 @@ public partial class Collectable : Area2D {
 		var descLabel = ui.GetNode<Label>("Control/Description");
 
 		var image = ui.GetNode<TextureRect>("Control/ItemImage");
+		
+		string actionType = "";
+			
+		switch(Type) {
+			case CollectableType.Sword:
+				actionType = "attack";
+				break;
+			case CollectableType.Dash:
+				actionType = "dash";
+				break;
+			case CollectableType.Walljump:
+				actionType = "jump";
+				break;
+			case CollectableType.Throw:
+				actionType = "sword_throw";
+				break;
+		}
+		
+		var binds = InputMap.ActionGetEvents(actionType);
+		string bindText = "";
+		
+		if(binds.Count == 0) {
+			bindText = "Missing Bind";
+		} else {
+			var firstEvent = binds[0];
+			
+			bindText = firstEvent switch {
+				InputEventKey keyEvent => keyEvent.AsText(), 
+				InputEventMouseButton mouseEvent => mouseEvent.AsText(),
+				InputEventJoypadButton joyEvent => joyEvent.AsText(),
+				_ => firstEvent.AsText()
+			};
+		}
+		
+		string useString = keybindDesc.Replace("<button>", bindText);
 
 		nameLabel.Text = ItemName;
-		keybindLabel.Text = keybindDesc;
+		keybindLabel.Text = useString;
 		descLabel.Text = Description;
 
 		if (PickupTexture != null) {
