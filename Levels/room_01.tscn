@@ -1,0 +1,291 @@
+[gd_scene load_steps=26 format=4 uid="uid://blemgugjlqkjd"]
+
+[ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="1_bkybe"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="2_dkn8l"]
+[ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_l5rdh"]
+[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_2g3pj"]
+[ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="8_rntpy"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="8_y5lni"]
+[ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_rntpy"]
+[ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_wlflr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y5lni"]
+shader = ExtResource("8_rntpy")
+shader_parameter/blur_power = 0.08
+shader_parameter/iterations = 100.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2g3pj"]
+texture = ExtResource("2_dkn8l")
+texture_region_size = Vector2i(128, 128)
+0:0/size_in_atlas = Vector2i(2, 2)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(-64, -64)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
+2:0/size_in_atlas = Vector2i(2, 2)
+2:0/0 = 0
+2:0/0/texture_origin = Vector2i(-64, -64)
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
+4:0/size_in_atlas = Vector2i(1, 2)
+4:0/0 = 0
+4:0/0/texture_origin = Vector2i(0, -64)
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.8498, 192.089, -63.8498, 191.909)
+5:1/0 = 0
+5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+5:0/size_in_atlas = Vector2i(2, 1)
+5:0/0 = 0
+5:0/0/texture_origin = Vector2i(-64, 0)
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 191.816, -64.0448, 191.816, 64.3634, -64, 64)
+0:4/size_in_atlas = Vector2i(1, 2)
+0:4/0 = 0
+0:4/0/texture_origin = Vector2i(0, -64)
+0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.9866, 192.025, -64.0136, 192.041)
+
+[sub_resource type="TileSet" id="TileSet_ykuuq"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
+sources/2 = SubResource("TileSetAtlasSource_2g3pj")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wlflr"]
+texture = ExtResource("2_dkn8l")
+texture_region_size = Vector2i(128, 128)
+0:2/0 = 0
+1:3/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:2/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+5:2/0 = 0
+0:6/0 = 0
+0:6/0/z_index = 1
+1:4/0 = 0
+1:4/0/z_index = 1
+1:5/0 = 0
+1:5/0/z_index = 1
+1:6/0 = 0
+1:6/0/z_index = 1
+2:4/0 = 0
+2:4/0/z_index = 1
+2:5/0 = 0
+2:5/0/z_index = 1
+3:5/0 = 0
+3:5/0/z_index = 1
+3:4/0 = 0
+3:4/0/z_index = 1
+4:4/0 = 0
+4:5/0 = 0
+6:5/0 = 0
+5:5/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+4:6/0 = 0
+4:6/0/z_index = 1
+3:6/0 = 0
+3:6/0/z_index = 1
+2:6/0 = 0
+2:6/0/z_index = 1
+0:4/size_in_atlas = Vector2i(1, 2)
+0:4/0 = 0
+0:4/0/texture_origin = Vector2i(0, -64)
+
+[sub_resource type="TileSet" id="TileSet_i48qr"]
+tile_size = Vector2i(128, 128)
+sources/2 = SubResource("TileSetAtlasSource_wlflr")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7ql3"]
+size = Vector2(0, 0)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_r1pom"]
+polygon = PackedVector2Array(-133, -706, -133, 255, -261, 255, -261, 383, 122, 383, 123, -513, 2427, -513, 2427, 384, 2683, 384, 2683, -706)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_y5lni"]
+polygon = PackedVector2Array(-128, 512, 128, 512, 128, 768, 2688, 768, 2688, 1024, -128, 1024)
+
+[sub_resource type="Gradient" id="Gradient_wlflr"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y5lni"]
+gradient = SubResource("Gradient_wlflr")
+
+[sub_resource type="Gradient" id="Gradient_i48qr"]
+colors = PackedColorArray(1.20327e-06, 0, 0.520981, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jd76r"]
+gradient = SubResource("Gradient_i48qr")
+fill_from = Vector2(0, 0.58296)
+fill_to = Vector2(1, 0.600897)
+
+[sub_resource type="Gradient" id="Gradient_2g3pj"]
+offsets = PackedFloat32Array(0.484277, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rntpy"]
+gradient = SubResource("Gradient_2g3pj")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(1, 0.878924)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_flkfy"]
+texture = ExtResource("1_bkybe")
+texture_region_size = Vector2i(128, 128)
+0:4/0 = 0
+0:3/0 = 0
+0:2/0 = 0
+0:1/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_wlflr"]
+tile_size = Vector2i(128, 128)
+sources/0 = SubResource("TileSetAtlasSource_flkfy")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykuuq"]
+size = Vector2(46, 382)
+
+[node name="Room01" type="Node2D"]
+
+[node name="Background Color" type="ColorRect" parent="."]
+offset_left = -594.0
+offset_top = -438.0
+offset_right = 4180.34
+offset_bottom = 2321.0
+scale = Vector2(0.695, 0.695)
+color = Color(0.147672, 0.147672, 0.147672, 1)
+
+[node name="CharacterCamera" type="Camera2D" parent="."]
+position = Vector2(903, 622)
+zoom = Vector2(0.75, 0.75)
+script = ExtResource("2_l5rdh")
+playerPath = NodePath("../Player")
+boundsPath = NodePath("../CameraBounds/CameraCollsion")
+
+[node name="Background" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.8, 0.8)
+
+[node name="BackgroundBlur" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_y5lni")
+offset_left = -774.0
+offset_top = -490.0
+offset_right = 2868.0
+offset_bottom = 1625.0
+color = Color(1, 1, 1, 0)
+
+[node name="Gears" type="Node2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("8_y5lni")]
+position = Vector2(952, 1005)
+
+[node name="MidTiles" type="Node2D" parent="."]
+position = Vector2(1654, 867)
+
+[node name="ground" type="TileMapLayer" parent="MidTiles"]
+position = Vector2(-1654, -867)
+tile_map_data = PackedByteArray("AAD9/wkAAgAFAAAAAAD//wkAAgAFAAAAAAABAAkAAgAFAAAAAAADAAkAAgAFAAAAAAAFAAkAAgAFAAAAAAAHAAkAAgAFAAAAAAAJAAkAAgAFAAAAAAALAAkAAgAFAAAAAAANAAkAAgAFAAAAAAAPAAkAAgAFAAAAAAARAAkAAgAAAAAAAAD9/wcAAgAAAAAAAAD9/wQAAgAFAAAAAAD9/wIAAgACAAAAAAD+/wAAAgAEAAAAAAD9/wEAAgAFAAEAAAD9//7/AgAAAAAAAAD9/wAAAgAFAAEAAAD///7/AgAFAAAAAAABAP7/AgAFAAAAAAADAP7/AgAFAAAAAAAFAP7/AgAFAAAAAAAHAP7/AgAFAAAAAAAJAP7/AgAFAAAAAAALAP7/AgAFAAAAAAANAP7/AgAFAAAAAAAPAP7/AgAFAAAAAAARAP7/AgAAAAAAAAARAAQAAgAAAAAAAAARAAMAAgAFAAEAAAASAAIAAgAEAAAAAAARAAEAAgAEAAAAAAARAAAAAgAFAAAAAAASAAEAAgAFAAEAAAD8/wUAAgAFAAAAAAD+/wUAAgAFAAEAAAA=")
+tile_set = SubResource("TileSet_ykuuq")
+
+[node name="detailBack" type="TileMapLayer" parent="MidTiles"]
+position = Vector2(-1654, -867)
+tile_set = SubResource("TileSet_i48qr")
+
+[node name="detailFront" type="TileMapLayer" parent="MidTiles"]
+position = Vector2(-1654, -867)
+tile_set = SubResource("TileSet_i48qr")
+
+[node name="CameraBounds" type="Area2D" parent="."]
+
+[node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
+position = Vector2(1031.45, 535)
+shape = SubResource("RectangleShape2D_j7ql3")
+
+[node name="Lighting" type="Node2D" parent="."]
+
+[node name="TopHalfOcclude" type="LightOccluder2D" parent="Lighting"]
+position = Vector2(-251, 385)
+occluder = SubResource("OccluderPolygon2D_r1pom")
+
+[node name="BottomHalfOcclude" type="LightOccluder2D" parent="Lighting"]
+position = Vector2(-256, 384)
+occluder = SubResource("OccluderPolygon2D_y5lni")
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="Lighting"]
+visible = false
+position = Vector2(1951.5, 777)
+scale = Vector2(11.3594, 6.02442)
+color = Color(0.999999, 0.995279, 0.695077, 1)
+energy = 0.25
+
+[node name="Door Light" type="PointLight2D" parent="Lighting"]
+position = Vector2(2418, 960.109)
+scale = Vector2(11.3594, 6.71533)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_y5lni")
+
+[node name="FinalBossLight" type="PointLight2D" parent="Lighting"]
+position = Vector2(-704, 842)
+scale = Vector2(26.6682, 36.6289)
+energy = 9.81
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_jd76r")
+
+[node name="MidDropoff" type="Node2D" parent="."]
+
+[node name="RightDropoff" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(2306.28, 255.531)
+rotation = 3.14159
+scale = Vector2(3.8748, 16.035)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="BottomDropoff" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(1027.5, 1234.43)
+rotation = -1.5708
+scale = Vector2(2.46597, 43.9227)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="TopDropoff" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(1023.4, -227.461)
+rotation = 1.5708
+scale = Vector2(2.9227, 43.9977)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="TopDropoff2" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(-288, 497.264)
+scale = Vector2(2.9227, 25.5855)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="Foreground" type="Parallax2D" parent="."]
+visible = false
+scroll_scale = Vector2(1.1, 1.1)
+scroll_offset = Vector2(106, 174)
+
+[node name="grayPipe" type="TileMapLayer" parent="Foreground"]
+modulate = Color(0.28485, 0.28485, 0.28485, 1)
+light_mask = 2
+position = Vector2(-513, -691)
+scale = Vector2(1.1, 1.1)
+tile_map_data = PackedByteArray("AAAEAAMAAAAAAAMAABAEAAQAAAAAAAEAABAEAAUAAAAAAAIAABAEAAYAAAAAAAQAAFAFAAYAAAADAAAAAAAGAAYAAAACAAAAAAAHAAYAAAAEAAAAAAAIAAYAAAADAAAAAAAJAAYAAAABAAAAAAAKAAYAAAACAAAAAAAEAAAAAAAAAAEAABAEAAEAAAAAAAEAABAEAAIAAAAAAAMAABALAAYAAAAAAAQAAAALAAQAAAAAAAEAAAALAAMAAAAAAAMAAAALAAIAAAAAAAAAAAAMAAIAAAADAAAAAAAOAAIAAAABAAAAAAANAAIAAAAEAAAAAAALAAUAAAAAAAIAAAAPAAIAAAABAAAAAAAQAAIAAAABAAAAAAARAAIAAAABAAAAAAANAAMAAAAAAAIAAAANAAQAAAAAAAQAAFAOAAQAAAADAAAAAAAPAAQAAAABAAAAAAAQAAQAAAABAAAAAAARAAQAAAABAAAAAAAHAAcAAAAAAAMAAAAHAAgAAAAAAAEAAAAHAAkAAAAAAAEAAAAHAAoAAAAAAAEAAAAHAAsAAAAAAAEAAAAHAAwAAAAAAAEAAAAHAA0AAAAAAAEAAAA=")
+tile_set = SubResource("TileSet_wlflr")
+
+[node name="FrontDropoff" type="Node2D" parent="."]
+visible = false
+
+[node name="BottomPipeDropoff" type="Sprite2D" parent="FrontDropoff"]
+position = Vector2(642, 1063.71)
+rotation = -1.5708
+scale = Vector2(1.9425, 3.36786)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="RightExit" parent="." instance=ExtResource("6_2g3pj")]
+position = Vector2(2429, 962)
+ConnectedRoom = "res://Levels/room_02.tscn"
+PlayerPos = Vector2(-138, -120)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
+position = Vector2(-20, -2)
+shape = SubResource("RectangleShape2D_ykuuq")
+
+[node name="ScreenFade" parent="." instance=ExtResource("9_rntpy")]
+
+[node name="CollectionOverlay" parent="." instance=ExtResource("14_wlflr")]

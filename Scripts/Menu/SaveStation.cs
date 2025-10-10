@@ -200,6 +200,10 @@ public partial class SaveStation : CharacterBody2D
 
 	public override void _Input(InputEvent @event)
 	{
+		// Safety check: don't process if not in tree
+		if (!IsInsideTree() || IsQueuedForDeletion())
+			return;
+			
 		// Only care about input when player is in range
 		if (!_playerInRange) return;
 
@@ -249,6 +253,7 @@ public partial class SaveStation : CharacterBody2D
 		cached.HasSword = playerSave.HasSword;
 		cached.HasDash = playerSave.HasDash;
 		cached.HasWalljump = playerSave.HasWalljump;
+		cached.HasClawTeleport = playerSave.HasClawTeleport;
 		cached.PlayerPosition = playerSave.PlayerPosition;
 		// If playerSave provides CollectedItems (unlikely), merge them too
 		if (playerSave.CollectedItems != null)

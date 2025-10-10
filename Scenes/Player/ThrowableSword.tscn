@@ -1,29 +1,33 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5v4w4vgsp6i0"]
+[gd_scene load_steps=3 format=3 uid="uid://throwablesword"]
 
-[ext_resource type="Script" path="res://Scripts/Player/ThrowableSword.cs" id="1_0n7m8"]
-[ext_resource type="Texture2D" uid="uid://c0xeplg1pfept" path="res://Sprites/Interactables/sword_item.png" id="2_sword"]
+[ext_resource type="Script" path="res://Scripts/Player/ThrowableSword.cs" id="1_ts"]
+[ext_resource type="Texture2D" uid="uid://bgmtq0ikfpjlw" path="res://Sprites/Player/Claw_SpriteSheet.png" id="2_claw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(20, 6)
+size = Vector2(20, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(20, 8)
 
 [node name="ThrowableSword" type="RigidBody2D"]
 collision_layer = 2
-collision_mask = 3
-contact_monitor = true
-max_contacts_reported = 10
-script = ExtResource("1_0n7m8")
+collision_mask = 1
+mass = 0.1
+gravity_scale = 0.0
+script = ExtResource("1_ts")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_sword")
-rotation = 1.5708
+texture = ExtResource("2_claw")
+hframes = 4
+vframes = 4
+frame = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 3
-monitoring = true
+collision_mask = 5
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_1")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_2")

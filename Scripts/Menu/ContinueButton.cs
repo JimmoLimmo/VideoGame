@@ -25,66 +25,19 @@ public partial class ContinueButton : Button
         // Stop any currently playing audio before scene transition
         AudioManager.StopAllAudio();
 
-        // For now, load defaultScene (level_1) and apply save after scene instanced
-        if (defaultScene == null)
-        {
-            GD.PrintErr("ContinueButton: defaultScene not set");
-            return;
-        }
-
-        var newScene = defaultScene.Instantiate() as Node;
-        if (newScene == null)
-        {
-            GD.PrintErr("ContinueButton: failed to instantiate defaultScene");
-            return;
-        }
-
+        // Load save data and change to the correct scene
+        string targetScene = save.CurrentScene;
         
+        // If no scene is saved or it's empty, default to room_01
+        if (string.IsNullOrEmpty(targetScene))
+        {
+            targetScene = "res://Levels/room_01.tscn";
+            GD.Print("[ContinueButton] No scene in save data, defaulting to room_01");
+        }
 
-        var current = GetTree().CurrentScene;
-
-        // Add new scene to root and set it as the current scene
-        GetTree().Root.AddChild(newScene);
+        GD.Print($"[ContinueButton] Loading game and changing to scene: {targetScene}");
         
-        try { GetTree().CurrentScene = newScene; } catch { }
-        
-
-        // Free the previous scene to avoid stacking (if any)
-        try { if (current != null) current.QueueFree(); } catch { }
-
-        // Try to find Player node in the newly loaded scene and apply save data (recursive search)
-        Player FindPlayerRecursive(Node node)
-        {
-            if (node is Player p) return p;
-            foreach (var child in node.GetChildren())
-            {
-                if (child is Node cn)
-                {
-                    var found = FindPlayerRecursive(cn);
-                    if (found != null) return found;
-                }
-            }
-            return null;
-        }
-
-        var player = FindPlayerRecursive(newScene);
-        if (player != null)
-        {
-            
-            // Defer applying save so Player._Ready/_Process doesn't overwrite our restore
-            player.CallDeferred(nameof(Player.ApplySaveDataFromManager), true);
-        }
-        else
-        {
-            GD.PrintErr("ContinueButton: no Player instance found in new scene");
-        }
-
-        // Close menu and free the main menu if appropriate
-        var parent = GetParent();
-        if (parent is MenuTab menuTab)
-        {
-            menuTab.Visible = false;
-            try { menuTab.QueueFree(); } catch { }
-        }
+        // Change to the saved scene - player will auto-load from save data in their _Ready method
+        GetTree().ChangeSceneToFile(targetScene);
     }
 }

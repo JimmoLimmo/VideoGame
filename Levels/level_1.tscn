@@ -1,21 +1,17 @@
-[gd_scene load_steps=23 format=4 uid="uid://iyovbraw1ggt"]
+[gd_scene load_steps=20 format=4 uid="uid://iyovbraw1ggt"]
 
 [ext_resource type="Texture2D" uid="uid://dv3rliy0u80jt" path="res://Sprites/Environment/background_sprite_1.png" id="1_0urlm"]
-[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://Scenes/Player/player.tscn" id="1_n0qsc"]
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="2_3mhv4"]
-[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="4_rfktq"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="1_n0qsc"]
+[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="3_rf6l5"]
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="5_0urlm"]
-[ext_resource type="Texture2D" uid="uid://cevvhdyha8whp" path="res://image.png" id="5_image"]
 [ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="8_77x7w"]
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="9_62b6n"]
-[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Obstacles/BreakableWall.tscn" id="9_xoyoh"]
+[ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Environment/BreakableWall.tscn" id="9_xoyoh"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="10_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="11_62b6n"]
-[ext_resource type="PackedScene" uid="uid://bvkxmxhow1t52" path="res://Scenes/Collectables/SwordTeleportUpgrade.tscn" id="12_sword_teleport"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_2hkqn"]
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="13_lk57d"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="13_lk57d"]
 [ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_2hkqn"]
-[ext_resource type="PackedScene" uid="uid://dr1g7ulllxmnx" path="res://Scenes/UI/SaveStation.tscn" id="15_34erp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_77x7w"]
 texture = ExtResource("1_0urlm")
@@ -25,7 +21,7 @@ texture = ExtResource("1_0urlm")
 [sub_resource type="TileSet" id="TileSet_xoyoh"]
 sources/0 = SubResource("TileSetAtlasSource_77x7w")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f4pg2"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2hkqn"]
 texture = ExtResource("9_62b6n")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -88,9 +84,9 @@ texture = ExtResource("9_62b6n")
 
 [sub_resource type="TileSet" id="TileSet_62b6n"]
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_f4pg2")
+sources/0 = SubResource("TileSetAtlasSource_2hkqn")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0urlm"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34erp"]
 texture = ExtResource("9_62b6n")
 2:3/0 = 0
 2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 0, -5.03604, 8, -0.539576, 8, 8, -8, 8)
@@ -127,7 +123,7 @@ texture = ExtResource("9_62b6n")
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 4
 physics_layer_1/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_0urlm")
+sources/0 = SubResource("TileSetAtlasSource_34erp")
 
 [node name="level_1" type="Node2D"]
 
@@ -146,28 +142,20 @@ tile_map_data = PackedByteArray("AAAzAAUAAAAGAAMAAAA0AAUAAAAGAAMAAAA1AAUAAAAGAAM
 tile_set = SubResource("TileSet_77x7w")
 
 [node name="Player" parent="." groups=["enemies"] instance=ExtResource("1_n0qsc")]
-position = Vector2(-36, -28)
-HudPath = NodePath("../Hud")
+position = Vector2(-53, -36)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(6, 2)
 zoom = Vector2(3, 3)
-
-[node name="Hud" parent="." instance=ExtResource("2_3mhv4")]
-script = ExtResource("4_rfktq")
-MaskFull = ExtResource("5_0urlm")
-MaskEmpty = ExtResource("5_image")
 
 [node name="SwordUpgrade" parent="." instance=ExtResource("8_77x7w")]
 position = Vector2(-478, 2)
 
 [node name="BreakableWall" parent="." instance=ExtResource("9_xoyoh")]
 position = Vector2(-302, 9)
-SaveID = "level_1_wall_1"
 
 [node name="BreakableWall2" parent="." instance=ExtResource("9_xoyoh")]
 position = Vector2(352, -24)
-SaveID = "level_1_wall_2"
 
 [node name="DashUpgrade" parent="." instance=ExtResource("10_f4pg2")]
 position = Vector2(487, -10)
@@ -175,13 +163,8 @@ position = Vector2(487, -10)
 [node name="WallJumpUpgrade" parent="." instance=ExtResource("11_62b6n")]
 position = Vector2(1192, 104)
 
-[node name="SwordTeleportUpgrade" parent="." instance=ExtResource("12_sword_teleport")]
-position = Vector2(42, -24)
-SaveID = "level_1_sword_teleport"
-
 [node name="BreakableWall3" parent="." instance=ExtResource("9_xoyoh")]
 position = Vector2(1120, -24)
-SaveID = "level_1_wall_3"
 
 [node name="Enemy" parent="." instance=ExtResource("13_lk57d")]
 position = Vector2(149, 24)
@@ -192,8 +175,3 @@ volume_db = -10.306
 autoplay = true
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("14_2hkqn")]
-
-[node name="SaveStation" parent="." instance=ExtResource("15_34erp")]
-z_index = 11
-position = Vector2(-134, 24)
-disable_mode = 2

@@ -1,505 +1,685 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
-public partial class Player : CharacterBody2D
-{
-	// Constants
-	public const float Speed = 150.0f;
-	public const float JumpVelocity = -350.0f;
+public partial class Player : CharacterBody2D {
+	// -------------------------------
+	// Tunables
+	// -------------------------------
+	[Export] public float Speed = 700.0f;
+	[Export] public float JumpVelocity = -1250.0f;
+	[Export] public float fallAcceleration = 2.5f;
 
-	// Movement Variables
-	private Vector2 _dashDirection = Vector2.Zero; // Direction of the dash
-	private bool _isDashing = false; // Whether the player is currently dashing
-	private bool _hasAirDashed = false; // Tracks if the player has dashed in the air
-	private bool _isWallSliding = false; // Tracks if the player is sliding on a wall
-	private float _dashTimer = 0f; // Tracks remaining dash time
-	private float _dashCooldownTimer = 0f; // Tracks cooldown time
-	[Export] public float WallJumpLockTime = 0.1f; // lock duration in seconds
+	// Heal Settings (Hollow Knight style)
+	private float _healTimer = 0f;
+	private const float HealDuration = 1.8f;
+	private const int HealAmount = 1;
+	private const int HealManaCost = 3;
+	private bool _isHealing = false;
+
+	// Movement variables
+	private Vector2 _dashDirection = Vector2.Zero;
+	private bool _isDashing = false;
+	private bool _hasAirDashed = false;
+	private bool _isWallSliding = false;
+	private float _dashTimer = 0f;
+	private float _dashCooldownTimer = 0f;
+	[Export] public float WallJumpLockTime = 0.1f;
 	private float _wallJumpLockTimer = 0f;
+	private bool holdPlayer = false;
 
+	// Wall slide
+	[Export] public float WallSlideSpeed = 400.0f;
+	[Export] public float WallJumpForce = 1000.0f;
+	[Export] private bool hasWalljump = false;
 
-	// Wall Slide Settings
-	[Export] public float WallSlideSpeed = 100.0f; // Speed of sliding down a wall
-	[Export] public float WallJumpForce = 600.0f; // Force applied when jumping off a wall
-	private float CurrentWallSlideSpeed = 980.0f; //
-	private bool hasWalljump = false;
+	// Dash
+	[Export] public float DashSpeed = 2000.0f;
+	[Export] public float DashDuration = 0.2f;
+	[Export] public float DashCooldown = 0.5f;
+	[Export] private bool hasDash = false;
 
-	// Dash Settings
-	[Export] public float DashSpeed = 400.0f; // Speed during dash
-	[Export] public float DashDuration = 0.2f; // Duration of the dash in seconds
-	[Export] public float DashCooldown = 0.5f; // Cooldown time between dashes
-	private bool hasDash = false;
-
-	// Attack Variables
+	// Attack
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
-	private bool hasSword = false;
-	private bool hasSwordTeleport = false;
+	[Export] private bool hasSword = false;
+	[Export] private bool hasClawTeleport = false;
+	private Node2D clawSprites;
 	
-	// Sword Teleport Variables
-	[Export] public PackedScene ThrowableSwordScene { get; set; }
-	private ThrowableSword _activeThrownSword;
-	private bool _swordIsThrown = false;
+	// Claw Teleport Variables
+	[Export] public PackedScene ThrowableClawScene { get; set; }
+	private ThrowableClaw _activeThrownClaw;
+	private bool _clawIsThrown = false;
 
-	// Health Variables
-	private int _hp = 5;
+	// Health & mana
+	private int _hp;
+	private int _mana;
 	private bool _isDead = false;
 
-	// Node Paths
-	[Export] public NodePath SwordPath { get; set; } // Assign in Inspector
-	[Export] public NodePath HudPath { get; set; } // Assign in Inspector
+	// Node paths
+	[Export] public NodePath SwordPath { get; set; }
 
-	// Node References
+	// Animation vars
+	private string nextAnimation = "";
+	private string lastAnimation;
+
+	// Nodes
 	private AnimationPlayer _anim;
-	private Sprite2D _sprite;
+	private AnimationPlayer swordAnimator;
+	private Node2D sprites;
 	private Sword _sword;
 	private HUD _hud;
+	private ScreenFader fade;
 
-	// Damage Handling Crap
-	[Export] public float InvulnTime = 0.6f;     // seconds of invulnerability
-	[Export] public float HitstunTime = 0.15f;   // time you can't control the player
-	[Export] public float KnockbackForce = 260f; // pixels/sec knockback speed
-	[Export] public float KnockbackUpward = 120f;// upward component
+	// Damage & invuln
+	[Export] public float InvulnTime = 0.6f;
+	[Export] public float HitstunTime = 0.15f;
+	[Export] public float KnockbackForce = 260f;
+	[Export] public float KnockbackUpward = 120f;
 	private bool _invulnerable = false;
 	private float _invulnTimer = 0f;
 	private float _hitstunTimer = 0f;
+	private bool lockPlayer = false;
+	private Vector2 respawnPoint;
 
+	// -------------------------------
 	// Initialization
-	public override void _Ready()
-	{
-		// Stop any menu audio that might still be playing when entering the level
-		AudioManager.StopMenuAudio();
-		
-		// Clean up any lingering menu UI elements
-		AudioManager.CleanupMenuUI();
+	// -------------------------------
+	public override void _Ready() {
+		if (GlobalRoomChange.Activate) {
+			// Moving between rooms in the same session
+			GlobalPosition = GlobalRoomChange.PlayerPos;
+			if (GlobalRoomChange.PlayerJumpOnEnter)
+				Velocity = new Vector2(0, JumpVelocity);
+
+			hasSword = GlobalRoomChange.hasSword;
+			hasDash = GlobalRoomChange.hasDash;
+			hasWalljump = GlobalRoomChange.hasWalljump;
+			hasClawTeleport = GlobalRoomChange.hasClawTeleport; // Add claw teleport to room changes
+
+			GlobalRoomChange.Activate = false;
+			_hp = GlobalRoomChange.health;
+			_mana = GlobalRoomChange.mana;
+		}
+		else {
+			// Starting fresh or loading from save
+			// Check if this is a new game vs loading from existing save
+			if (!SaveManager.IsNewGame()) {
+				// Loading from existing save (Continue button was pressed)
+				var saveData = SaveManager.GetCurrentSave();
+				ApplySaveData(saveData, true);
+				
+				// IMPORTANT: Sync loaded abilities to GlobalRoomChange so room transitions work correctly
+				GlobalRoomChange.hasSword = hasSword;
+				GlobalRoomChange.hasDash = hasDash;
+				GlobalRoomChange.hasWalljump = hasWalljump;
+				GlobalRoomChange.hasClawTeleport = hasClawTeleport;
+				GlobalRoomChange.health = _hp;
+				GlobalRoomChange.mana = _mana;
+				
+				// Make sure the room group is set correctly for gameplay scenes
+				// This ensures the HUD shows up properly
+				string currentSceneName = GetTree().CurrentScene.Name;
+				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
+					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
+				}
+			}
+			else {
+				// New game - use default starting values, don't load from save
+				_hp = 5; // Default starting health
+				hasSword = false;
+				hasDash = false;
+				hasWalljump = false;
+				hasClawTeleport = false;
+				
+				// IMPORTANT: Update GlobalRoomChange to match new game state
+				GlobalRoomChange.health = _hp;
+				GlobalRoomChange.hasSword = false;
+				GlobalRoomChange.hasDash = false;
+				GlobalRoomChange.hasWalljump = false;
+				GlobalRoomChange.hasClawTeleport = false;
+				
+				// Make sure the room group is set for new game
+				string currentSceneName = GetTree().CurrentScene.Name;
+				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
+					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
+				}
+			}
+		}
+
+		respawnPoint = Position;
 
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
-		_sprite = GetNode<Sprite2D>("Sprite2D");
-
+		swordAnimator = GetNode<AnimationPlayer>("SwordAnimation");
+		sprites = GetNode<Node2D>("Sprites");
+		clawSprites = GetNode<Node2D>("Sprites/ClawSprites");
 		_sword = GetNodeOrNull<Sword>(SwordPath);
-		if (_sword == null)
-			GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
+		if (hasSword) {
+			_sword.Visible = true;
+			clawSprites.Visible = true;
+		}
 
-		_hud = GetNodeOrNull<HUD>(HudPath);
-		if (_hud == null)
-			GD.PushError($"HUD not found at '{HudPath}' from {GetPath()}.");
+		// Get HUD from autoload - defer this to ensure autoloads are ready
+		CallDeferred(nameof(InitializeHUD));
+		
+		fade = GetNodeOrNull<ScreenFader>("../ScreenFade");
 
-		// Defer HUD sync so HUD._Ready() has time to build its UI
-		CallDeferred(nameof(SyncHud));
-
-		var hazardBox = GetNode<Area2D>("player");
+		var hazardBox = GetNode<Area2D>("HitBox");
 		hazardBox.BodyEntered += areaHazard;
 
 		AddToGroup("player");
 	}
 
-	private void SyncHud()
+	private void InitializeHUD()
 	{
-		_hud ??= GetNodeOrNull<HUD>(HudPath);
+		// Get HUD from autoload
+		_hud = GetNodeOrNull<HUD>("/root/HUD");
+		if (_hud != null)
+		{
+			// Sync initial HUD state
+			SyncHud();
+		}
+	}
+
+	private void SyncHud() {
+		// Try to reconnect to HUD if it's missing
 		if (_hud == null)
 		{
-			GD.PushError($"[Player] Could not sync HUD; node still null at '{HudPath}'.");
-			return;
+			_hud = GetNodeOrNull<HUD>("/root/HUD");
+			if (_hud == null) return;
 		}
-
-		// Clamp to HUD capacity and apply initial value
-		_hp = Mathf.Min(_hp, _hud.MaxMasks);
 		_hud.SetHealth(_hp);
+		_hud.SetMana(_mana);
 	}
 
-	// Physics Process
-	public override void _PhysicsProcess(double delta)
-	{
-		if (_isDead) return; // Disable controls if dead
+	// -------------------------------
+	// Physics Loop
+	// -------------------------------
+	public override void _PhysicsProcess(double delta) {
+		if (_isDead || lockPlayer) return;
 
 		_wallJumpLockTimer = Mathf.Max(0f, _wallJumpLockTimer - (float)delta);
-
 		HandleDashCooldown(delta);
 
-		if (_isDashing)
-		{
-			HandleDash(delta);
-		}
-		else
-		{
-			HandleMovement(delta);
-		}
+		if (_isDashing) HandleDash(delta);
+		else HandleMovement(delta);
 
-		if (_isWallSliding && !_isDashing)
-			HandleWallSlide(delta);
+		if (_isWallSliding && !_isDashing) HandleWallSlide(delta);
 
-		HandleJump();         // Allow jumping regardless of dash
-		HandleDashInput();    // Still process new dash input
-		HandleAttack(delta);  // Allow attacking mid-air or mid-dash
-		HandleAnimations();   // Update animation
-
-		// decrement timers
-		if (_invulnerable)
-		{
-			_invulnTimer -= (float)delta;
-			if (_invulnTimer <= 0f)
-			{
-				_invulnerable = false;
-				_sprite.SelfModulate = Colors.White; // stop flicker
-			}
-			else
-			{
-				// simple flicker (toggle alpha)
-				// 10 Hz blink:
-				bool on = ((int)(Time.GetTicksMsec() / 100) % 2) == 0;
-				_sprite.SelfModulate = new Color(1, 1, 1, on ? 0.5f : 1f);
-			}
+		if (!holdPlayer) {
+			HandleJump();
+			HandleDashInput();
+			HandleAttack(delta);
+			HandleAnimations();
 		}
 
-		if (_hitstunTimer > 0f)
-		{
-			_hitstunTimer -= (float)delta;
-
-			// During hitstun: no input, just apply gravity and keep current Velocity
-			Vector2 v = Velocity;
-			if (!IsOnFloor()) v += GetGravity() * (float)delta;
-			Velocity = v;
-			MoveAndSlide();
-			return; // skip normal controls this frame
-		}
-
+		HandleHeal(delta);
+		UpdateInvulnerability(delta);
+		UpdateHitstun(delta);
 	}
 
-	// Movement Logic
-	private void HandleMovement(double delta)
-	{
-		// Respect wall-jump input lock
-		float inputX = (_wallJumpLockTimer > 0f)
+	private void UpdateInvulnerability(double delta) {
+		if (!_invulnerable) return;
+		_invulnTimer -= (float)delta;
+		if (_invulnTimer <= 0f) {
+			_invulnerable = false;
+			sprites.SelfModulate = Colors.White;
+		}
+		else {
+			bool flash = ((int)(Time.GetTicksMsec() / 100) % 2) == 0;
+			sprites.SelfModulate = new Color(1, 1, 1, flash ? 0.5f : 1f);
+		}
+	}
+
+	private void UpdateHitstun(double delta) {
+		if (_hitstunTimer <= 0f) return;
+		_hitstunTimer -= (float)delta;
+		Vector2 v = Velocity;
+		if (!IsOnFloor()) v += GetGravity() * (float)delta;
+		Velocity = v;
+		MoveAndSlide();
+	}
+
+	// -------------------------------
+	// Movement & Jump
+	// -------------------------------
+	private void HandleMovement(double delta) {
+		float inputX = (_wallJumpLockTimer > 0f || holdPlayer)
 			? 0f
 			: Input.GetAxis("move_left", "move_right");
 
 		Vector2 velocity = Velocity;
+		int div = 1;
 
-		if (!IsOnFloor() && !_isWallSliding)
-			velocity += GetGravity() * (float)delta;
+		if (!IsOnFloor() && !_isWallSliding && !_isDashing) {
+			velocity += Velocity.Y > 0
+				? GetGravity() * (float)delta * fallAcceleration
+				: GetGravity() * (float)delta;
+			div = 7;
+		}
 
-		if (Mathf.Abs(inputX) > 0.01f)
-		{
+		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
-			_sprite.FlipH = facingLeft;
+			sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
 			_sword?.SetFacingLeft(facingLeft);
 		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed);
-		}
+		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 
 		Velocity = velocity;
 		MoveAndSlide();
 	}
 
-
-	// Jump Logic
-	private void HandleJump()
-	{
-		if (Input.IsActionJustPressed("jump"))
-		{
-			if (IsOnFloor())
-			{
-				// Normal jump
+	private void HandleJump() {
+		if (IsOnFloor()) {
+			if (Input.IsActionJustPressed("jump"))
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
-			}
-			else if (_isWallSliding && hasWalljump)
-			{
-				// Jump away from the wall with a strong horizontal push
-				int dir = _sprite.FlipH ? 1 : -1; // facing left => wall on left, push right
-				Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+		}
+		else if (Input.IsActionJustReleased("jump") && Velocity.Y < 0)
+			Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 
-				// Start input lock so holding into wall doesn’t cancel this
-				_isWallSliding = false;
-				_wallJumpLockTimer = WallJumpLockTime;
-			}
-			else if (_isDashing)
-			{
-				// Preserve momentum when jumping during a dash
-				Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-				_isDashing = false; // End the dash
-				_dashTimer = 0f; // Reset the dash timer
-			}
+		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
+			int dir = sprites.Scale.X < 0 ? 1 : -1;
+			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+			_isWallSliding = false;
+			_wallJumpLockTimer = WallJumpLockTime;
+		}
+		else if (_isDashing && Input.IsActionJustPressed("jump")) {
+			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+			_isDashing = false;
+			_dashTimer = 0f;
 		}
 	}
 
-	// Dash Logic
-	private void HandleDashCooldown(double delta)
-	{
+	// -------------------------------
+	// Dash
+	// -------------------------------
+	private void HandleDashCooldown(double delta) {
 		if (_dashCooldownTimer > 0f)
 			_dashCooldownTimer -= (float)delta;
 	}
 
-	private void HandleDash(double delta)
-	{
+	private void HandleDash(double delta) {
 		_dashTimer -= (float)delta;
-		if (_dashTimer <= 0f || !Input.IsActionPressed("dash"))
-		{
-			_isDashing = false; // End the dash
+		if (_dashTimer <= 0f || !Input.IsActionPressed("dash")) {
+			_isDashing = false;
 		}
-		else
-		{
-			// Only apply dash velocity if the player is still dashing
+		else {
 			Velocity = _dashDirection * DashSpeed;
 			MoveAndSlide();
 		}
 	}
 
-	private void HandleDashInput()
-	{
-		if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing && hasDash)
-		{
-			if (IsOnWall() && !IsOnFloor())
-			{
-				// Dash up the wall at a controlled speed
-				Vector2 upIntoWall = new Vector2((_sprite.FlipH ? -1 : 1) * 0.2f, -1f).Normalized();
+	private void HandleDashInput() {
+		if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing && hasDash) {
+			if (IsOnWall() && !IsOnFloor()) {
+				Vector2 upIntoWall = new Vector2((sprites.Scale.X < 0 ? -1 : 1) * 0.2f, -1f).Normalized();
 				StartDash(upIntoWall);
-
 			}
-			else if (IsOnFloor() || !_hasAirDashed)
-			{
+			else if (IsOnFloor() || !_hasAirDashed) {
 				StartDash(Input.GetVector("move_left", "move_right", "ui_up", "ui_down"));
-				if (!IsOnFloor())
-					_hasAirDashed = true; // Mark air dash as used
+				if (!IsOnFloor()) _hasAirDashed = true;
 			}
 		}
 	}
 
-	private void StartDash(Vector2 direction)
-	{
+	private void StartDash(Vector2 direction) {
 		if (direction == Vector2.Zero)
-			direction = _sprite.FlipH ? Vector2.Left : Vector2.Right; // Default to facing direction
+			direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
 
 		_isDashing = true;
 		_dashTimer = DashDuration;
 		_dashCooldownTimer = DashCooldown;
-
-		// Scale the dash speed for wall dashing
 		_dashDirection = direction.Normalized();
-		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f); // Reduce speed for wall dashing
-
-		// _anim.Play("Dash"); // Play dash animation
+		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f);
 	}
 
-	// Wall Slide Logic
-	private void HandleWallSlide(double delta)
-	{
-		if (IsOnWall() && !IsOnFloor())
-		{
+	// -------------------------------
+	// Wall Slide
+	// -------------------------------
+	private void HandleWallSlide(double delta) {
+		if (IsOnWall() && !IsOnFloor() && hasWalljump) {
 			_isWallSliding = true;
-
-			// Stick to the wall and slide down slowly
-			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, CurrentWallSlideSpeed));
+			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
 		}
-		else
-		{
-			_isWallSliding = false;
-		}
+		else _isWallSliding = false;
 	}
 
-	// Attack Logic
-	private void HandleAttack(double delta)
-	{
+	// -------------------------------
+	// Attack
+	// -------------------------------
+	private void HandleAttack(double delta) {
 		_attackTimer -= (float)delta;
 		
 		// Handle normal sword attack
-		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword && !_swordIsThrown)
-		{
+		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword && !_clawIsThrown) {
 			_attackTimer = AttackCooldown;
-			_anim.Play("Sword"); // Animation calls AttackStart/AttackEnd
+			swordAnimator.Play("Swing");
 		}
 		
-		// Handle sword throwing (only if teleport upgrade is available)
-		if (Input.IsActionJustPressed("sword_throw") && _attackTimer <= 0f && hasSword && hasSwordTeleport && !_swordIsThrown)
-		{
-			ThrowSword();
+		// Handle claw throwing (only if teleport upgrade is available)
+		if (Input.IsActionJustPressed("claw_throw") && _attackTimer <= 0f && hasSword && hasClawTeleport && !_clawIsThrown) {
+			ThrowClaw();
 		}
 	}
 
 	public void AttackStart() => _sword?.EnableHitbox();
 	public void AttackEnd() => _sword?.DisableHitbox();
 	
-	private void ThrowSword()
+	private void ThrowClaw()
 	{
-		if (ThrowableSwordScene == null || _swordIsThrown) return;
+		if (ThrowableClawScene == null || _clawIsThrown) return;
 		
 		_attackTimer = AttackCooldown;
-		_swordIsThrown = true;
+		_clawIsThrown = true;
 		
-		// Hide the regular sword
+		// Hide the regular sword (claw is still attached to sword)
 		if (_sword != null)
 		{
 			_sword.Visible = false;
 		}
 		
-		// Create throwable sword
-		_activeThrownSword = ThrowableSwordScene.Instantiate<ThrowableSword>();
-		GetTree().CurrentScene.AddChild(_activeThrownSword);
+		// Create throwable claw
+		_activeThrownClaw = ThrowableClawScene.Instantiate<ThrowableClaw>();
+		GetTree().CurrentScene.AddChild(_activeThrownClaw);
 		
-		// Position it at the player's sword position
-		Vector2 swordOffset = new Vector2(_sprite.FlipH ? -30 : 30, -10);
-		_activeThrownSword.GlobalPosition = GlobalPosition + swordOffset;
+		// Set the player reference in the claw
+		_activeThrownClaw.SetPlayer(this);
+		
+		// Position it at the player's claw position
+		Vector2 clawOffset = new Vector2(sprites.Scale.X < 0 ? -30 : 30, -10);
+		_activeThrownClaw.GlobalPosition = GlobalPosition + clawOffset;
 		
 		// Determine throw direction based on player facing
-		Vector2 throwDirection = _sprite.FlipH ? Vector2.Left : Vector2.Right;
-		_activeThrownSword.ThrowInDirection(throwDirection);
+		Vector2 throwDirection = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
+		_activeThrownClaw.ThrowInDirection(throwDirection);
 		
-		// Connect to the sword's destruction to know when to show our sword again
-		_activeThrownSword.TreeExiting += OnThrownSwordDestroyed;
+		// Connect to the claw's destruction to know when to show our sword again
+		_activeThrownClaw.TreeExiting += OnThrownClawDestroyed;
 	}
 	
-	private void OnThrownSwordDestroyed()
+	private void OnThrownClawDestroyed()
 	{
-		_swordIsThrown = false;
-		_activeThrownSword = null;
+		_clawIsThrown = false;
+		_activeThrownClaw = null;
 		
-		// Show the regular sword again
+		// Show the regular sword again (claw is part of the sword weapon)
 		if (_sword != null && hasSword)
 		{
 			_sword.Visible = true;
 		}
 	}
 
-	// Animation Logic
-	private void HandleAnimations()
-	{
-		if (_anim.CurrentAnimation != "Sword" || !_anim.IsPlaying())
-		{
-			string nextAnim =
-				!IsOnFloor() ? (Velocity.Y < 0f ? "Jump" : "Fall") :
-				Mathf.Abs(Velocity.X) > 1f ? "Walk" : "Idle";
+	// -------------------------------
+	// Animation Control
+	// -------------------------------
+	private void HandleAnimations() {
+		if (hasSword && !_clawIsThrown) {
+			_sword.Visible = true;
+			clawSprites.Visible = true;
+		}
+		else {
+			_sword.Visible = false;
+			clawSprites.Visible = false;
+		}
 
-			if (_anim.CurrentAnimation != nextAnim)
-				_anim.Play(nextAnim);
+		if (holdPlayer) {
+			nextAnimation = ("Stagger");
+		} else if(_isWallSliding && Velocity.Y > 0) {
+			nextAnimation = ("Wallslide");
+		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
+			nextAnimation = "Peak";
+		}
+		else if (Velocity.Y < -200f) {
+			nextAnimation = "Jump";
+		}
+		else if (Velocity.Y > 100f) {
+			nextAnimation = "Fall";
+		}
+		else if (Velocity.Y == 0 && Velocity.X != 0) {
+			if (lastAnimation == "Fall") {
+				nextAnimation = "IntoRun";
+			}
+			else {
+				nextAnimation = "Run";
+			}
+		}
+		else if (Velocity.Y == 0 && Velocity.X == 0) {
+			if (lastAnimation == "Fall") {
+				nextAnimation = "IntoIdle";
+			}
+			else {
+				nextAnimation = "Idle";
+			}
+		}
+
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+			_anim.Play(nextAnimation);
+			lastAnimation = nextAnimation;
 		}
 	}
 
-	// Health Logic
-	public void TakeDamage(int dmg)
-	{
-		if (_isDead) return; // Ignore damage if already dead
+	// -------------------------------
+	// Health & Heal
+	// -------------------------------
+	public void TakeDamage(int dmg) {
+		if (_isDead) return;
 
 		_hp = Mathf.Max(0, _hp - dmg);
 		_hud?.SetHealth(_hp);
 		_hud?.FlashDamage();
+		GlobalRoomChange.health = _hp;
 
-		if (_hp <= 0)
-			Die();
+		if (_hp <= 0) Die();
 	}
 
-	public void Heal(int amt)
-	{
+	public async void Heal(int amt) {
+		GD.Print($"[Heal] Attempting heal: hp={_hp}, mana={_mana}");
+		if (!SpendMana(HealManaCost)) {
+			GD.Print("[Heal] Not enough mana!");
+			return;
+		}
+		int before = _hp;
 		int max = _hud?.MaxMasks ?? _hp;
 		_hp = Mathf.Min(_hp + amt, max);
+		GlobalRoomChange.health = _hp;
 		_hud?.SetHealth(_hp);
+		await _hud?.DrainManaForHeal(HealManaCost, 1.0f);
+		GD.Print($"[Heal] Success — {before} → {_hp}, mana now {_mana}");
 	}
 
-	public void Die()
-	{
-		if (_isDead) return; // Prevent multiple death triggers
+	private void HandleHeal(double delta) {
+		if (_isDead || lockPlayer || _isDashing || _hitstunTimer > 0f)
+			return;
+
+		// --------------------------
+		// Begin Healing (button pressed)
+		// --------------------------
+		if (Input.IsActionPressed("heal")) {
+			if (!_isHealing && _mana >= HealManaCost) {
+				_isHealing = true;
+				_healTimer = 0f;
+				holdPlayer = true;
+				_invulnerable = true;
+				GD.Print("[Heal] Started");
+				if (_anim.HasAnimation("FocusStart"))
+					_anim.Play("FocusStart");
+			}
+
+			// Always advance timer while healing
+			if (_isHealing) {
+				_healTimer += (float)delta;
+
+				if (_healTimer >= HealDuration) {
+					GD.Print("[Heal] Finished");
+					Heal(HealAmount);
+					StopHealing();
+					return;
+				}
+
+				// Small debug print
+				if (((int)(Time.GetTicksMsec() / 250)) % 5 == 0)
+					DebugHealState();
+			}
+		}
+		// --------------------------
+		// Heal Cancelled (button released)
+		// --------------------------
+		else if (_isHealing) {
+			GD.Print("[Heal] Cancelled");
+			StopHealing();
+		}
+	}
+
+
+	private void StopHealing() {
+		GD.Print("[Heal] StopHealing called");
+		_isHealing = false;
+		holdPlayer = false;
+		_invulnerable = false;
+		_healTimer = 0f;
+
+		if (_anim.HasAnimation("FocusEnd"))
+			_anim.Play("FocusEnd");
+		else
+			_anim.Play("Idle");
+	}
+
+	private void DebugHealState() {
+		GD.Print($"[HealDebug] isHealing={_isHealing}, holdPlayer={holdPlayer}, mana={_mana}, healTimer={_healTimer:F2}/{HealDuration}, anim={_anim?.CurrentAnimation}");
+	}
+
+	private void _OnFocusStartFinished() {
+		if (_isHealing && _anim.HasAnimation("FocusHold")) {
+			_anim.Play("FocusHold");
+			GD.Print("[Heal] FocusStart → FocusHold");
+		}
+	}
+
+	// -------------------------------
+	// Death & Respawn
+	// -------------------------------
+	public void Die() {
+		if (_isDead) return;
 		_isDead = true;
-
-		// Play the "Dead" animation
-		_anim.Play("Dead");
-
-		// Disable player controls
+		
+		// Use existing Stagger animation for death, or just stop movement
+		if (_anim.HasAnimation("Stagger")) {
+			_anim.Play("Stagger");
+		} else {
+			_anim.Play("Idle");
+		}
+		
 		SetPhysicsProcess(false);
-
-		// Optionally, trigger a game-over sequence after the animation finishes
-		_anim.Connect("animation_finished", new Callable(this, nameof(OnDeathAnimationFinished)));
+		
+		// Handle death - show game over message and return to main menu
+		GD.Print("Game Over! Returning to main menu...");
+		
+		// Create a timer to delay the scene change for player feedback
+		var timer = new Timer();
+		timer.WaitTime = 2.0; // 2 second delay
+		timer.OneShot = true;
+		timer.Timeout += OnDeathTimerTimeout;
+		AddChild(timer);
+		timer.Start();
+	}
+	
+	private void OnDeathTimerTimeout()
+	{
+		// Unpause the game before changing scenes
+		GetTree().Paused = false;
+		
+		// Change to main menu scene
+		GetTree().ChangeSceneToFile("res://Scenes/UI/main_menu.tscn");
 	}
 
-	private void OnDeathAnimationFinished(string animName)
-	{
-		if (animName == "Dead")
-		{
-			// Trigger game-over logic (e.g., restart level, show game-over screen)
-			GD.Print("Game Over!");
-			GetTree().Paused = true; // Pause the game
+	public override void _Process(double delta) {
+		if (IsOnFloor()) _hasAirDashed = false;
+		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
+			_isWallSliding = true;
+			_hasAirDashed = false;
 		}
+		else if (!IsOnWall() || IsOnFloor()) _isWallSliding = false;
 	}
 
-	// Reset States on Ground or Wall Contact
-	public override void _Process(double delta)
-	{
-		if (IsOnFloor())
-		{
-			_hasAirDashed = false; // Reset air dash when touching the ground
-		}
-
-		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing)
-		{
-			_isWallSliding = true;  // Enable wall sliding when touching a wall
-			_hasAirDashed = false;  // Reset air dash when touching a wall
-		}
-		else if (!IsOnWall() || IsOnFloor())
-		{
-			_isWallSliding = false;
-		}
-	}
-
-	public void areaHazard(Node2D body)
-	{
+	// -------------------------------
+	// Misc
+	// -------------------------------
+	public async void areaHazard(Node2D body) {
+		lockPlayer = true;
 		TakeDamage(1);
+		await fade.FadeOut(0.5f);
+		Position = respawnPoint;
+		lockPlayer = false;
+		await fade.FadeIn(0.5f);
 	}
 
-	public void OnCollect(CollectableType type)
-	{
-		if (type == CollectableType.Sword)
-		{
-			hasSword = true;
-		}
-		else if (type == CollectableType.Dash)
-		{
-			hasDash = true;
-		}
-		else if (type == CollectableType.Walljump)
-		{
-			CurrentWallSlideSpeed = WallSlideSpeed;
-			hasWalljump = true;
-		}
-		else if (type == CollectableType.SwordTeleport)
-		{
-			hasSwordTeleport = true;
-		}
+	public void OnCollect(CollectableType type) {
+		if (type == CollectableType.Sword) hasSword = true;
+		else if (type == CollectableType.Dash) hasDash = true;
+		else if (type == CollectableType.Walljump) hasWalljump = true;
+		else if (type == CollectableType.Throw) hasClawTeleport = true;
+		GlobalRoomChange.hasSword = hasSword;
+		GlobalRoomChange.hasDash = hasDash;
+		GlobalRoomChange.hasWalljump = hasWalljump;
+		GlobalRoomChange.hasClawTeleport = hasClawTeleport;
 	}
 
-	public void ApplyHit(int dmg, Vector2 sourceGlobalPos)
-	{
+	public void ApplyHit(int dmg, Vector2 src) {
 		if (_isDead || _invulnerable) return;
-
-		// 1) take damage
 		TakeDamage(dmg);
-
-		// 2) start i-frames + hitstun
 		_invulnerable = true;
 		_invulnTimer = InvulnTime;
 		_hitstunTimer = HitstunTime;
-
-		// 3) compute knockback (away from source, with a bit of upward kick)
-		Vector2 dir = (GlobalPosition - sourceGlobalPos).Normalized();
+		Vector2 dir = (GlobalPosition - src).Normalized();
 		Vector2 kb = new Vector2(dir.X, 0).Normalized() * KnockbackForce;
-		kb.Y = -Mathf.Abs(KnockbackUpward); // negative = up
+		kb.Y = -Mathf.Abs(KnockbackUpward);
 		Velocity = kb;
-
-		// optional: immediately slide once so it feels snappy
 		MoveAndSlide();
 	}
 
+	public void SetCheckpoint(Vector2 globalPos) => respawnPoint = globalPos;
+
+	public async void HoldPlayer(float time) {
+		holdPlayer = true;
+
+		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
+		holdPlayer = false;
+	}
+
+	public int MaxMana => GlobalRoomChange.maxMana;
+
+	public void AddMana(int amount) {
+		_mana = Mathf.Min(_mana + amount, MaxMana);
+		_hud?.SetMana(_mana);
+		GlobalRoomChange.mana = _mana;
+	}
+
+	public bool SpendMana(int amount) {
+		if (_mana < amount) return false;
+		_mana -= amount;
+		_hud?.SetMana(_mana);
+		GlobalRoomChange.mana = _mana;
+		return true;
+	}
 
 	// --- Save / Load helpers -------------------------------------------------
 
 	public SaveManager.SaveData ToSaveData()
 	{
+		// Get current scene file path
+		string currentScenePath = GetTree().CurrentScene.SceneFilePath;
+		
 		return new SaveManager.SaveData
 		{
 			Hp = _hp,
 			HasSword = hasSword,
 			HasDash = hasDash,
 			HasWalljump = hasWalljump,
-			HasSwordTeleport = hasSwordTeleport,
+			HasClawTeleport = hasClawTeleport,
+			CurrentScene = currentScenePath,
 			PlayerPosition = GlobalPosition
 		};
 	}
@@ -512,7 +692,7 @@ public partial class Player : CharacterBody2D
 		hasSword = data.HasSword;
 		hasDash = data.HasDash;
 		hasWalljump = data.HasWalljump;
-		hasSwordTeleport = data.HasSwordTeleport;
+		hasClawTeleport = data.HasClawTeleport;
 
 		// Update relevant nodes/UI
 		_hud?.SetHealth(_hp);
@@ -547,6 +727,4 @@ public partial class Player : CharacterBody2D
 		if (data != null)
 			ApplySaveData(data, setPosition);
 	}
-
-
 }

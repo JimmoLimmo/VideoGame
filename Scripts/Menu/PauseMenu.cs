@@ -52,13 +52,7 @@ public partial class PauseMenu : Control
 		}
 		catch (Exception) { }
 
-		// Append the key binding to the Save button text (e.g. "Save (X)")
-		if (_saveBtn != null)
-		{
-			var keyName = GetPrimaryKeyForAction("save");
-			if (!string.IsNullOrEmpty(keyName))
-				_saveBtn.Text = $"Save ({keyName})";
-		}
+		GD.Print("PauseMenu: Ready");
 	}
 
 	public override void _GuiInput(InputEvent @event)
@@ -139,6 +133,7 @@ public partial class PauseMenu : Control
 
 		// Defer the scene change to avoid modifying the scene tree while we're processing UI callbacks.
 			var mainMenuPath = "res://Scenes/UI/main_menu.tscn";
+
 	// Defer the scene change by calling our wrapper method on this node so CallDeferred invokes the method in this script.
 	CallDeferred(nameof(DeferredChangeScene), mainMenuPath);
 
@@ -220,13 +215,20 @@ public partial class PauseMenu : Control
 			for (int i = root.GetChildCount() - 1; i >= 0; i--)
 			{
 				var child = root.GetChild(i);
-				// Keep the newly added scene and the PauseController autoload
+				
+				// Keep the newly added scene and all autoloads
 				if (child == newScene) continue;
 				if (child is PauseController) continue;
-				// Remove any PauseMenu node or any CanvasLayer/Node2D (likely the old level)
-				if (child.Name == "PauseMenu" || child is CanvasLayer || child is Node2D)
+				
+				// Keep all autoloads by name - don't remove them!
+				string childName = child.Name.ToString();
+				if (childName == "GlobalRoomChange" || childName == "MusicManager" || 
+				    childName == "HUD" || childName == "SettingsManager" || 
+				    childName == "AudioManager" || childName == "SaveManager") continue;
+				
+				// Remove only specific unwanted nodes, not all CanvasLayers
+				if (child.Name == "PauseMenu" || child is Node2D)
 				{
-					
 					try { child.QueueFree(); } catch { }
 				}
 			}

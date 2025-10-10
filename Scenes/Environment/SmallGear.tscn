@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://c17p6nhy8jnwb"]
+
+[ext_resource type="Script" uid="uid://cd6icyvan6d3m" path="res://Scripts/Environment/Gear.cs" id="1_kp0j3"]
+[ext_resource type="Texture2D" uid="uid://bive7o0lfbujm" path="res://Sprites/Environment/Gear_Tileset.png" id="2_ws33c"]
+
+[node name="SmallGear" type="Node2D"]
+script = ExtResource("1_kp0j3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_ws33c")
+region_enabled = true
+region_rect = Rect2(862.357, 54.7272, 324.648, 323.346)

@@ -1,31 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://bvkxmxhow1t52"]
+[gd_scene load_steps=4 format=3 uid="uid://swordteleportupgrade"]
 
-[ext_resource type="Script" path="res://Scripts/Level/Collectable.cs" id="1_collectable"]
+[ext_resource type="Script" uid="uid://clrllxlkifg7a" path="res://Scripts/Level/Collectable.cs" id="1_col"]
+[ext_resource type="Texture2D" uid="uid://buihi5p6wvfhf" path="res://Sprites/Interactables/sword_item.png" id="2_sword"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(32, 32)
+size = Vector2(24, 24)
 
 [node name="SwordTeleportUpgrade" type="Area2D"]
-script = ExtResource("1_collectable")
+script = ExtResource("1_col")
 Type = 3
+PickupTexture = ExtResource("2_sword")
 ItemName = "Sword Teleport"
-keybindDesc = "Press S to throw sword and teleport"
-Description = "Throw your sword and teleport to it!"
+keybindDesc = "Press <button> to throw and teleport to sword"
+Description = "You can now throw your sword and teleport to it!"
+SaveID = "sword_teleport_upgrade"
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
-color = Color(0.9, 0.7, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_sword")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1")
-
-[node name="Label" type="Label" parent="."]
-offset_left = -20.0
-offset_top = -30.0
-offset_right = 20.0
-offset_bottom = -20.0
-text = "ST"
-horizontal_alignment = 1

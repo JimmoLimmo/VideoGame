@@ -13,8 +13,9 @@ public partial class SaveManager : Node
         public bool HasSword { get; set; }
         public bool HasDash { get; set; }
         public bool HasWalljump { get; set; }
-        public bool HasSwordTeleport { get; set; }
+        public bool HasClawTeleport { get; set; }
         public Vector2 PlayerPosition { get; set; }
+        public string CurrentScene { get; set; } = "";
         // List of collected item IDs (editor-assigned SaveID on Collectable nodes)
         public System.Collections.Generic.List<string> CollectedItems { get; set; }
     }
@@ -50,7 +51,8 @@ public partial class SaveManager : Node
             ["HasSword"] = data.HasSword,
             ["HasDash"] = data.HasDash,
             ["HasWalljump"] = data.HasWalljump,
-            ["HasSwordTeleport"] = data.HasSwordTeleport,
+            ["HasClawTeleport"] = data.HasClawTeleport,
+            ["CurrentScene"] = data.CurrentScene,
             ["PlayerPosition"] = new Godot.Collections.Dictionary
             {
                 ["x"] = data.PlayerPosition.X,
@@ -73,6 +75,9 @@ public partial class SaveManager : Node
 
         // Update cached save reference so subsequent operations see the new state
         _cachedSave = data;
+        
+        // Clear new game flag since we've now saved the game
+        _isNewGame = false;
     }
 
     public static SaveData Load()
@@ -104,9 +109,13 @@ public partial class SaveManager : Node
             if (root.TryGetProperty("HasWalljump", out var wallEl) && wallEl.ValueKind != JsonValueKind.Null)
                 hasWalljump = wallEl.GetBoolean();
 
-            bool hasSwordTeleport = false;
-            if (root.TryGetProperty("HasSwordTeleport", out var swordTeleportEl) && swordTeleportEl.ValueKind != JsonValueKind.Null)
-                hasSwordTeleport = swordTeleportEl.GetBoolean();
+            bool hasClawTeleport = false;
+            if (root.TryGetProperty("HasClawTeleport", out var clawTeleportEl) && clawTeleportEl.ValueKind != JsonValueKind.Null)
+                hasClawTeleport = clawTeleportEl.GetBoolean();
+
+            string currentScene = "";
+            if (root.TryGetProperty("CurrentScene", out var sceneEl) && sceneEl.ValueKind != JsonValueKind.Null)
+                currentScene = sceneEl.GetString();
 
             Vector2 playerPos = Vector2.Zero;
             if (root.TryGetProperty("PlayerPosition", out var posEl) && posEl.ValueKind == JsonValueKind.Object)
@@ -125,7 +134,8 @@ public partial class SaveManager : Node
                 HasSword = hasSword,
                 HasDash = hasDash,
                 HasWalljump = hasWalljump,
-                HasSwordTeleport = hasSwordTeleport,
+                HasClawTeleport = hasClawTeleport,
+                CurrentScene = currentScene,
                 PlayerPosition = playerPos,
                 CollectedItems = new System.Collections.Generic.List<string>()
             };
@@ -153,15 +163,48 @@ public partial class SaveManager : Node
 
     // --- Convenience API (cached save + helpers) -------------------------
     private static SaveData _cachedSave = null;
+    private static bool _isNewGame = false;
 
     // Returns the in-memory save (loads from disk if necessary). Never null.
     public static SaveData GetCurrentSave()
     {
         if (_cachedSave != null) return _cachedSave;
-    _cachedSave = Load() ?? new SaveData { CollectedItems = new System.Collections.Generic.List<string>() };
+        
+        // If we're in new game mode, don't load from disk - use fresh data
+        if (_isNewGame)
+        {
+            _cachedSave = new SaveData 
+            { 
+                Hp = 5,
+                HasSword = false,
+                HasDash = false,
+                HasWalljump = false,
+                HasClawTeleport = false,
+                CurrentScene = "res://Levels/room_01.tscn",
+                PlayerPosition = Vector2.Zero,
+                CollectedItems = new System.Collections.Generic.List<string>()
+            };
+        }
+        else
+        {
+            _cachedSave = Load() ?? new SaveData { CollectedItems = new System.Collections.Generic.List<string>() };
+        }
+        
         if (_cachedSave.CollectedItems == null)
             _cachedSave.CollectedItems = new System.Collections.Generic.List<string>();
         return _cachedSave;
+    }
+
+    // Check if we're currently in a new game (not loading from existing save)
+    public static bool IsNewGame()
+    {
+        return _isNewGame;
+    }
+
+    // Clear the new game flag (called when the game is actually saved)
+    public static void ClearNewGameFlag()
+    {
+        _isNewGame = false;
     }
 
     public static bool HasCollectedItem(string id)
@@ -197,13 +240,15 @@ public partial class SaveManager : Node
     /// </summary>
     public static void ResetToNewGame(bool deleteFile = true)
     {
+        _isNewGame = true; // Mark that we're starting a new game
         _cachedSave = new SaveData
         {
             Hp = 5,
             HasSword = false,
             HasDash = false,
             HasWalljump = false,
-            HasSwordTeleport = false,
+            HasClawTeleport = false,
+            CurrentScene = "res://Levels/room_01.tscn", // Default starting room
             PlayerPosition = Vector2.Zero,
             CollectedItems = new System.Collections.Generic.List<string>()
         };

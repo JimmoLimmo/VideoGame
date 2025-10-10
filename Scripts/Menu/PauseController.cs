@@ -9,6 +9,10 @@ public partial class PauseController : Node
 
 	public override void _Input(InputEvent @event)
 	{
+		// Safety check: don't process if not in tree
+		if (!IsInsideTree() || IsQueuedForDeletion())
+			return;
+			
 		if (Input.IsActionJustPressed(PauseAction))
 			TogglePause();
 	}
