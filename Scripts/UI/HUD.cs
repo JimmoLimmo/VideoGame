@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 public partial class HUD : CanvasLayer {
 	[Export] public int MaxMasks { get; set; } = 5;
-	[Export] public int size = 150;
+	[Export(PropertyHint.Range, "16,256,1")] public int MaskSize { get; set; } = 64;
 
 	[ExportCategory("Textures")]
 	[Export] public Texture2D MaskFull { get; set; }
@@ -16,71 +16,64 @@ public partial class HUD : CanvasLayer {
 	private HBoxContainer _healthBox;
 	private readonly List<TextureRect> _maskIcons = new();
 
-	// --------------------------------------------------------------------
-	// Node lifecycle
-	// --------------------------------------------------------------------
-	public override async void _Ready() {
-		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+	private bool _initialized = false;
+
+	public override void _Ready() {
+		InitializeHUD(); // call once
+		GlobalRoomChange.RoomGroupChanged += OnRoomGroupChanged;
+		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
+	}
+
+	public override void _ExitTree() {
+		GlobalRoomChange.RoomGroupChanged -= OnRoomGroupChanged;
+	}
+
+	// --------------------------------------------------------------
+	// Initialization (handles reparenting when rooms reload)
+	// --------------------------------------------------------------
+	private void InitializeHUD() {
+		// Skip if we already did a successful build
+		if (_initialized && IsInstanceValid(_healthBox)) return;
 
 		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath)
 			?? FindChild("Health", true, false) as HBoxContainer;
 
 		if (_healthBox == null) {
-			GD.PushError("[HUD] ERROR: Health container not found.");
+			GD.PushWarning("[HUD] HealthBox not found yet, will retry on next frame...");
+			// Try again next frame in case the new scene tree hasn't loaded
+			CallDeferred(nameof(InitializeHUD));
 			return;
 		}
 
-		GD.Print($"[HUD] Initialized. Found {_healthBox.GetPath()}");
+		GD.Print($"[HUD] Found {_healthBox.GetPath()}");
 		BuildMaskRow(MaxMasks);
 		SetHealth(MaxMasks);
-
-		// Connect to room group changes
-		GlobalRoomChange.RoomGroupChanged += OnRoomGroupChanged;
-
-		// Apply correct visibility for the starting scene
-		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
+		_initialized = true;
 	}
 
-	public override void _ExitTree() {
-		// Clean up event subscription to prevent leaks
-		GlobalRoomChange.RoomGroupChanged -= OnRoomGroupChanged;
-	}
-
-	// --------------------------------------------------------------------
+	// --------------------------------------------------------------
 	// Visibility
-	// --------------------------------------------------------------------
-	private void OnRoomGroupChanged(RoomGroup group) {
-		UpdateVisibilityFromGroup(group);
-	}
+	// --------------------------------------------------------------
+	private void OnRoomGroupChanged(RoomGroup group) => UpdateVisibilityFromGroup(group);
 
 	public void UpdateVisibilityFromGroup(RoomGroup group) {
-		switch (group) {
-			case RoomGroup.Title:
-				Visible = false;
-				break;
-			case RoomGroup.Overworld:
-			case RoomGroup.Boss:
-				Visible = true;
-				break;
-		}
-		GD.Print($"[HUD] Visibility updated for group: {group} -> Visible={Visible}");
+		Visible = group == RoomGroup.Overworld || group == RoomGroup.Boss;
 	}
 
-	// --------------------------------------------------------------------
-	// Health Display
-	// --------------------------------------------------------------------
+	// --------------------------------------------------------------
+	// Health mask management
+	// --------------------------------------------------------------
 	private void BuildMaskRow(int count) {
 		if (_healthBox == null) return;
 
-		foreach (var child in _healthBox.GetChildren())
-			(child as Node)?.QueueFree();
+		foreach (var c in _healthBox.GetChildren())
+			c.QueueFree();
 		_maskIcons.Clear();
 
 		for (int i = 0; i < count; i++) {
 			var icon = new TextureRect {
-				StretchMode = TextureRect.StretchModeEnum.Scale,
-				CustomMinimumSize = new Vector2(28, 28),
-				Size = new Vector2(size, size),
+				StretchMode = TextureRect.StretchModeEnum.KeepCentered,
+				CustomMinimumSize = new Vector2(MaskSize, MaskSize),
 				Texture = MaskEmpty,
 				MouseFilter = Control.MouseFilterEnum.Ignore
 			};
@@ -90,25 +83,27 @@ public partial class HUD : CanvasLayer {
 	}
 
 	public void SetHealth(int current) {
-		if (_healthBox == null) return;
+		InitializeHUD(); // ensure the box is valid even after scene changes
+
+		if (_healthBox == null || _maskIcons.Count == 0)
+			return;
 
 		current = Mathf.Clamp(current, 0, MaxMasks);
-		if (_maskIcons.Count != MaxMasks)
-			BuildMaskRow(MaxMasks);
 
 		for (int i = 0; i < MaxMasks; i++) {
-			_maskIcons[i].Texture = (i < current) ? MaskFull : MaskEmpty;
-			_maskIcons[i].Size = new Vector2(size, size);
+			var icon = _maskIcons[i];
+			icon.Texture = (i < current) ? MaskFull : MaskEmpty;
 		}
 	}
 
-	public async void FlashDamage() {
+	// --------------------------------------------------------------
+	// Utilities
+	// --------------------------------------------------------------
+	public async Task FlashDamage() {
 		if (_healthBox == null) return;
-
-		var tween = CreateTween();
-		var baseMod = _healthBox.Modulate;
+		var tween = GetTree().CreateTween();
 		tween.TweenProperty(_healthBox, "modulate", new Color(1, 0.4f, 0.4f, 1), 0.05f);
-		tween.TweenProperty(_healthBox, "modulate", baseMod, 0.15f);
+		tween.TweenProperty(_healthBox, "modulate", Colors.White, 0.15f);
 		await ToSignal(tween, Tween.SignalName.Finished);
 	}
 
@@ -118,10 +113,5 @@ public partial class HUD : CanvasLayer {
 		SetHealth(current);
 	}
 
-	// --------------------------------------------------------------------
-	// Manual refresh helper (optional)
-	// --------------------------------------------------------------------
-	public void RefreshVisibility() {
-		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
-	}
+	public void RefreshVisibility() => UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
 }

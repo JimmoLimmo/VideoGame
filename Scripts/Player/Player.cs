@@ -37,14 +37,14 @@ public partial class Player : CharacterBody2D {
 	private Node2D attackSprites;
 
 	// Health Variables
-	private int _hp = 5;
+	private int _hp;
 	private bool _isDead = false;
 
 	private int _mana = 3;
 
 	// Node Paths
 	[Export] public NodePath SwordPath { get; set; }
-	
+
 	//Animation Variables
 	string nextAnimation = "";
 	string lastAnimation;
@@ -77,6 +77,7 @@ public partial class Player : CharacterBody2D {
 			hasDash = GlobalRoomChange.hasDash;
 			hasWalljump = GlobalRoomChange.hasWalljump;
 			GlobalRoomChange.Activate = false;
+			_hp = GlobalRoomChange.health;
 		}
 
 		respawnPoint = Position;
@@ -89,7 +90,7 @@ public partial class Player : CharacterBody2D {
 		if (_sword == null)
 			GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
 		attackSprites = GetNode<Node2D>("AttackSprites");
-		if(hasSword) _sword.Visible = true;
+		if (hasSword) _sword.Visible = true;
 
 		_hud = GetNode<HUD>("/root/HUD");
 
@@ -169,7 +170,7 @@ public partial class Player : CharacterBody2D {
 
 		Vector2 velocity = Velocity;
 		int div = 1;
-		
+
 		if (!IsOnFloor() && !_isWallSliding && !_isDashing) {
 			velocity += Velocity.Y > 0 ? GetGravity() * (float)delta * fallAcceleration : GetGravity() * (float)delta;
 			div = 7;
@@ -179,11 +180,11 @@ public partial class Player : CharacterBody2D {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
 			_sprite.FlipH = facingLeft;
-			attackSprites.Scale = new Vector2(facingLeft ? -1: 1, 1);
+			attackSprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
 			_sword?.SetFacingLeft(facingLeft);
 		}
 		else {
-			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed/div);
+			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 		}
 
 		Velocity = velocity;
@@ -206,7 +207,8 @@ public partial class Player : CharacterBody2D {
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
-		} else if (_isDashing && Input.IsActionJustPressed("jump")) {
+		}
+		else if (_isDashing && Input.IsActionJustPressed("jump")) {
 			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
 			_isDashing = false;
 			_dashTimer = 0f;
@@ -279,33 +281,40 @@ public partial class Player : CharacterBody2D {
 
 	// Animation
 	private void HandleAnimations() {
-		if(hasSword) {
+		if (hasSword) {
 			_sword.Visible = true;
-		} else {
+		}
+		else {
 			_sword.Visible = false;
 		}
-		
-		if(Velocity.Y < -10f && Velocity.Y > -200f) {
+
+		if (Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
-		} else if(Velocity.Y < -200f) {
+		}
+		else if (Velocity.Y < -200f) {
 			nextAnimation = "Jump";
-		} else if(Velocity.Y > 100f) {
+		}
+		else if (Velocity.Y > 100f) {
 			nextAnimation = "Fall";
-		}  else if(Velocity.Y == 0 && Velocity.X != 0) {
-			if(lastAnimation == "Fall") {
+		}
+		else if (Velocity.Y == 0 && Velocity.X != 0) {
+			if (lastAnimation == "Fall") {
 				nextAnimation = "IntoRun";
-			} else {
+			}
+			else {
 				nextAnimation = "Run";
 			}
-		} else if(Velocity.Y == 0 && Velocity.X == 0) {
-			if(lastAnimation == "Fall") {
+		}
+		else if (Velocity.Y == 0 && Velocity.X == 0) {
+			if (lastAnimation == "Fall") {
 				nextAnimation = "IntoIdle";
-			} else {
+			}
+			else {
 				nextAnimation = "Idle";
 			}
 		}
-		
-		if(_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}
@@ -319,6 +328,8 @@ public partial class Player : CharacterBody2D {
 		_hud?.SetHealth(_hp);
 		_hud?.FlashDamage();
 
+		GlobalRoomChange.health = _hp;
+
 		if (_hp <= 0)
 			Die();
 	}
@@ -327,6 +338,8 @@ public partial class Player : CharacterBody2D {
 		int max = _hud?.MaxMasks ?? _hp;
 		_hp = Mathf.Min(_hp + amt, max);
 		_hud?.SetHealth(_hp);
+
+		GlobalRoomChange.health = _hp;
 	}
 
 	public void Die() {
@@ -352,7 +365,8 @@ public partial class Player : CharacterBody2D {
 		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
 			_isWallSliding = true;
 			_hasAirDashed = false;
-		} else if (!IsOnWall() || IsOnFloor()) {
+		}
+		else if (!IsOnWall() || IsOnFloor()) {
 			_isWallSliding = false;
 		}
 	}

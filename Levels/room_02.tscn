@@ -243,7 +243,7 @@ scale = Vector2(18.7429, 20.0996)
 texture = SubResource("GradientTexture2D_beo6d")
 
 [node name="BottomDropoff3" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(2868, 1362)
+position = Vector2(2878, 1362)
 rotation = -1.5708
 scale = Vector2(42.5201, 45.3929)
 texture = SubResource("GradientTexture2D_beo6d")
