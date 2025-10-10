@@ -33,23 +33,24 @@ public partial class Sword : Area2D {
 		var areas = GetOverlappingAreas();
 		
 		foreach(Area2D area in areas) {
-			if(_hitEnemies.Add(area)) {
-				
-				Node current = area;
-				while (current != null && !current.HasMethod("TakeDamage")) {
-					current = current.GetParent();
+			if(area.Name == "HitBox"){
+				if(_hitEnemies.Add(area)) {
+					Node current = area;
+					while (current != null && !current.HasMethod("TakeDamage")) {
+						current = current.GetParent();
+					}
+					
+					if(current == null) {
+						continue;
+					}
+					
+					if(current.HasMethod("TakeDamage")) {
+						current.CallDeferred("TakeDamage", Damage);
+					}
+					var player = GetParentOrNull<Player>();
+					player?.AddMana(1);
+					GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
 				}
-				
-				if(current == null) {
-					continue;
-				}
-				
-				if(current.HasMethod("TakeDamage")) {
-					current.CallDeferred("TakeDamage", Damage);
-				}
-				var player = GetParentOrNull<Player>();
-				player?.AddMana(1);
-				GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
 			}
 		}
 	}

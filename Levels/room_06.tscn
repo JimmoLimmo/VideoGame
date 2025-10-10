@@ -248,8 +248,13 @@ tile_map_data = PackedByteArray("AAAqAAQAAgACAAgAAAAtAAYAAgACAAgAAAAuAAYAAgADAAg
 tile_set = SubResource("TileSet_3ikjv")
 
 [node name="Player" parent="." instance=ExtResource("4_kuq1f")]
-position = Vector2(-191, -124)
+position = Vector2(1163, 1187)
+safe_margin = 1.0
+WallJumpLockTime = 0.15
+WallJumpForce = 1250.0
 hasWalljump = true
+hasDash = true
+hasSword = true
 
 [node name="FactoryCrusher" parent="." instance=ExtResource("5_4p8kh")]
 position = Vector2(2688, 1409)

@@ -378,6 +378,7 @@ tile_set = SubResource("TileSet_si834")
 
 [node name="Player" parent="." instance=ExtResource("3_emd5a")]
 position = Vector2(3515, 381)
+hasSword = true
 
 [node name="MechMosquito" parent="." instance=ExtResource("12_3iqsu")]
 position = Vector2(2276, 1896)

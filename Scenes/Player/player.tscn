@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bl57h6bp50oo2"]
+[gd_scene load_steps=26 format=3 uid="uid://bl57h6bp50oo2"]
 
 [ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_evcib"]
 [ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="1_whvb5"]
@@ -803,6 +803,161 @@ tracks/5/keys = {
 "values": [0.0855211]
 }
 
+[sub_resource type="Animation" id="Animation_0kmp4"]
+resource_name = "IntoWallslide"
+length = 0.250004
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites/Head:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [36, 37]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprites/Body:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [42, 43]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprites/ClawSprites/HangingClaw:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(-11.6667, 43.3333), Vector2(-20, 48.3333)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprites/ClawSprites/HangingClaw:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0.113446, 0.253073]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprites/ClawSprites/HangingClawAttachment:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(-35, 15), Vector2(-33.3333, 3.33333)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Sprites/ClawSprites/HangingClawAttachment:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [-0.00174533, -0.00174533]
+}
+
+[sub_resource type="Animation" id="Animation_i5acl"]
+resource_name = "Wallslide"
+length = 0.666671
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites/Head:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [38, 39, 40, 41]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprites/Body:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [44, 45, 46, 47]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprites/ClawSprites/HangingClaw:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(-21.6667, 38.3333), Vector2(-21.6667, 41.6667), Vector2(-25, 43.3333), Vector2(-23.3333, 38.3333)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprites/ClawSprites/HangingClaw:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0.340339, 0.340339, 0.340339]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprites/ClawSprites/HangingClawAttachment:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(-33.3333, 3.33333), Vector2(-33.3333, 3.33333), Vector2(-33.3333, 3.33333), Vector2(-33.3333, 3.33333)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Sprites/ClawSprites/HangingClawAttachment:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [-0.00174533, -0.00174533, -0.00174533, -0.00174533]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f4cuq"]
 _data = {
 &"Fall": SubResource("Animation_ude3g"),
@@ -812,11 +967,13 @@ _data = {
 &"Idle": SubResource("Animation_evcib"),
 &"IntoIdle": SubResource("Animation_t26db"),
 &"IntoRun": SubResource("Animation_4wape"),
+&"IntoWallslide": SubResource("Animation_0kmp4"),
 &"Jump": SubResource("Animation_h54ih"),
 &"Peak": SubResource("Animation_jmcll"),
 &"RESET": SubResource("Animation_lgeye"),
 &"Run": SubResource("Animation_yn3cd"),
-&"Stagger": SubResource("Animation_ji083")
+&"Stagger": SubResource("Animation_ji083"),
+&"Wallslide": SubResource("Animation_i5acl")
 }
 
 [sub_resource type="Animation" id="Animation_825xp"]
@@ -1022,7 +1179,6 @@ SwordPath = NodePath("Sword")
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 modulate = Color(1, 1, 1, 0.8)
-position = Vector2(3.33333, -1.66667)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("1_whvb5")
 hframes = 6
@@ -1063,10 +1219,12 @@ hframes = 6
 vframes = 8
 
 [node name="CollsionBox" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, 6.66667)
 shape = SubResource("CapsuleShape2D_whvb5")
 
 [node name="Sword" type="Area2D" parent="." node_paths=PackedStringArray("VisualAnchor")]
+visible = false
 script = ExtResource("3_lgeye")
 VisualAnchor = NodePath(".")
 
@@ -1076,6 +1234,7 @@ shape = SubResource("RectangleShape2D_yn3cd")
 debug_color = Color(0.920035, 0.187933, 0.528799, 0.42)
 
 [node name="HitBox" type="Area2D" parent="."]
+visible = false
 position = Vector2(-21.6667, 1.66667)
 collision_mask = 4
 
