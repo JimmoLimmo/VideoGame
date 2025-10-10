@@ -72,12 +72,18 @@ public partial class Player : CharacterBody2D {
 	public override void _Ready() {
 		if (GlobalRoomChange.Activate) {
 			GlobalPosition = GlobalRoomChange.PlayerPos;
-			if (GlobalRoomChange.PlayerJumpOnEnter) Velocity = new Vector2(0, JumpVelocity);
+			if (GlobalRoomChange.PlayerJumpOnEnter)
+				Velocity = new Vector2(0, JumpVelocity);
 			hasSword = GlobalRoomChange.hasSword;
 			hasDash = GlobalRoomChange.hasDash;
 			hasWalljump = GlobalRoomChange.hasWalljump;
 			GlobalRoomChange.Activate = false;
 			_hp = GlobalRoomChange.health;
+		}
+		else {
+			// Fallback: start full if not already set
+			_hp = (GlobalRoomChange.health > 0) ? GlobalRoomChange.health : 5;
+			GlobalRoomChange.health = _hp;
 		}
 
 		respawnPoint = Position;
@@ -87,8 +93,6 @@ public partial class Player : CharacterBody2D {
 		_sprite = GetNode<Sprite2D>("Sprite2D");
 
 		_sword = GetNodeOrNull<Sword>(SwordPath);
-		if (_sword == null)
-			GD.PushError($"Sword not found at '{SwordPath}' from {GetPath()}.");
 		attackSprites = GetNode<Node2D>("AttackSprites");
 		if (hasSword) _sword.Visible = true;
 
@@ -96,7 +100,7 @@ public partial class Player : CharacterBody2D {
 
 		fade = GetNode<ScreenFader>("../ScreenFade");
 
-		// Defer HUD sync so HUD._Ready() builds first
+		// Call deferred to ensure HUD has finished building
 		CallDeferred(nameof(SyncHud));
 
 		var hazardBox = GetNode<Area2D>("player");
@@ -106,14 +110,11 @@ public partial class Player : CharacterBody2D {
 	}
 
 	private void SyncHud() {
-		if (_hud == null) {
-			GD.PushError("[Player] Could not find HUD autoload.");
-			return;
-		}
-
-		_hp = Mathf.Min(_hp, _hud.MaxMasks);
+		if (_hud == null) return;
+		GD.Print($"[SyncHud] hp={_hp}"); // debug
 		_hud.SetHealth(_hp);
 	}
+
 
 	// Physics Process
 	public override void _PhysicsProcess(double delta) {
