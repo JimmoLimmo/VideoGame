@@ -2,10 +2,16 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_3y6oe"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_pfkkc"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_h74ac"]
+[ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="3_8pjpn"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="4_h74ac"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_gh6ww"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_52mge"]
-[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/player.tscn" id="11_mnije"]
+[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_b8a68"]
+[ext_resource type="Script" uid="uid://cujxrl4o6m02h" path="res://Scripts/UI/HUD.cs" id="9_3npna"]
+[ext_resource type="Texture2D" uid="uid://wvuujjx2gcte" path="res://Sprites/UI/Gear_Health.png" id="10_0jl2y"]
+[ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="11_75yyn"]
+[ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_5yxbl"]
+[ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_p0irr"]
 [ext_resource type="PackedScene" uid="uid://u5ti17mobc8c" path="res://Scenes/Enemy/Boss.tscn" id="14_pfkkc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y5lni"]

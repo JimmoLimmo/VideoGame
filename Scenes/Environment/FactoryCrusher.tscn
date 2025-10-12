@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://bmrx72adb6qla"]
 
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_d6asn"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="1_d6asn"]
 [ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_jc7cj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jc7cj"]

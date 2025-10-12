@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b242eyhweiko7"
-path="res://.godot/imported/FactoryWall_Tileset.png-cd640b1e1edb4925e894822f0d6ecd6d.ctex"
+uid="uid://c3ujtkbyuw6xn"
+path="res://.godot/imported/Mark_Mosquito.png-54684591514383560377a99b811afdae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Environment/FactoryWall_Tileset.png"
-dest_files=["res://.godot/imported/FactoryWall_Tileset.png-cd640b1e1edb4925e894822f0d6ecd6d.ctex"]
+source_file="res://Sprites/Enemies/Mark_Mosquito.png"
+dest_files=["res://.godot/imported/Mark_Mosquito.png-54684591514383560377a99b811afdae.ctex"]
 
 [params]
 

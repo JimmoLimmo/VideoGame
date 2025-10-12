@@ -43,7 +43,7 @@ public partial class Player : CharacterBody2D {
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
-	private Node2D attackSprites;
+	private Node2D clawSprites;
 
 	// Health & mana
 	private int _hp;
@@ -60,7 +60,7 @@ public partial class Player : CharacterBody2D {
 	// Nodes
 	private AnimationPlayer _anim;
 	private AnimationPlayer swordAnimator;
-	private Sprite2D _sprite;
+	private Node2D sprites;
 	private Sword _sword;
 	private HUD _hud;
 	private ScreenFader fade;
@@ -102,17 +102,20 @@ public partial class Player : CharacterBody2D {
 
 		_anim = GetNode<AnimationPlayer>("AnimationPlayer");
 		swordAnimator = GetNode<AnimationPlayer>("SwordAnimation");
-		_sprite = GetNode<Sprite2D>("Sprite2D");
+		sprites = GetNode<Node2D>("Sprites");
+		clawSprites = GetNode<Node2D>("Sprites/ClawSprites");
 		_sword = GetNodeOrNull<Sword>(SwordPath);
-		attackSprites = GetNode<Node2D>("AttackSprites");
-		if (hasSword) _sword.Visible = true;
+		if (hasSword) {
+			_sword.Visible = true;
+			clawSprites.Visible = true;
+		}
 
 		_hud = GetNode<HUD>("/root/HUD");
 		fade = GetNode<ScreenFader>("../ScreenFade");
 
 		CallDeferred(nameof(SyncHud));
 
-		var hazardBox = GetNode<Area2D>("player");
+		var hazardBox = GetNode<Area2D>("HitBox");
 		hazardBox.BodyEntered += areaHazard;
 
 		AddToGroup("player");
@@ -137,7 +140,7 @@ public partial class Player : CharacterBody2D {
 		if (_isDashing) HandleDash(delta);
 		else HandleMovement(delta);
 
-		if (_isWallSliding && !_isDashing) HandleWallSlide(delta);
+		if (!_isDashing) HandleWallSlide(delta);
 
 		if (!holdPlayer) {
 			HandleJump();
@@ -156,11 +159,11 @@ public partial class Player : CharacterBody2D {
 		_invulnTimer -= (float)delta;
 		if (_invulnTimer <= 0f) {
 			_invulnerable = false;
-			_sprite.SelfModulate = Colors.White;
+			sprites.SelfModulate = Colors.White;
 		}
 		else {
 			bool flash = ((int)(Time.GetTicksMsec() / 100) % 2) == 0;
-			_sprite.SelfModulate = new Color(1, 1, 1, flash ? 0.5f : 1f);
+			sprites.SelfModulate = new Color(1, 1, 1, flash ? 0.5f : 1f);
 		}
 	}
 
@@ -194,8 +197,7 @@ public partial class Player : CharacterBody2D {
 		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
-			_sprite.FlipH = facingLeft;
-			attackSprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
+			sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
 			_sword?.SetFacingLeft(facingLeft);
 		}
 		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
@@ -213,7 +215,7 @@ public partial class Player : CharacterBody2D {
 			Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
 
 		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
-			int dir = _sprite.FlipH ? 1 : -1;
+			int dir = sprites.Scale.X < 0 ? 1 : -1;
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
@@ -247,7 +249,7 @@ public partial class Player : CharacterBody2D {
 	private void HandleDashInput() {
 		if (Input.IsActionJustPressed("dash") && _dashCooldownTimer <= 0f && !_isDashing && hasDash) {
 			if (IsOnWall() && !IsOnFloor()) {
-				Vector2 upIntoWall = new Vector2((_sprite.FlipH ? -1 : 1) * 0.2f, -1f).Normalized();
+				Vector2 upIntoWall = new Vector2((sprites.Scale.X < 0 ? -1 : 1) * 0.2f, -1f).Normalized();
 				StartDash(upIntoWall);
 			}
 			else if (IsOnFloor() || !_hasAirDashed) {
@@ -259,7 +261,7 @@ public partial class Player : CharacterBody2D {
 
 	private void StartDash(Vector2 direction) {
 		if (direction == Vector2.Zero)
-			direction = _sprite.FlipH ? Vector2.Left : Vector2.Right;
+			direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
 
 		_isDashing = true;
 		_dashTimer = DashDuration;
@@ -272,7 +274,7 @@ public partial class Player : CharacterBody2D {
 	// Wall Slide
 	// -------------------------------
 	private void HandleWallSlide(double delta) {
-		if (IsOnWall() && !IsOnFloor() && hasWalljump) {
+		if (IsOnWall() && !IsOnFloor() && hasWalljump && Input.GetAxis("move_left", "move_right") != 0) {
 			_isWallSliding = true;
 			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
 		}
@@ -299,15 +301,29 @@ public partial class Player : CharacterBody2D {
 	private void HandleAnimations() {
 		if (hasSword) {
 			_sword.Visible = true;
+			clawSprites.Visible = true;
 		}
 		else {
 			_sword.Visible = false;
+			clawSprites.Visible = false;
 		}
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		}
-		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
+		} else if(_isWallSliding) {
+			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
+			
+			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+				nextAnimation = ("IntoWallslide");
+			} else {
+				nextAnimation = ("Wallslide");
+			}
+		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
+			if(!_anim.IsPlaying()) {
+				nextAnimation = "Jump";
+				sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
+			}
+		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
 		else if (Velocity.Y < -200f) {
@@ -333,7 +349,7 @@ public partial class Player : CharacterBody2D {
 			}
 		}
 
-		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}
@@ -457,10 +473,8 @@ public partial class Player : CharacterBody2D {
 	public override void _Process(double delta) {
 		if (IsOnFloor()) _hasAirDashed = false;
 		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
-			_isWallSliding = true;
 			_hasAirDashed = false;
 		}
-		else if (!IsOnWall() || IsOnFloor()) _isWallSliding = false;
 	}
 
 	// -------------------------------

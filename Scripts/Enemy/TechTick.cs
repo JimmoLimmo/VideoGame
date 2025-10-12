@@ -5,6 +5,7 @@ public partial class TechTick : CharacterBody2D
 {
 	private AnimationPlayer _anim;
 	private Sprite2D _sprite;
+	private Area2D hitBox;
 
 	[Export] public int MaxHealth = 15;
 	[Export] public float Speed = 400;
@@ -34,7 +35,7 @@ public partial class TechTick : CharacterBody2D
 		_rightLimit = rightLimit.GlobalPosition;
 
 		// Connect Area2D hitbox signal 
-		var hitBox = GetNode<Area2D>("HitBox");
+		hitBox = GetNode<Area2D>("HitBox");
 		hitBox.BodyEntered += OnHitBoxBodyEntered;   // Physics bodies
 		
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
@@ -80,6 +81,7 @@ public partial class TechTick : CharacterBody2D
 	private async void CheckDeath() {
 		if (_currentHealth <= 0) {
 			_sprite.Visible = false;
+			hitBox.Monitoring = false;
 			await ToSignal(bloodEmitter, "finished");
 			QueueFree(); // Remove enemy from scene
 		}
@@ -90,7 +92,6 @@ public partial class TechTick : CharacterBody2D
 	{
 		// If the Player body (CharacterBody2D) enters, allow damage
 		if (body is Player p) {
-			GD.Print("1");
 			p.ApplyHit(ContactDamage, GlobalPosition);
 		}
 	}
