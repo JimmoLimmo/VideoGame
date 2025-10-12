@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_d287s"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_4p8kh"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_6au6i"]
-[ext_resource type="PackedScene" uid="uid://dg7n1mrmedhhe" path="res://Scenes/Player/Player.tscn" id="4_kuq1f"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="3_6au6i"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_kuq1f"]
 [ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="5_4p8kh"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="5_vkjb2"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_spqte"]
@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_a42xq"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_q12ft"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="10_7n36c"]
-[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/enemy.tscn" id="12_6au6i"]
+[ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="12_6au6i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rky6a"]
 size = Vector2(6145, 1121)
@@ -248,7 +248,13 @@ tile_map_data = PackedByteArray("AAAqAAQAAgACAAgAAAAtAAYAAgACAAgAAAAuAAYAAgADAAg
 tile_set = SubResource("TileSet_3ikjv")
 
 [node name="Player" parent="." instance=ExtResource("4_kuq1f")]
-position = Vector2(-191, -124)
+position = Vector2(1163, 1187)
+safe_margin = 1.0
+WallJumpLockTime = 0.15
+WallJumpForce = 1250.0
+hasWalljump = true
+hasDash = true
+hasSword = true
 
 [node name="FactoryCrusher" parent="." instance=ExtResource("5_4p8kh")]
 position = Vector2(2688, 1409)
@@ -264,11 +270,9 @@ position = Vector2(2559, 0)
 
 [node name="FactoryCrusher3" parent="." instance=ExtResource("5_4p8kh")]
 position = Vector2(2432, 1409)
-isDown = true
 
 [node name="FactoryCrusher2" parent="." instance=ExtResource("5_4p8kh")]
 position = Vector2(4864, 1409)
-isDown = true
 
 [node name="TechTick" parent="." instance=ExtResource("12_6au6i")]
 position = Vector2(3761, 1352)
@@ -427,7 +431,6 @@ texture = SubResource("GradientTexture2D_j533a")
 
 [node name="Hud" parent="." instance=ExtResource("8_a42xq")]
 visible = false
-size = 50
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("9_q12ft")]
 
