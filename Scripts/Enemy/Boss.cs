@@ -559,6 +559,13 @@ public partial class Boss : CharacterBody2D {
     [Export] public bool LogStateChanges = true;
     [Export] public bool WatchdogEnabled = true;
     [Export] public float WatchdogSeconds = 6.0f;
+    // --- Shockwave Integration ---
+    [ExportGroup("Projectiles")]
+    [Export] public PackedScene ShockwaveScene;
+
+    private Marker2D _spawnLeft;
+    private Marker2D _spawnRight;
+
 
     // ========================= Internals =========================
     private float _time = 0f;
@@ -725,7 +732,15 @@ public partial class Boss : CharacterBody2D {
         _rng.Randomize();
         _col = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
         _defaultSnap = FloorSnapOnGround > 0 ? FloorSnapOnGround : FloorSnapLength;
-        FloorSnapLength = _defaultSnap;
+
+        _spawnLeft = GetNodeOrNull<Marker2D>("ShockwaveSpawnLeft");
+        _spawnRight = GetNodeOrNull<Marker2D>("ShockwaveSpawnRight");
+
+        // DEBUG: Force spawn once on start
+        GD.Print("[Boss TEST] Forcing initial shockwave spawn for verification");
+        SpawnShockwaves();
+
+
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -776,6 +791,55 @@ public partial class Boss : CharacterBody2D {
         // keep inside arena
         ClampArena();
     }
+
+    // ================================================
+    //  Spawn shockwaves on ground slam
+    // ================================================
+    private void SpawnShockwaves() {
+        GD.Print("[Boss DEBUG] SpawnShockwaves() called");
+
+        if (ShockwaveScene == null) {
+            GD.PrintErr("[Boss ERROR] ShockwaveScene not assigned! Please drag Shockwave.tscn into the Boss Inspector.");
+            return;
+        }
+
+        // Verify spawn markers
+        if (_spawnLeft == null || _spawnRight == null) {
+            GD.PrintErr("[Boss WARNING] Spawn markers not found! Using default positions.");
+        }
+
+        Vector2 leftPos = _spawnLeft?.GlobalPosition ?? (GlobalPosition + new Vector2(-150, 0));
+        Vector2 rightPos = _spawnRight?.GlobalPosition ?? (GlobalPosition + new Vector2(150, 0));
+
+        // Instantiate shockwaves
+        Node2D waveL = ShockwaveScene.Instantiate<Node2D>();
+        Node2D waveR = ShockwaveScene.Instantiate<Node2D>();
+
+        if (waveL == null || waveR == null) {
+            GD.PrintErr("[Boss ERROR] Failed to instantiate ShockwaveScene!");
+            return;
+        }
+
+        // Assign positions immediately
+        waveL.GlobalPosition = leftPos;
+        waveR.GlobalPosition = rightPos;
+
+        // Add safely (deferred)
+        GetTree().CurrentScene.CallDeferred("add_child", waveL);
+        GetTree().CurrentScene.CallDeferred("add_child", waveR);
+
+        // Initialize waves after they're added
+        waveL.CallDeferred("Setup", -1);
+        waveR.CallDeferred("Setup", 1);
+
+        // Ensure visible
+        waveL.Visible = true;
+        waveR.Visible = true;
+
+        GD.Print($"[Boss DEBUG] Deferred shockwave spawn at {leftPos} and {rightPos}");
+    }
+
+
 
     // ========================= States =========================
     private void S_Ready(double dt) {
@@ -1017,12 +1081,14 @@ public partial class Boss : CharacterBody2D {
             Change(State.Fall);
 
         if (_colliderReenabledMidair && IsOnFloor()) {
+            SpawnShockwaves(); // <<< NEW
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
             _snapSuppressed = false;
-            Velocity = new Vector2(0, 0);
+            Velocity = Vector2.Zero;
         }
+
     }
 
     // A forward leap that becomes a fall/slam
@@ -1055,12 +1121,14 @@ public partial class Boss : CharacterBody2D {
             Change(State.Fall);
 
         if (_colliderReenabledMidair && IsOnFloor()) {
+            SpawnShockwaves(); // <<< NEW
             Change(State.Recover);
             _stateTimer = SlamRecover;
             FloorSnapLength = _defaultSnap;
             _snapSuppressed = false;
             Velocity = Vector2.Zero;
         }
+
     }
 
     // Generic airborne fall; lands into Recover
@@ -1078,14 +1146,24 @@ public partial class Boss : CharacterBody2D {
         if (IsOnFloor()) {
             _landTimer -= (float)dt;
             if (_landTimer <= 0f) {
+                // Restore normal snap
                 FloorSnapLength = _defaultSnap;
                 _snapSuppressed = false;
+
+                // >>> Spawn shockwaves on impact if coming from Leap/Uppercut
+                if (_currentAttack == Attack.Leap || _currentAttack == Attack.Uppercut) {
+                    GD.Print("[Boss DEBUG] Landed after Leap/Uppercut → spawning shockwaves");
+                    SpawnShockwaves();
+                }
+
+                // Then go to recovery
                 Change(State.Recover);
                 _stateTimer = SlamRecover;
                 Velocity = Vector2.Zero;
             }
         }
     }
+
 
     // Brief post-attack delay → Choose next
     private void S_Recover(double dt) {
