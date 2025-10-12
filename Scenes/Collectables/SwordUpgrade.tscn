@@ -1,12 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://bcm8cay7pje61"]
 
-[ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="2_olvd5"]
+[ext_resource type="Texture2D" uid="uid://duith60v2w8n1" path="res://Sprites/Player/Claw_SpriteSheet.png" id="2_olvd5"]
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="2_v0dgo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_muhdk"]
-size = Vector2(266, 239)
+size = Vector2(355, 220.5)
 
 [node name="SwordUpgrade" type="Node2D"]
+position = Vector2(-55, -49)
 
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("2_v0dgo")
@@ -17,10 +18,10 @@ WaitTime = 1.5
 
 [node name="Sprite2D" type="Sprite2D" parent="Area2D"]
 texture = ExtResource("2_olvd5")
-hframes = 7
-vframes = 7
+hframes = 6
+vframes = 2
 frame = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(-37, 45.5)
+position = Vector2(54.5, 48.75)
 shape = SubResource("RectangleShape2D_muhdk")

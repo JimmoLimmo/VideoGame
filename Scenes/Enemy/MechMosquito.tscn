@@ -1,0 +1,85 @@
+[gd_scene load_steps=7 format=3 uid="uid://dajr1nqbjbtyb"]
+
+[ext_resource type="Script" uid="uid://6wbco1f8d7ae" path="res://Scripts/Enemy/MechMosquito.cs" id="1_ajggc"]
+[ext_resource type="Texture2D" uid="uid://c3ujtkbyuw6xn" path="res://Sprites/Enemies/Mark_Mosquito.png" id="1_nst8m"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nst8m"]
+radius = 916.14
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ajggc"]
+radius = 24.0
+height = 110.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nwvxj"]
+radius = 38.8315
+height = 142.546
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nst8m"]
+size = Vector2(4, 4)
+
+[node name="MechMosquito" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_ajggc")
+
+[node name="AggroArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroArea"]
+shape = SubResource("CircleShape2D_nst8m")
+debug_color = Color(0.865576, 0.782177, 0.246378, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nst8m")
+flip_h = true
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+position = Vector2(-11, 22)
+rotation = 0.959931
+shape = SubResource("CapsuleShape2D_ajggc")
+
+[node name="HitBox" type="Area2D" parent="."]
+rotation = 0.959931
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(12.5312, 22.2029)
+shape = SubResource("CapsuleShape2D_nwvxj")
+debug_color = Color(0.673059, 0.138718, 0.220696, 0.42)
+
+[node name="BloodEmitter" type="CPUParticles2D" parent="."]
+position = Vector2(-5, 17)
+rotation = -2.3527
+emitting = false
+amount = 380
+texture = SubResource("PlaceholderTexture2D_nst8m")
+lifetime = 0.44
+one_shot = true
+speed_scale = 0.7
+explosiveness = 1.0
+randomness = 0.65
+lifetime_randomness = 1.0
+draw_order = 1
+emission_shape = 2
+emission_sphere_radius = 39.43
+initial_velocity_min = 309.34
+initial_velocity_max = 539.19
+angular_velocity_max = 1.25
+color = Color(0.546409, 7.33994e-07, 3.85046e-07, 1)
+
+[node name="SparkEmitter" type="CPUParticles2D" parent="."]
+position = Vector2(-8, 14)
+rotation = -2.30733
+emitting = false
+amount = 42
+lifetime = 0.27
+one_shot = true
+speed_scale = 0.35
+explosiveness = 0.57
+randomness = 1.0
+lifetime_randomness = 0.68
+emission_shape = 2
+emission_sphere_radius = 14.37
+initial_velocity_min = 628.0
+initial_velocity_max = 628.0
+color = Color(1, 1, 0.356863, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
