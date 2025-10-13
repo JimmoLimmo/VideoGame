@@ -197,8 +197,11 @@ public partial class Player : CharacterBody2D {
 		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
-			sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
-			_sword?.SetFacingLeft(facingLeft);
+			
+			if(!swordAnimator.IsPlaying()) {
+				sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);	
+				_sword?.SetFacingLeft(facingLeft);
+			}
 		}
 		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 
@@ -320,7 +323,6 @@ public partial class Player : CharacterBody2D {
 				nextAnimation = ("Wallslide");
 			}
 		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
-			GD.Print(lastAnimation);
 			nextAnimation = "Jump";
 		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
