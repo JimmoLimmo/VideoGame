@@ -12,6 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://bhjly88ulyk4o" path="res://Sprites/UI/Screenshot 2025-09-08 145139.png" id="11_75yyn"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_5yxbl"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_p0irr"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_h74ac"]
+[ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_gh6ww"]
+[ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_52mge"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="11_mnije"]
 [ext_resource type="PackedScene" uid="uid://u5ti17mobc8c" path="res://Scenes/Enemy/Boss.tscn" id="14_pfkkc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y5lni"]
@@ -158,7 +162,7 @@ scale = Vector2(0.695, 0.695)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
 [node name="CharacterCamera" type="Camera2D" parent="."]
-position = Vector2(903, 622)
+position = Vector2(902, 622)
 zoom = Vector2(0.75, 0.75)
 script = ExtResource("1_3y6oe")
 playerPath = NodePath("")

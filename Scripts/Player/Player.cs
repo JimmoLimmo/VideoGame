@@ -40,7 +40,7 @@ public partial class Player : CharacterBody2D {
 	[Export] private bool hasDash = false;
 
 	// Attack
-	[Export] public float AttackCooldown = 0.25f;
+	[Export] public float AttackCooldown = 0.45f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
 	private Node2D clawSprites;
@@ -75,6 +75,16 @@ public partial class Player : CharacterBody2D {
 	private float _hitstunTimer = 0f;
 	private bool lockPlayer = false;
 	private Vector2 respawnPoint;
+	private AudioStreamPlayer2D _footstepPlayer;
+	private AudioStreamPlayer2D _jumpPlayer;
+	private AudioStreamPlayer2D _dashPlayer;
+	private AudioStreamPlayer2D _swingPlayer;
+	private AudioStreamPlayer2D _wallJumpPlayer;
+	private AudioStreamPlayer2D _landPlayer;
+	private bool _wasOnFloor = false;
+	private bool hasSwung = false;
+
+
 
 	// -------------------------------
 	// Initialization
@@ -118,6 +128,13 @@ public partial class Player : CharacterBody2D {
 		var hazardBox = GetNode<Area2D>("HitBox");
 		hazardBox.BodyEntered += areaHazard;
 
+		_footstepPlayer = GetNode<AudioStreamPlayer2D>("Audio/FootstepPlayer");
+		_jumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/JumpPlayer");
+		_dashPlayer = GetNode<AudioStreamPlayer2D>("Audio/DashPlayer");
+		_swingPlayer = GetNode<AudioStreamPlayer2D>("Audio/SwordSwingPlayer");
+		_wallJumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/WallJumpPlayer");
+		_landPlayer = GetNode<AudioStreamPlayer2D>("Audio/LandPlayer");
+
 		AddToGroup("player");
 	}
 
@@ -148,6 +165,14 @@ public partial class Player : CharacterBody2D {
 			HandleAttack(delta);
 			HandleAnimations();
 		}
+		// --- Landing detection ---
+		if (!_wasOnFloor && IsOnFloor()) {
+			// Just landed this frame
+			_landPlayer.PitchScale = (float)GD.RandRange(0.95, 1.05);
+			_landPlayer.Play();
+		}
+		_wasOnFloor = IsOnFloor();
+
 
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
@@ -202,14 +227,31 @@ public partial class Player : CharacterBody2D {
 		}
 		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 
+		// --- Footstep Sound ---
+		if (IsOnFloor() && Mathf.Abs(Velocity.X) > 50f) {
+			// Play only when not already playing, to prevent spam
+			if (!_footstepPlayer.Playing) {
+				_footstepPlayer.PitchScale = (float)GD.RandRange(0.95f, 1.05f); // adds variation
+				_footstepPlayer.Play();
+			}
+		}
+		else {
+			// Stop footsteps midair or idle
+			if (_footstepPlayer.Playing)
+				_footstepPlayer.Stop();
+		}
+
+
 		Velocity = velocity;
 		MoveAndSlide();
 	}
 
 	private void HandleJump() {
 		if (IsOnFloor()) {
-			if (Input.IsActionJustPressed("jump"))
+			if (Input.IsActionJustPressed("jump")) {
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
+				_jumpPlayer.Play();
+			}
 		}
 		else if (Input.IsActionJustReleased("jump") && Velocity.Y < 0)
 			Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
@@ -217,14 +259,17 @@ public partial class Player : CharacterBody2D {
 		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
 			int dir = sprites.Scale.X < 0 ? 1 : -1;
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+			_wallJumpPlayer.PitchScale = (float)GD.RandRange(0.9f, 1.1f);
+			_wallJumpPlayer.Play();
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
 		}
-		else if (_isDashing && Input.IsActionJustPressed("jump")) {
-			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-			_isDashing = false;
-			_dashTimer = 0f;
-		}
+		// else if (_isDashing && Input.IsActionJustPressed("jump")) {
+		// 	Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+		// 	_isDashing = false;
+		// 	_dashTimer = 0f;
+		// 	_jumpPlayer.Play();
+		// }
 	}
 
 	// -------------------------------
@@ -268,6 +313,7 @@ public partial class Player : CharacterBody2D {
 		_dashCooldownTimer = DashCooldown;
 		_dashDirection = direction.Normalized();
 		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f);
+		_dashPlayer.Play();
 	}
 
 	// -------------------------------
@@ -289,6 +335,7 @@ public partial class Player : CharacterBody2D {
 		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword) {
 			_attackTimer = AttackCooldown;
 			swordAnimator.Play("Swing");
+			_swingPlayer.Play();
 		}
 	}
 
@@ -310,20 +357,24 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		} else if(_isWallSliding) {
-			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
-			
-			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+		}
+		else if (_isDashing) {
+			if (Velocity.Y < 0) nextAnimation = "Jump";
+			else nextAnimation = "Dash";
+		}
+		else if (_isWallSliding) {
+			if (lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
-			} else {
+			}
+			else {
 				nextAnimation = ("Wallslide");
 			}
-		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
-			if(!_anim.IsPlaying()) {
-				nextAnimation = "Jump";
-				sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
-			}
-		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
+		}
+		else if (_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
+			GD.Print(lastAnimation);
+			nextAnimation = "Jump";
+		}
+		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
 		else if (Velocity.Y < -200f) {
@@ -349,7 +400,11 @@ public partial class Player : CharacterBody2D {
 			}
 		}
 
-		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide")) {
+		if (nextAnimation == "IntoWallslide" || nextAnimation == "Wallslide") {
+			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
+		}
+
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide" || _anim.CurrentAnimation == "IntoWallslide")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}
