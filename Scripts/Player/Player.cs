@@ -360,7 +360,7 @@ public partial class Player : CharacterBody2D {
 		}
 		
 		// Handle claw throwing (only if teleport upgrade is available)
-		if (Input.IsActionJustPressed("claw_throw") && _attackTimer <= 0f && hasSword && hasClawTeleport && !_clawIsThrown) {
+		if (Input.IsActionJustPressed("sword_throw") && _attackTimer <= 0f && hasSword && hasClawTeleport && !_clawIsThrown) {
 			ThrowClaw();
 		}
 	}

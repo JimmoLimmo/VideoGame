@@ -64,7 +64,6 @@ public partial class AudioManager : Node
             
             // Skip essential nodes
             if (child.Name == "AudioManager") continue;
-            if (child.Name == "PauseController") continue;
             if (child == Instance.GetTree().CurrentScene) continue;
             
             // Remove potential menu leftovers
