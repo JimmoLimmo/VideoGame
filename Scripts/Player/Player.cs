@@ -40,7 +40,7 @@ public partial class Player : CharacterBody2D {
 	[Export] private bool hasDash = false;
 
 	// Attack
-	[Export] public float AttackCooldown = 0.25f;
+	[Export] public float AttackCooldown = 0.45f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
 	private Node2D clawSprites;
@@ -82,6 +82,7 @@ public partial class Player : CharacterBody2D {
 	private AudioStreamPlayer2D _wallJumpPlayer;
 	private AudioStreamPlayer2D _landPlayer;
 	private bool _wasOnFloor = false;
+	private bool hasSwung = false;
 
 
 
