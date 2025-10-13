@@ -311,10 +311,8 @@ public partial class Player : CharacterBody2D {
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
 		} else if(_isDashing) {
-			GD.Print(lastAnimation);
-			//if(Velocity.Y < 0) GD.Print("Wall Dash");
-			//else GD.Print("Dash");
-			nextAnimation = "Jump";
+			if(Velocity.Y < 0) nextAnimation = "Jump";
+			else nextAnimation = "Dash";
 		} else if(_isWallSliding) {
 			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
