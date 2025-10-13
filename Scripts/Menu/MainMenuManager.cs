@@ -7,11 +7,19 @@ public partial class MainMenuManager : Control {
 List<int> goBackList = new();
 
 	public override void _Ready() {
-		var first = GetNodeOrNull<Button>("MenuTab/VBoxContainer/StartGameBtn");
+		// Defer the focus grab to ensure all nodes are fully initialized
+		CallDeferred(nameof(SetInitialFocus));
+	}
+
+	private void SetInitialFocus() {
+		// Try both possible node paths for different menu structures
+		var first = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/NewGameBtn") ?? 
+				   GetNodeOrNull<Button>("MenuTab/VBoxContainer/StartGameBtn");
+				   
 		if (first != null)
 			first.GrabFocus();
 		else
-			GD.PushWarning("[MainMenuManager] StartGameBtn not found — check node path.");
+			GD.PushWarning("[MainMenuManager] Neither NewGameBtn nor StartGameBtn found — check node path.");
 	}
 
 	public void swapMenu(int menuIndex, int returnIndex) {
