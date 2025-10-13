@@ -740,7 +740,7 @@ public partial class Boss : CharacterBody2D {
         GD.Print("[Boss TEST] Forcing initial shockwave spawn for verification");
         SpawnShockwaves();
 
-
+        AddToGroup("boss");
     }
 
     public override void _PhysicsProcess(double delta) {

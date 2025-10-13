@@ -40,17 +40,10 @@ public partial class Player : CharacterBody2D {
 	[Export] private bool hasDash = false;
 
 	// Attack
-	[Export] public float AttackCooldown = 0.25f;
+	[Export] public float AttackCooldown = 0.45f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
-	[Export] private bool hasClawTeleport = false;
 	private Node2D clawSprites;
-	
-	// Claw Teleport Variables
-	[Export] public PackedScene ThrowableClawScene { get; set; }
-	private ThrowableClaw _activeThrownClaw;
-	private bool _clawIsThrown = false;
->>>>>>> Aidan
 
 	// Health & mana
 	private int _hp;
@@ -82,16 +75,22 @@ public partial class Player : CharacterBody2D {
 	private float _hitstunTimer = 0f;
 	private bool lockPlayer = false;
 	private Vector2 respawnPoint;
+	private AudioStreamPlayer2D _footstepPlayer;
+	private AudioStreamPlayer2D _jumpPlayer;
+	private AudioStreamPlayer2D _dashPlayer;
+	private AudioStreamPlayer2D _swingPlayer;
+	private AudioStreamPlayer2D _wallJumpPlayer;
+	private AudioStreamPlayer2D _landPlayer;
+	private bool _wasOnFloor = false;
+	private bool hasSwung = false;
+
+
 
 	// -------------------------------
 	// Initialization
 	// -------------------------------
 	public override void _Ready() {
 		if (GlobalRoomChange.Activate) {
-<<<<<<< HEAD
-=======
-			// Moving between rooms in the same session
->>>>>>> Aidan
 			GlobalPosition = GlobalRoomChange.PlayerPos;
 			if (GlobalRoomChange.PlayerJumpOnEnter)
 				Velocity = new Vector2(0, JumpVelocity);
@@ -99,66 +98,14 @@ public partial class Player : CharacterBody2D {
 			hasSword = GlobalRoomChange.hasSword;
 			hasDash = GlobalRoomChange.hasDash;
 			hasWalljump = GlobalRoomChange.hasWalljump;
-<<<<<<< HEAD
-=======
-			hasClawTeleport = GlobalRoomChange.hasClawTeleport; // Add claw teleport to room changes
->>>>>>> Aidan
 
 			GlobalRoomChange.Activate = false;
 			_hp = GlobalRoomChange.health;
 			_mana = GlobalRoomChange.mana;
 		}
 		else {
-<<<<<<< HEAD
 			_hp = (GlobalRoomChange.health > 0) ? GlobalRoomChange.health : 5;
 			GlobalRoomChange.health = _hp;
-=======
-			// Starting fresh or loading from save
-			// Check if this is a new game vs loading from existing save
-			if (!SaveManager.IsNewGame()) {
-				// Loading from existing save (Continue button was pressed)
-				var saveData = SaveManager.GetCurrentSave();
-				ApplySaveData(saveData, true);
-				
-				// IMPORTANT: Sync loaded abilities to GlobalRoomChange so room transitions work correctly
-				GlobalRoomChange.hasSword = hasSword;
-				GlobalRoomChange.hasDash = hasDash;
-				GlobalRoomChange.hasWalljump = hasWalljump;
-				GlobalRoomChange.hasClawTeleport = hasClawTeleport;
-				GlobalRoomChange.health = _hp;
-				GlobalRoomChange.mana = _mana;
-				
-				// Make sure the room group is set correctly for gameplay scenes
-				// This ensures the HUD shows up properly
-				string currentSceneName = GetTree().CurrentScene.Name;
-				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
-					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
-				}
-			}
-			else {
-				// New game - use default starting values, don't load from save
-				_hp = 5; // Default starting health
-				hasSword = false;
-				hasDash = false;
-				hasWalljump = false;
-				hasClawTeleport = false;
-				
-				// IMPORTANT: Update GlobalRoomChange to match new game state
-				GlobalRoomChange.health = _hp;
-				GlobalRoomChange.hasSword = false;
-				GlobalRoomChange.hasDash = false;
-				GlobalRoomChange.hasWalljump = false;
-				GlobalRoomChange.hasClawTeleport = false;
-				
-				// Make sure the room group is set for new game
-				string currentSceneName = GetTree().CurrentScene.Name;
-				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
-					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
-				}
-			}
->>>>>>> Aidan
 		}
 
 		respawnPoint = Position;
@@ -173,49 +120,27 @@ public partial class Player : CharacterBody2D {
 			clawSprites.Visible = true;
 		}
 
-<<<<<<< HEAD
 		_hud = GetNode<HUD>("/root/HUD");
 		fade = GetNode<ScreenFader>("../ScreenFade");
 
 		CallDeferred(nameof(SyncHud));
 
-=======
-		// Get HUD from autoload - defer this to ensure autoloads are ready
-		CallDeferred(nameof(InitializeHUD));
-		
-		fade = GetNodeOrNull<ScreenFader>("../ScreenFade");
-
->>>>>>> Aidan
 		var hazardBox = GetNode<Area2D>("HitBox");
 		hazardBox.BodyEntered += areaHazard;
+
+		_footstepPlayer = GetNode<AudioStreamPlayer2D>("Audio/FootstepPlayer");
+		_jumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/JumpPlayer");
+		_dashPlayer = GetNode<AudioStreamPlayer2D>("Audio/DashPlayer");
+		_swingPlayer = GetNode<AudioStreamPlayer2D>("Audio/SwordSwingPlayer");
+		_wallJumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/WallJumpPlayer");
+		_landPlayer = GetNode<AudioStreamPlayer2D>("Audio/LandPlayer");
 
 		AddToGroup("player");
 	}
 
-<<<<<<< HEAD
 	private void SyncHud() {
 		if (_hud == null) return;
 		GD.Print($"[SyncHud] hp={_hp}");
-=======
-	private void InitializeHUD()
-	{
-		// Get HUD from autoload
-		_hud = GetNodeOrNull<HUD>("/root/HUD");
-		if (_hud != null)
-		{
-			// Sync initial HUD state
-			SyncHud();
-		}
-	}
-
-	private void SyncHud() {
-		// Try to reconnect to HUD if it's missing
-		if (_hud == null)
-		{
-			_hud = GetNodeOrNull<HUD>("/root/HUD");
-			if (_hud == null) return;
-		}
->>>>>>> Aidan
 		_hud.SetHealth(_hp);
 		_hud.SetMana(_mana);
 	}
@@ -240,6 +165,14 @@ public partial class Player : CharacterBody2D {
 			HandleAttack(delta);
 			HandleAnimations();
 		}
+		// --- Landing detection ---
+		if (!_wasOnFloor && IsOnFloor()) {
+			// Just landed this frame
+			_landPlayer.PitchScale = (float)GD.RandRange(0.95, 1.05);
+			_landPlayer.Play();
+		}
+		_wasOnFloor = IsOnFloor();
+
 
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
@@ -294,14 +227,31 @@ public partial class Player : CharacterBody2D {
 		}
 		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 
+		// --- Footstep Sound ---
+		if (IsOnFloor() && Mathf.Abs(Velocity.X) > 50f) {
+			// Play only when not already playing, to prevent spam
+			if (!_footstepPlayer.Playing) {
+				_footstepPlayer.PitchScale = (float)GD.RandRange(0.95f, 1.05f); // adds variation
+				_footstepPlayer.Play();
+			}
+		}
+		else {
+			// Stop footsteps midair or idle
+			if (_footstepPlayer.Playing)
+				_footstepPlayer.Stop();
+		}
+
+
 		Velocity = velocity;
 		MoveAndSlide();
 	}
 
 	private void HandleJump() {
 		if (IsOnFloor()) {
-			if (Input.IsActionJustPressed("jump"))
+			if (Input.IsActionJustPressed("jump")) {
 				Velocity = new Vector2(Velocity.X, JumpVelocity);
+				_jumpPlayer.Play();
+			}
 		}
 		else if (Input.IsActionJustReleased("jump") && Velocity.Y < 0)
 			Velocity = new Vector2(Velocity.X, Velocity.Y * 0.5f);
@@ -309,14 +259,17 @@ public partial class Player : CharacterBody2D {
 		if (_isWallSliding && hasWalljump && Input.IsActionJustPressed("jump")) {
 			int dir = sprites.Scale.X < 0 ? 1 : -1;
 			Velocity = new Vector2(dir * WallJumpForce, JumpVelocity);
+			_wallJumpPlayer.PitchScale = (float)GD.RandRange(0.9f, 1.1f);
+			_wallJumpPlayer.Play();
 			_isWallSliding = false;
 			_wallJumpLockTimer = WallJumpLockTime;
 		}
-		else if (_isDashing && Input.IsActionJustPressed("jump")) {
-			Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
-			_isDashing = false;
-			_dashTimer = 0f;
-		}
+		// else if (_isDashing && Input.IsActionJustPressed("jump")) {
+		// 	Velocity = new Vector2(_dashDirection.X * DashSpeed, JumpVelocity);
+		// 	_isDashing = false;
+		// 	_dashTimer = 0f;
+		// 	_jumpPlayer.Play();
+		// }
 	}
 
 	// -------------------------------
@@ -360,6 +313,7 @@ public partial class Player : CharacterBody2D {
 		_dashCooldownTimer = DashCooldown;
 		_dashDirection = direction.Normalized();
 		Velocity = _dashDirection * DashSpeed * (IsOnWall() ? 0.7f : 1f);
+		_dashPlayer.Play();
 	}
 
 	// -------------------------------
@@ -378,28 +332,15 @@ public partial class Player : CharacterBody2D {
 	// -------------------------------
 	private void HandleAttack(double delta) {
 		_attackTimer -= (float)delta;
-<<<<<<< HEAD
 		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword) {
 			_attackTimer = AttackCooldown;
 			swordAnimator.Play("Swing");
-=======
-		
-		// Handle normal sword attack
-		if (Input.IsActionJustPressed("attack") && _attackTimer <= 0f && hasSword && !_clawIsThrown) {
-			_attackTimer = AttackCooldown;
-			swordAnimator.Play("Swing");
-		}
-		
-		// Handle claw throwing (only if teleport upgrade is available)
-		if (Input.IsActionJustPressed("claw_throw") && _attackTimer <= 0f && hasSword && hasClawTeleport && !_clawIsThrown) {
-			ThrowClaw();
->>>>>>> Aidan
+			_swingPlayer.Play();
 		}
 	}
 
 	public void AttackStart() => _sword?.EnableHitbox();
 	public void AttackEnd() => _sword?.DisableHitbox();
-<<<<<<< HEAD
 
 	// -------------------------------
 	// Animation Control
@@ -416,19 +357,24 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		} else if(_isDashing) {
-			if(Velocity.Y < 0) nextAnimation = "Jump";
+		}
+		else if (_isDashing) {
+			if (Velocity.Y < 0) nextAnimation = "Jump";
 			else nextAnimation = "Dash";
-		} else if(_isWallSliding) {
-			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+		}
+		else if (_isWallSliding) {
+			if (lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
-			} else {
+			}
+			else {
 				nextAnimation = ("Wallslide");
 			}
-		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
+		}
+		else if (_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
 			GD.Print(lastAnimation);
 			nextAnimation = "Jump";
-		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
+		}
+		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
 		else if (Velocity.Y < -200f) {
@@ -453,114 +399,18 @@ public partial class Player : CharacterBody2D {
 				nextAnimation = "Idle";
 			}
 		}
-		
-		if(nextAnimation == "IntoWallslide" || nextAnimation == "Wallslide") {
+
+		if (nextAnimation == "IntoWallslide" || nextAnimation == "Wallslide") {
 			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
 		}
 
 		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide" || _anim.CurrentAnimation == "IntoWallslide")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
-=======
-	
-	private void ThrowClaw()
-	{
-		if (ThrowableClawScene == null || _clawIsThrown) return;
-		
-		_attackTimer = AttackCooldown;
-		_clawIsThrown = true;
-		
-		// Hide the regular sword (claw is still attached to sword)
-		if (_sword != null)
-		{
-			_sword.Visible = false;
-		}
-		
-		// Create throwable claw
-		_activeThrownClaw = ThrowableClawScene.Instantiate<ThrowableClaw>();
-		GetTree().CurrentScene.AddChild(_activeThrownClaw);
-		
-		// Set the player reference in the claw
-		_activeThrownClaw.SetPlayer(this);
-		
-		// Position it at the player's claw position
-		Vector2 clawOffset = new Vector2(sprites.Scale.X < 0 ? -30 : 30, -10);
-		_activeThrownClaw.GlobalPosition = GlobalPosition + clawOffset;
-		
-		// Determine throw direction based on player facing
-		Vector2 throwDirection = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
-		_activeThrownClaw.ThrowInDirection(throwDirection);
-		
-		// Connect to the claw's destruction to know when to show our sword again
-		_activeThrownClaw.TreeExiting += OnThrownClawDestroyed;
-	}
-	
-	private void OnThrownClawDestroyed()
-	{
-		_clawIsThrown = false;
-		_activeThrownClaw = null;
-		
-		// Show the regular sword again (claw is part of the sword weapon)
-		if (_sword != null && hasSword)
-		{
-			_sword.Visible = true;
->>>>>>> Aidan
 		}
 	}
 
 	// -------------------------------
-<<<<<<< HEAD
-=======
-	// Animation Control
-	// -------------------------------
-	private void HandleAnimations() {
-		if (hasSword && !_clawIsThrown) {
-			_sword.Visible = true;
-			clawSprites.Visible = true;
-		}
-		else {
-			_sword.Visible = false;
-			clawSprites.Visible = false;
-		}
-
-		if (holdPlayer) {
-			nextAnimation = ("Stagger");
-		} else if(_isWallSliding && Velocity.Y > 0) {
-			nextAnimation = ("Wallslide");
-		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
-			nextAnimation = "Peak";
-		}
-		else if (Velocity.Y < -200f) {
-			nextAnimation = "Jump";
-		}
-		else if (Velocity.Y > 100f) {
-			nextAnimation = "Fall";
-		}
-		else if (Velocity.Y == 0 && Velocity.X != 0) {
-			if (lastAnimation == "Fall") {
-				nextAnimation = "IntoRun";
-			}
-			else {
-				nextAnimation = "Run";
-			}
-		}
-		else if (Velocity.Y == 0 && Velocity.X == 0) {
-			if (lastAnimation == "Fall") {
-				nextAnimation = "IntoIdle";
-			}
-			else {
-				nextAnimation = "Idle";
-			}
-		}
-
-		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
-			_anim.Play(nextAnimation);
-			lastAnimation = nextAnimation;
-		}
-	}
-
-	// -------------------------------
->>>>>>> Aidan
 	// Health & Heal
 	// -------------------------------
 	public void TakeDamage(int dmg) {
@@ -663,7 +513,6 @@ public partial class Player : CharacterBody2D {
 	public void Die() {
 		if (_isDead) return;
 		_isDead = true;
-<<<<<<< HEAD
 		_anim.Play("Dead");
 		SetPhysicsProcess(false);
 		_anim.Connect("animation_finished", new Callable(this, nameof(OnDeathAnimationFinished)));
@@ -673,58 +522,16 @@ public partial class Player : CharacterBody2D {
 		if (animName == "Dead") {
 			GD.Print("Game Over!");
 			GetTree().Paused = true;
-=======
-		
-		// Use existing Stagger animation for death, or just stop movement
-		if (_anim.HasAnimation("Stagger")) {
-			_anim.Play("Stagger");
-		} else {
-			_anim.Play("Idle");
 		}
-		
-		SetPhysicsProcess(false);
-		
-		// Handle death - show game over message and return to main menu
-		GD.Print("Game Over! Returning to main menu...");
-		
-		// Create a timer to delay the scene change for player feedback
-		var timer = new Timer();
-		timer.WaitTime = 2.0; // 2 second delay
-		timer.OneShot = true;
-		timer.Timeout += OnDeathTimerTimeout;
-		AddChild(timer);
-		timer.Start();
-	}
-	
-	private void OnDeathTimerTimeout()
-	{
-		// Unpause the game before changing scenes
-		GetTree().Paused = false;
-		
-		// Change to main menu scene
-		GetTree().ChangeSceneToFile("res://Scenes/UI/main_menu.tscn");
 	}
 
 	public override void _Process(double delta) {
 		if (IsOnFloor()) _hasAirDashed = false;
 		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
 			_hasAirDashed = false;
->>>>>>> Aidan
-		}
-		else if (!IsOnWall() || IsOnFloor()) _isWallSliding = false;
-	}
-
-<<<<<<< HEAD
-	public override void _Process(double delta) {
-		if (IsOnFloor()) _hasAirDashed = false;
-		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
-			_isWallSliding = true;
-			_hasAirDashed = false;
 		}
 	}
 
-=======
->>>>>>> Aidan
 	// -------------------------------
 	// Misc
 	// -------------------------------
@@ -741,17 +548,9 @@ public partial class Player : CharacterBody2D {
 		if (type == CollectableType.Sword) hasSword = true;
 		else if (type == CollectableType.Dash) hasDash = true;
 		else if (type == CollectableType.Walljump) hasWalljump = true;
-<<<<<<< HEAD
 		GlobalRoomChange.hasSword = hasSword;
 		GlobalRoomChange.hasDash = hasDash;
 		GlobalRoomChange.hasWalljump = hasWalljump;
-=======
-		else if (type == CollectableType.Throw) hasClawTeleport = true;
-		GlobalRoomChange.hasSword = hasSword;
-		GlobalRoomChange.hasDash = hasDash;
-		GlobalRoomChange.hasWalljump = hasWalljump;
-		GlobalRoomChange.hasClawTeleport = hasClawTeleport;
->>>>>>> Aidan
 	}
 
 	public void ApplyHit(int dmg, Vector2 src) {
@@ -791,70 +590,4 @@ public partial class Player : CharacterBody2D {
 		GlobalRoomChange.mana = _mana;
 		return true;
 	}
-<<<<<<< HEAD
-=======
-
-	// --- Save / Load helpers -------------------------------------------------
-
-	public SaveManager.SaveData ToSaveData()
-	{
-		// Get current scene file path
-		string currentScenePath = GetTree().CurrentScene.SceneFilePath;
-		
-		return new SaveManager.SaveData
-		{
-			Hp = _hp,
-			HasSword = hasSword,
-			HasDash = hasDash,
-			HasWalljump = hasWalljump,
-			HasClawTeleport = hasClawTeleport,
-			CurrentScene = currentScenePath,
-			PlayerPosition = GlobalPosition
-		};
-	}
-
-	public void ApplySaveData(SaveManager.SaveData data, bool setPosition = true)
-	{
-		if (data == null) return;
-
-		_hp = data.Hp;
-		hasSword = data.HasSword;
-		hasDash = data.HasDash;
-		hasWalljump = data.HasWalljump;
-		hasClawTeleport = data.HasClawTeleport;
-
-		// Update relevant nodes/UI
-		_hud?.SetHealth(_hp);
-		if (_sword != null) {
-			_sword.Show();
-			_sword.Visible = hasSword;
-		}
-
-		if (setPosition)
-		{
-			// Teleport player to saved position
-			GlobalPosition = data.PlayerPosition;
-		}
-	}
-
-	public void SaveToFile()
-	{
-		SaveManager.Save(ToSaveData());
-	}
-
-	public void LoadFromFile()
-	{
-		var data = SaveManager.Load();
-		if (data != null)
-			ApplySaveData(data);
-	}
-
-	// Helper used for deferred application from external code (reads cached save)
-	public void ApplySaveDataFromManager(bool setPosition = true)
-	{
-		var data = SaveManager.GetCurrentSave();
-		if (data != null)
-			ApplySaveData(data, setPosition);
-	}
->>>>>>> Aidan
 }
