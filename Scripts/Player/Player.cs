@@ -80,6 +80,9 @@ public partial class Player : CharacterBody2D {
 	private AudioStreamPlayer2D _dashPlayer;
 	private AudioStreamPlayer2D _swingPlayer;
 	private AudioStreamPlayer2D _wallJumpPlayer;
+	private AudioStreamPlayer2D _landPlayer;
+	private bool _wasOnFloor = false;
+
 
 
 	// -------------------------------
@@ -129,6 +132,7 @@ public partial class Player : CharacterBody2D {
 		_dashPlayer = GetNode<AudioStreamPlayer2D>("Audio/DashPlayer");
 		_swingPlayer = GetNode<AudioStreamPlayer2D>("Audio/SwordSwingPlayer");
 		_wallJumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/WallJumpPlayer");
+		_landPlayer = GetNode<AudioStreamPlayer2D>("Audio/LandPlayer");
 
 		AddToGroup("player");
 	}
@@ -160,6 +164,14 @@ public partial class Player : CharacterBody2D {
 			HandleAttack(delta);
 			HandleAnimations();
 		}
+		// --- Landing detection ---
+		if (!_wasOnFloor && IsOnFloor()) {
+			// Just landed this frame
+			_landPlayer.PitchScale = (float)GD.RandRange(0.95, 1.05);
+			_landPlayer.Play();
+		}
+		_wasOnFloor = IsOnFloor();
+
 
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
