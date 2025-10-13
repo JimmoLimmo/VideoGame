@@ -2,92 +2,90 @@ using Godot;
 using System.Threading.Tasks;
 
 public partial class PauseMenu : Control {
-    [Export] public string PauseActionName = "pause"; // your custom pause bind
+    [Export] public string PauseActionName = "pause"; // ESC / Start button, etc.
 
     private Button _continueBtn;
-    private Button _optionsBtn;
-    private Button _quitToTitleBtn;
+    private Button _quitBtn;
+    private ColorRect _overlay;
+    private CanvasLayer _pauseLayer;
 
     public override void _Ready() {
-        _continueBtn = GetNode<Button>("CenterContainer/VBoxContainer/ContinueBtn");
-        _quitToTitleBtn = GetNode<Button>("CenterContainer/VBoxContainer/QuitToTitleBtn");
+        // Always start hidden
+        Visible = false;
 
-        // Hide Options button
-        var optionsBtn = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/OptionsBtn");
-        if (optionsBtn != null)
-            optionsBtn.Visible = false;
+        // Find nodes
+        _pauseLayer = GetNode<CanvasLayer>("PauseLayer");
+        _continueBtn = GetNode<Button>("PauseLayer/CenterContainer/VBoxContainer/ContinueBtn");
+        _quitBtn = GetNode<Button>("PauseLayer/CenterContainer/VBoxContainer/QuitToTitleBtn");
+        _overlay = GetNode<ColorRect>("PauseLayer/ColorRect");
 
         _continueBtn.Pressed += OnContinuePressed;
-        _quitToTitleBtn.Pressed += OnQuitPressed;
+        _quitBtn.Pressed += OnQuitPressed;
+
+        // Make sure this layer always draws above HUD
+        _pauseLayer.Layer = 50;
+
+        // Force-hide all children at runtime too
+        HideAll();
 
         ProcessMode = ProcessModeEnum.Always;
-        Visible = false;
-        ZIndex = 100;
     }
 
-
     public override void _Process(double delta) {
-        var scene = GetTree().CurrentScene;
+        var tree = GetTree();
+        var scene = tree.CurrentScene;
         if (scene == null)
             return;
 
-        // Skip pausing when we're in any menu scene
-        if (scene.IsInGroup("Menu") || scene.IsInGroup("Title"))
+        // Completely disable pause logic on menu/title screens
+        if (scene.IsInGroup("Menu") || scene.IsInGroup("Title")) {
+            HideAll();
+            if (tree.Paused)
+                tree.Paused = false;
             return;
+        }
 
+        // Only toggle pause in gameplay scenes
         if (Input.IsActionJustPressed(PauseActionName))
             TogglePause();
     }
 
+    private void HideAll() {
+        Visible = false;
+        if (_pauseLayer != null)
+            _pauseLayer.Visible = false;
+    }
 
-
-    private void TogglePause() {
+    private async void TogglePause() {
         var tree = GetTree();
-        bool isPaused = !tree.Paused;
+        bool isPausing = !tree.Paused;
 
-        tree.Paused = isPaused;
-        Visible = isPaused;
-
-        if (isPaused) {
+        if (isPausing) {
             tree.Paused = true;
             Visible = true;
+            _pauseLayer.Visible = true;
             _continueBtn.GrabFocus();
-        }
 
+            // Fade in overlay and menu
+            var tween = CreateTween();
+            _overlay.Modulate = new Color(0, 0, 0, 0);
+            Modulate = new Color(1, 1, 1, 0);
+            tween.TweenProperty(_overlay, "modulate:a", 0.6f, 0.25);
+            tween.TweenProperty(this, "modulate:a", 1.0f, 0.25);
+        }
         else {
-            // Unfreeze game
-            Visible = false;
+            // Fade out overlay and menu
+            var tween = CreateTween();
+            tween.TweenProperty(_overlay, "modulate:a", 0.0f, 0.15);
+            tween.TweenProperty(this, "modulate:a", 0.0f, 0.15);
+            await ToSignal(tween, Tween.SignalName.Finished);
+
+            HideAll();
+            tree.Paused = false;
         }
     }
 
-    private void OnContinuePressed() {
-        TogglePause();
-    }
-
-    private async void OnOptionsPressed() {
-        var tree = GetTree();
-        tree.Paused = false;
-
-        var optionsScene = GD.Load<PackedScene>("res://Scenes/UI/OptionsMenu.tscn");
-        if (optionsScene == null) {
-            GD.PushError("[PauseMenu] Failed to load OptionsMenu scene!");
-            return;
-        }
-
-        var optionsMenu = optionsScene.Instantiate<Control>();
-        GetTree().Root.AddChild(optionsMenu);
-
-        // Hide pause menu
-        Visible = false;
-
-        await ToSignal(optionsMenu, "tree_exited");
-
-        // Re-pause when returning
-        tree.Paused = true;
-        Visible = true;
-        _continueBtn.GrabFocus();
-    }
-
+    private void OnContinuePressed() => TogglePause();
 
     private async void OnQuitPressed() {
         var tree = GetTree();
@@ -96,12 +94,17 @@ public partial class PauseMenu : Control {
         if (fader != null)
             await fader.FadeOut(0.4f);
 
+        HideAll();
         tree.Paused = false;
-        Visible = false;
         tree.ChangeSceneToFile("res://Scenes/UI/MainMenu.tscn");
 
         if (fader != null)
             await fader.FadeIn(0.4f);
     }
 
+    public override void _Notification(int what) {
+        // Auto-hide on scene change
+        if (what == 1000)
+            HideAll();
+    }
 }
