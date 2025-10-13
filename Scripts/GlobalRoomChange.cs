@@ -40,32 +40,51 @@ public partial class GlobalRoomChange : Node {
 
 	public override void _Process(double delta) {
 		var scene = GetTree().CurrentScene;
-		if (scene == _lastScene || scene == null) return;
-		_lastScene = scene;
-		UpdateScene(scene);
+
+		// Scene temporarily missing?  Wait until next valid one
+		if (scene == null) return;
+
+		string sceneName = scene.Name ?? "";
+		if (scene != _lastScene && sceneName != "") {
+			GD.Print($"[GlobalRoomChange] Scene object changed → {sceneName}");
+			_lastScene = scene;
+			UpdateScene(scene);
+		}
 	}
+
 
 	// --------------------------------------------------------------------
 	// ForceUpdate — call this after ChangeSceneToPacked() to sync HUD/music
 	// --------------------------------------------------------------------
+	// public static async void ForceUpdate() {
+	// 	var tree = Engine.GetMainLoop() as SceneTree;
+	// 	if (tree == null) {
+	// 		GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but SceneTree missing.");
+	// 		return;
+	// 	}
+
+	// 	// Wait a frame if the current scene isn't ready yet
+	// 	if (tree.CurrentScene == null) {
+	// 		await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+	// 	}
+
+	// 	var scene = tree.CurrentScene;
+	// 	if (scene == null) {
+	// 		GD.PushWarning("[GlobalRoomChange] ForceUpdate() still no scene after waiting — aborting.");
+	// 		return;
+	// 	}
+
+	// 	UpdateScene(scene);
+	// }
 	public static async void ForceUpdate() {
 		var tree = Engine.GetMainLoop() as SceneTree;
-		if (tree == null) {
-			GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but SceneTree missing.");
-			return;
-		}
+		if (tree == null) return;
 
-		// Wait a frame if the current scene isn't ready yet
-		if (tree.CurrentScene == null) {
+		// Wait until CurrentScene is non-null
+		while (tree.CurrentScene == null)
 			await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-		}
 
 		var scene = tree.CurrentScene;
-		if (scene == null) {
-			GD.PushWarning("[GlobalRoomChange] ForceUpdate() still no scene after waiting — aborting.");
-			return;
-		}
-
 		UpdateScene(scene);
 	}
 
