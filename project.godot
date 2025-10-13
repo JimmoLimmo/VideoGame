@@ -21,6 +21,7 @@ GlobalRoomChange="*res://Scripts/GlobalRoomChange.cs"
 MusicManager="*res://Scenes/MusicManager.tscn"
 HUD="*res://Scenes/UI/HUD.tscn"
 SettingsManager="*res://Scripts/Menu/SettingsManager.cs"
+PauseMenu="*res://Scenes/UI/PauseMenu.tscn"
 
 [display]
 
@@ -33,6 +34,10 @@ window/stretch/aspect="ignore"
 [dotnet]
 
 project/assembly_name="2d Metroid Vania"
+
+[global_group]
+
+Menu=""
 
 [input]
 
