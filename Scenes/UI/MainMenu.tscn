@@ -44,7 +44,7 @@ alignment = 1
 modulate = Color(0.9, 0.9, 1, 0.95)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "Temp Title"
+text = "Bernie's Quest"
 horizontal_alignment = 1
 
 [node name="NewGameBtn" type="Button" parent="CenterContainer/VBoxContainer"]

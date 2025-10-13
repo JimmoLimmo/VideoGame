@@ -20,6 +20,7 @@ MaskFull = ExtResource("2_xaom8")
 MaskEmpty = ExtResource("3_xaom8")
 
 [node name="Root" type="Control" parent="."]
+z_index = 970
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
