@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=4 uid="uid://c4ru7yfkibo77"]
 
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="1_uvd1l"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_uvd1l"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="2_f87w0"]
 [ext_resource type="PackedScene" uid="uid://76merjs60id2" path="res://Scenes/Environment/MediumGear.tscn" id="2_p4erq"]
 [ext_resource type="PackedScene" uid="uid://c17p6nhy8jnwb" path="res://Scenes/Environment/SmallGear.tscn" id="3_p4erq"]

@@ -235,7 +235,7 @@ public partial class Player : CharacterBody2D {
 		if (_isDashing) HandleDash(delta);
 		else HandleMovement(delta);
 
-		if (_isWallSliding && !_isDashing) HandleWallSlide(delta);
+		if (!_isDashing) HandleWallSlide(delta);
 
 		if (!holdPlayer) {
 			HandleJump();
@@ -369,7 +369,7 @@ public partial class Player : CharacterBody2D {
 	// Wall Slide
 	// -------------------------------
 	private void HandleWallSlide(double delta) {
-		if (IsOnWall() && !IsOnFloor() && hasWalljump) {
+		if (IsOnWall() && !IsOnFloor() && hasWalljump && Input.GetAxis("move_left", "move_right") != 0) {
 			_isWallSliding = true;
 			Velocity = new Vector2(0, Mathf.Min(Velocity.Y + GetGravity().Y * (float)delta, WallSlideSpeed));
 		}
@@ -419,8 +419,18 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		} else if(_isWallSliding && Velocity.Y > 0) {
-			nextAnimation = ("Wallslide");
+		} else if(_isDashing) {
+			if(Velocity.Y < 0) nextAnimation = "Jump";
+			else nextAnimation = "Dash";
+		} else if(_isWallSliding) {
+			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+				nextAnimation = ("IntoWallslide");
+			} else {
+				nextAnimation = ("Wallslide");
+			}
+		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
+			GD.Print(lastAnimation);
+			nextAnimation = "Jump";
 		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
@@ -446,8 +456,12 @@ public partial class Player : CharacterBody2D {
 				nextAnimation = "Idle";
 			}
 		}
+		
+		if(nextAnimation == "IntoWallslide" || nextAnimation == "Wallslide") {
+			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
+		}
 
-		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run")) {
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide" || _anim.CurrentAnimation == "IntoWallslide")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 =======
@@ -697,7 +711,6 @@ public partial class Player : CharacterBody2D {
 	public override void _Process(double delta) {
 		if (IsOnFloor()) _hasAirDashed = false;
 		if (IsOnWall() && !IsOnFloor() && _wallJumpLockTimer <= 0f && !_isDashing && hasWalljump) {
-			_isWallSliding = true;
 			_hasAirDashed = false;
 >>>>>>> Aidan
 		}
@@ -711,7 +724,6 @@ public partial class Player : CharacterBody2D {
 			_isWallSliding = true;
 			_hasAirDashed = false;
 		}
-		else if (!IsOnWall() || IsOnFloor()) _isWallSliding = false;
 	}
 
 =======

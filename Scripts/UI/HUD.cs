@@ -36,23 +36,34 @@ public partial class HUD : CanvasLayer {
 	// ------------------------------------------------------------
 	// GODOT
 	// ------------------------------------------------------------
-	public override void _Ready() {
+	public override async void _Ready() {
+		ProcessMode = Node.ProcessModeEnum.Always;
+
+		// Ensure singleton HUD always lives under /root and doesn't get detached
+		if (GetParent() != GetTree().Root)
+			GetTree().Root.AddChild(this);
+
+		GlobalRoomChange.RoomGroupChanged -= OnRoomGroupChanged;
 		GlobalRoomChange.RoomGroupChanged += OnRoomGroupChanged;
+
 		UpdateVisibilityFromGroup(GlobalRoomChange.CurrentGroup);
+
+		// Wait one frame to ensure HUD nodes are ready and attached
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		TryBuildHUD();
 	}
 
 	public override void _Process(double delta) {
 		if (!_built)
-			TryBuildHUD();
-		else if (_initPass)
+			return;
+
+		if (_initPass)
 			_initPass = false;
 
 		// Smooth mana fill animation
-		if (_manaFill != null) {
+		if (_manaFill?.Material is ShaderMaterial shaderMat) {
 			_currentManaRatio = Mathf.Lerp(_currentManaRatio, _targetManaRatio, (float)delta * 5f);
-			if (_manaFill.Material is ShaderMaterial shaderMat)
-				shaderMat.SetShaderParameter("fill_ratio", _currentManaRatio);
-
+			shaderMat.SetShaderParameter("fill_ratio", _currentManaRatio);
 		}
 	}
 
@@ -64,11 +75,16 @@ public partial class HUD : CanvasLayer {
 	// BUILD
 	// ------------------------------------------------------------
 	private void TryBuildHUD() {
+		// Only build once
 		if (_built) return;
 
 		_healthBox = GetNodeOrNull<HBoxContainer>(HealthBoxPath);
 		_manaFill = GetNodeOrNull<TextureRect>(ManaContainerPath);
-		if (_healthBox == null || _manaFill == null) return;
+
+		if (_healthBox == null || _manaFill == null) {
+			GD.PushWarning("[HUD] Nodes not yet ready, skipping build.");
+			return;
+		}
 
 		BuildMaskRow(_healthBox, _maskIcons, MaxMasks, MaskEmpty);
 		SetHealth(GlobalRoomChange.health);
@@ -79,8 +95,11 @@ public partial class HUD : CanvasLayer {
 	}
 
 	private void BuildMaskRow(HBoxContainer box, List<TextureRect> list, int count, Texture2D tex) {
-		foreach (var c in box.GetChildren()) c.QueueFree();
+		foreach (var c in box.GetChildren())
+			c.QueueFree();
+
 		list.Clear();
+
 		for (int i = 0; i < count; i++) {
 			var icon = new TextureRect {
 				Texture = tex,
@@ -110,9 +129,11 @@ public partial class HUD : CanvasLayer {
 
 			var tween = GetTree().CreateTween();
 			tween.TweenProperty(icon, "scale", new Vector2(1.25f, 1.25f), 0.1f)
-				.SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+				.SetTrans(Tween.TransitionType.Back)
+				.SetEase(Tween.EaseType.Out);
 			tween.TweenProperty(icon, "scale", Vector2.One, 0.1f)
-				.SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.In);
+				.SetTrans(Tween.TransitionType.Back)
+				.SetEase(Tween.EaseType.In);
 			await ToSignal(tween, Tween.SignalName.Finished);
 		}
 	}
@@ -129,10 +150,10 @@ public partial class HUD : CanvasLayer {
 		if (!_built || _manaFill == null) return;
 		int max = Mathf.Max(1, GlobalRoomChange.maxMana);
 		_targetManaRatio = Mathf.Clamp((float)current / max, 0, 1);
-		if (instant) _currentManaRatio = _targetManaRatio;
+		if (instant)
+			_currentManaRatio = _targetManaRatio;
 	}
 
-	// Gradual soul drain when healing (focus)
 	public async Task DrainManaForHeal(int cost, float duration = 1.0f) {
 		if (!_built) return;
 		float startRatio = _currentManaRatio;

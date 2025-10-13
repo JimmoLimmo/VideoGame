@@ -1,20 +1,14 @@
-<<<<<<< HEAD
-[gd_scene load_steps=40 format=4 uid="uid://x32noqlfbc2m"]
-=======
 [gd_scene load_steps=39 format=4 uid="uid://x32noqlfbc2m"]
->>>>>>> Aidan
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_6rrfu"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_eqk5l"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_emd5a"]
 [ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="4_pvlks"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="6_p6njx"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="6_p6njx"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="9_6v2ye"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="11_ojjet"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="12_2nqbu"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="12_3iqsu"]
-<<<<<<< HEAD
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="13_5hn0a"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
 =======
 [ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
@@ -386,6 +380,7 @@ tile_set = SubResource("TileSet_si834")
 
 [node name="Player" parent="." instance=ExtResource("3_emd5a")]
 position = Vector2(3515, 381)
+hasSword = true
 
 [node name="MechMosquito" parent="." instance=ExtResource("12_3iqsu")]
 position = Vector2(2276, 1896)
@@ -567,10 +562,6 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="ScreenFade" parent="." instance=ExtResource("12_2nqbu")]
-
-<<<<<<< HEAD
-[node name="Hud" parent="." instance=ExtResource("13_5hn0a")]
-visible = false
 
 =======
 >>>>>>> Aidan

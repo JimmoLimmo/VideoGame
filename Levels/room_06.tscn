@@ -1,20 +1,14 @@
-<<<<<<< HEAD
-[gd_scene load_steps=42 format=4 uid="uid://c1qmvnh7lusmk"]
-=======
 [gd_scene load_steps=41 format=4 uid="uid://c1qmvnh7lusmk"]
->>>>>>> Aidan
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_d287s"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_4p8kh"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Levels/FactoryWall_Tileset.png" id="3_6au6i"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_6au6i"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_kuq1f"]
 [ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="5_4p8kh"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="5_vkjb2"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_spqte"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_1lsf5"]
 [ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="7_kuq1f"]
-<<<<<<< HEAD
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="8_a42xq"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_q12ft"]
 =======
 [ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_q12ft"]
@@ -256,8 +250,13 @@ tile_map_data = PackedByteArray("AAAqAAQAAgACAAgAAAAtAAYAAgACAAgAAAAuAAYAAgADAAg
 tile_set = SubResource("TileSet_3ikjv")
 
 [node name="Player" parent="." instance=ExtResource("4_kuq1f")]
-position = Vector2(-191, -124)
+position = Vector2(1163, 1187)
+safe_margin = 1.0
+WallJumpLockTime = 0.15
+WallJumpForce = 1250.0
 hasWalljump = true
+hasDash = true
+hasSword = true
 
 [node name="FactoryCrusher" parent="." instance=ExtResource("5_4p8kh")]
 position = Vector2(2688, 1409)
@@ -431,10 +430,6 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_j533a")
 
 [node name="ScreenFade" parent="." instance=ExtResource("7_1lsf5")]
-
-<<<<<<< HEAD
-[node name="Hud" parent="." instance=ExtResource("8_a42xq")]
-visible = false
 
 =======
 >>>>>>> Aidan
