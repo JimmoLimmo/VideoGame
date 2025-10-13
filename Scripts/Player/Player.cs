@@ -310,19 +310,18 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
+		} else if(_isDashing) {
+			if(Velocity.Y < 0) nextAnimation = "Jump";
+			else nextAnimation = "Dash";
 		} else if(_isWallSliding) {
-			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
-			
 			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
 			} else {
 				nextAnimation = ("Wallslide");
 			}
 		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
-			if(!_anim.IsPlaying()) {
-				nextAnimation = "Jump";
-				sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
-			}
+			GD.Print(lastAnimation);
+			nextAnimation = "Jump";
 		} else if(Velocity.Y < -10f && Velocity.Y > -200f) {
 			nextAnimation = "Peak";
 		}
@@ -348,8 +347,12 @@ public partial class Player : CharacterBody2D {
 				nextAnimation = "Idle";
 			}
 		}
+		
+		if(nextAnimation == "IntoWallslide" || nextAnimation == "Wallslide") {
+			sprites.Scale = new Vector2(sprites.Scale.X * -1, 1);
+		}
 
-		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide")) {
+		if (_anim.CurrentAnimation != nextAnimation && (!_anim.IsPlaying() || _anim.CurrentAnimation == "Run" || _anim.CurrentAnimation == "Wallslide" || _anim.CurrentAnimation == "IntoWallslide")) {
 			_anim.Play(nextAnimation);
 			lastAnimation = nextAnimation;
 		}

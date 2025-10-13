@@ -4,7 +4,7 @@ using System;
 public partial class MechMosquito : CharacterBody2D {
 	private AnimationPlayer animator;
 	
-	[Export] public int maxHealth = 15;
+	[Export] public int maxHealth = 30;
 	[Export] public float speed = 300;
 	[Export] public float angleVariationDegrees = 15f;
 	[Export] public float noiseSpeed = 200f;
@@ -42,6 +42,7 @@ public partial class MechMosquito : CharacterBody2D {
 		noise.Seed = (int)GD.Randi();
 		noiseOffset = GD.Randf() * 1000f;
 		
+		sprite = GetNode<Sprite2D>("Sprite2D");
 		hitBox = GetNode<Area2D>("HitBox");
 		aggroArea = GetNode<Area2D>("AggroArea");
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
@@ -102,6 +103,7 @@ public partial class MechMosquito : CharacterBody2D {
 		currentHealth -= amount;
 		bloodEmitter.Restart();
 		sparkEmitter.Restart();
+		GD.Print("Current Health: " + currentHealth);
 		CheckDeath();
 	}
 	
