@@ -1,9 +1,14 @@
-[gd_scene load_steps=27 format=3 uid="uid://bl57h6bp50oo2"]
+[gd_scene load_steps=32 format=3 uid="uid://bl57h6bp50oo2"]
 
 [ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_evcib"]
 [ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="1_whvb5"]
 [ext_resource type="Script" uid="uid://yuq1i44nft4l" path="res://Scripts/Player/Sword.cs" id="3_lgeye"]
 [ext_resource type="Texture2D" uid="uid://duith60v2w8n1" path="res://Sprites/Player/Claw_SpriteSheet.png" id="3_ude3g"]
+[ext_resource type="AudioStream" uid="uid://dti18yyxhdcnx" path="res://Audio/SFX/hero_run_footsteps_metal.wav" id="5_gk6dx"]
+[ext_resource type="AudioStream" uid="uid://b5qjvpqf3yptp" path="res://Audio/SFX/hero_jump.wav" id="6_jhyir"]
+[ext_resource type="AudioStream" uid="uid://be8aw4oq2wq48" path="res://Audio/SFX/hornet_dash.wav" id="7_74mp2"]
+[ext_resource type="AudioStream" uid="uid://cdfq3g3ygkqlj" path="res://Audio/SFX/sword_1.wav" id="8_oikmp"]
+[ext_resource type="AudioStream" uid="uid://bohsgl5oe3nrd" path="res://Audio/SFX/hero_wall_jump.wav" id="9_06tpx"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_whvb5"]
 radius = 75.0
@@ -15,6 +20,35 @@ size = Vector2(225.917, 283.75)
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f4cuq"]
 radius = 80.303
 height = 333.333
+
+[sub_resource type="Animation" id="Animation_dd0ac"]
+resource_name = "Dash"
+length = 0.100005
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites/Body:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [14]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprites/Head:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [20]
+}
 
 [sub_resource type="Animation" id="Animation_ude3g"]
 resource_name = "Fall"
@@ -958,35 +992,6 @@ tracks/5/keys = {
 "values": [-0.00174533, -0.00174533, -0.00174533, -0.00174533]
 }
 
-[sub_resource type="Animation" id="Animation_dd0ac"]
-resource_name = "Dash"
-length = 0.100005
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprites/Body:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [14]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprites/Head:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [20]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f4cuq"]
 _data = {
 &"Dash": SubResource("Animation_dd0ac"),
@@ -1284,3 +1289,28 @@ autoplay = "Idle"
 libraries = {
 &"": SubResource("AnimationLibrary_825xp")
 }
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="FootstepPlayer" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("5_gk6dx")
+volume_db = 24.0
+bus = &"SFX"
+
+[node name="JumpPlayer" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("6_jhyir")
+volume_db = 24.0
+bus = &"SFX"
+
+[node name="DashPlayer" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("7_74mp2")
+volume_db = 24.0
+bus = &"SFX"
+
+[node name="SwordSwingPlayer" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("8_oikmp")
+volume_db = 24.0
+bus = &"SFX"
+
+[node name="WallJumpPlayer" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("9_06tpx")
