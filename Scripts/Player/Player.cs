@@ -40,10 +40,16 @@ public partial class Player : CharacterBody2D {
 	[Export] private bool hasDash = false;
 
 	// Attack
-	[Export] public float AttackCooldown = 0.45f;
+	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
+	[Export] private bool hasClawTeleport = false;
 	private Node2D clawSprites;
+	
+	// Claw Teleport Variables
+	[Export] public PackedScene ThrowableClawScene { get; set; }
+	private ThrowableClaw _activeThrownClaw;
+	private bool _clawIsThrown = false;
 
 	// Health & mana
 	private int _hp;
@@ -98,14 +104,58 @@ public partial class Player : CharacterBody2D {
 			hasSword = GlobalRoomChange.hasSword;
 			hasDash = GlobalRoomChange.hasDash;
 			hasWalljump = GlobalRoomChange.hasWalljump;
+			hasClawTeleport = GlobalRoomChange.hasClawTeleport; // Add claw teleport to room changes
 
 			GlobalRoomChange.Activate = false;
 			_hp = GlobalRoomChange.health;
 			_mana = GlobalRoomChange.mana;
 		}
 		else {
-			_hp = (GlobalRoomChange.health > 0) ? GlobalRoomChange.health : 5;
-			GlobalRoomChange.health = _hp;
+			// Starting fresh or loading from save
+			// Check if this is a new game vs loading from existing save
+			if (!SaveManager.IsNewGame()) {
+				// Loading from existing save (Continue button was pressed)
+				var saveData = SaveManager.GetCurrentSave();
+				ApplySaveData(saveData, true);
+				
+				// IMPORTANT: Sync loaded abilities to GlobalRoomChange so room transitions work correctly
+				GlobalRoomChange.hasSword = hasSword;
+				GlobalRoomChange.hasDash = hasDash;
+				GlobalRoomChange.hasWalljump = hasWalljump;
+				GlobalRoomChange.hasClawTeleport = hasClawTeleport;
+				GlobalRoomChange.health = _hp;
+				GlobalRoomChange.mana = _mana;
+				
+				// Make sure the room group is set correctly for gameplay scenes
+				// This ensures the HUD shows up properly
+				string currentSceneName = GetTree().CurrentScene.Name;
+				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
+					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
+				}
+			}
+			else {
+				// New game - use default starting values, don't load from save
+				_hp = 5; // Default starting health
+				hasSword = false;
+				hasDash = false;
+				hasWalljump = false;
+				hasClawTeleport = false;
+				
+				// IMPORTANT: Update GlobalRoomChange to match new game state
+				GlobalRoomChange.health = _hp;
+				GlobalRoomChange.hasSword = false;
+				GlobalRoomChange.hasDash = false;
+				GlobalRoomChange.hasWalljump = false;
+				GlobalRoomChange.hasClawTeleport = false;
+				
+				// Make sure the room group is set for new game
+				string currentSceneName = GetTree().CurrentScene.Name;
+				string lowerSceneName = currentSceneName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+				if (lowerSceneName.Contains("room") || lowerSceneName.Contains("level")) {
+					GlobalRoomChange.EnterRoom(currentSceneName, RoomGroup.Overworld);
+				}
+			}
 		}
 
 		respawnPoint = Position;
@@ -120,10 +170,10 @@ public partial class Player : CharacterBody2D {
 			clawSprites.Visible = true;
 		}
 
-		_hud = GetNode<HUD>("/root/HUD");
-		fade = GetNode<ScreenFader>("../ScreenFade");
-
-		CallDeferred(nameof(SyncHud));
+		// Get HUD from autoload - defer this to ensure autoloads are ready
+		CallDeferred(nameof(InitializeHUD));
+		
+		fade = GetNodeOrNull<ScreenFader>("../ScreenFade");
 
 		var hazardBox = GetNode<Area2D>("HitBox");
 		hazardBox.BodyEntered += areaHazard;
@@ -138,9 +188,24 @@ public partial class Player : CharacterBody2D {
 		AddToGroup("player");
 	}
 
+	private void InitializeHUD()
+	{
+		// Get HUD from autoload
+		_hud = GetNodeOrNull<HUD>("/root/HUD");
+		if (_hud != null)
+		{
+			// Sync initial HUD state
+			SyncHud();
+		}
+	}
+
 	private void SyncHud() {
-		if (_hud == null) return;
-		GD.Print($"[SyncHud] hp={_hp}");
+		// Try to reconnect to HUD if it's missing
+		if (_hud == null)
+		{
+			_hud = GetNodeOrNull<HUD>("/root/HUD");
+			if (_hud == null) return;
+		}
 		_hud.SetHealth(_hp);
 		_hud.SetMana(_mana);
 	}
@@ -337,16 +402,65 @@ public partial class Player : CharacterBody2D {
 			swordAnimator.Play("Swing");
 			_swingPlayer.Play();
 		}
+		
+		// Handle claw throwing (only if teleport upgrade is available)
+		if (Input.IsActionJustPressed("sword_throw") && _attackTimer <= 0f && hasSword && hasClawTeleport && !_clawIsThrown) {
+			ThrowClaw();
+		}
 	}
 
 	public void AttackStart() => _sword?.EnableHitbox();
 	public void AttackEnd() => _sword?.DisableHitbox();
+	
+	private void ThrowClaw()
+	{
+		if (ThrowableClawScene == null || _clawIsThrown) return;
+		
+		_attackTimer = AttackCooldown;
+		_clawIsThrown = true;
+		
+		// Hide the regular sword (claw is still attached to sword)
+		if (_sword != null)
+		{
+			_sword.Visible = false;
+		}
+		
+		// Create throwable claw
+		_activeThrownClaw = ThrowableClawScene.Instantiate<ThrowableClaw>();
+		GetTree().CurrentScene.AddChild(_activeThrownClaw);
+		
+		// Set the player reference in the claw
+		_activeThrownClaw.SetPlayer(this);
+		
+		// Position it at the player's claw position
+		Vector2 clawOffset = new Vector2(sprites.Scale.X < 0 ? -30 : 30, -10);
+		_activeThrownClaw.GlobalPosition = GlobalPosition + clawOffset;
+		
+		// Determine throw direction based on player facing
+		Vector2 throwDirection = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
+		_activeThrownClaw.ThrowInDirection(throwDirection);
+		
+		// Connect to the claw's destruction to know when to show our sword again
+		_activeThrownClaw.TreeExiting += OnThrownClawDestroyed;
+	}
+	
+	private void OnThrownClawDestroyed()
+	{
+		_clawIsThrown = false;
+		_activeThrownClaw = null;
+		
+		// Show the regular sword again (claw is part of the sword weapon)
+		if (_sword != null && hasSword)
+		{
+			_sword.Visible = true;
+		}
+	}
 
 	// -------------------------------
 	// Animation Control
 	// -------------------------------
 	private void HandleAnimations() {
-		if (hasSword) {
+		if (hasSword && !_clawIsThrown) {
 			_sword.Visible = true;
 			clawSprites.Visible = true;
 		}
@@ -548,9 +662,11 @@ public partial class Player : CharacterBody2D {
 		if (type == CollectableType.Sword) hasSword = true;
 		else if (type == CollectableType.Dash) hasDash = true;
 		else if (type == CollectableType.Walljump) hasWalljump = true;
+		else if (type == CollectableType.Throw) hasClawTeleport = true;
 		GlobalRoomChange.hasSword = hasSword;
 		GlobalRoomChange.hasDash = hasDash;
 		GlobalRoomChange.hasWalljump = hasWalljump;
+		GlobalRoomChange.hasClawTeleport = hasClawTeleport;
 	}
 
 	public void ApplyHit(int dmg, Vector2 src) {
@@ -589,5 +705,68 @@ public partial class Player : CharacterBody2D {
 		_hud?.SetMana(_mana);
 		GlobalRoomChange.mana = _mana;
 		return true;
+	}
+
+	// --- Save / Load helpers -------------------------------------------------
+
+	public SaveManager.SaveData ToSaveData()
+	{
+		// Get current scene file path
+		string currentScenePath = GetTree().CurrentScene.SceneFilePath;
+		
+		return new SaveManager.SaveData
+		{
+			Hp = _hp,
+			HasSword = hasSword,
+			HasDash = hasDash,
+			HasWalljump = hasWalljump,
+			HasClawTeleport = hasClawTeleport,
+			CurrentScene = currentScenePath,
+			PlayerPosition = GlobalPosition
+		};
+	}
+
+	public void ApplySaveData(SaveManager.SaveData data, bool setPosition = true)
+	{
+		if (data == null) return;
+
+		_hp = data.Hp;
+		hasSword = data.HasSword;
+		hasDash = data.HasDash;
+		hasWalljump = data.HasWalljump;
+		hasClawTeleport = data.HasClawTeleport;
+
+		// Update relevant nodes/UI
+		_hud?.SetHealth(_hp);
+		if (_sword != null) {
+			_sword.Show();
+			_sword.Visible = hasSword;
+		}
+
+		if (setPosition)
+		{
+			// Teleport player to saved position
+			GlobalPosition = data.PlayerPosition;
+		}
+	}
+
+	public void SaveToFile()
+	{
+		SaveManager.Save(ToSaveData());
+	}
+
+	public void LoadFromFile()
+	{
+		var data = SaveManager.Load();
+		if (data != null)
+			ApplySaveData(data);
+	}
+
+	// Helper used for deferred application from external code (reads cached save)
+	public void ApplySaveDataFromManager(bool setPosition = true)
+	{
+		var data = SaveManager.GetCurrentSave();
+		if (data != null)
+			ApplySaveData(data, setPosition);
 	}
 }

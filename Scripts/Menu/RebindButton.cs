@@ -36,7 +36,11 @@ public partial class RebindButton : Button {
 	}
 
 	public override void _Input(InputEvent @event) {
-		if (!_waitingForInput) return;
+// Safety check: don't process if not in tree
+		if (!IsInsideTree() || IsQueuedForDeletion())
+			return;
+			
+if (!_waitingForInput) return;
 
 		// --- Keyboard ---
 		if (@event is InputEventKey keyEvent && keyEvent.Pressed) {
