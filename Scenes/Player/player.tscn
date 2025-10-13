@@ -1295,7 +1295,7 @@ libraries = {
 
 [node name="FootstepPlayer" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("5_gk6dx")
-volume_db = 24.0
+volume_db = 20.0
 bus = &"SFX"
 
 [node name="JumpPlayer" type="AudioStreamPlayer2D" parent="Audio"]
@@ -1310,7 +1310,7 @@ bus = &"SFX"
 
 [node name="SwordSwingPlayer" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("8_oikmp")
-volume_db = 24.0
+volume_db = 16.0
 bus = &"SFX"
 
 [node name="WallJumpPlayer" type="AudioStreamPlayer2D" parent="Audio"]
@@ -1318,5 +1318,5 @@ stream = ExtResource("9_06tpx")
 
 [node name="LandPlayer" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("10_jhyir")
-volume_db = 24.0
+volume_db = 20.0
 bus = &"SFX"
