@@ -10,7 +10,7 @@
 [ext_resource type="Theme" uid="uid://dihdq8axoc2oq" path="res://Themes/HollowKnightTheme.tres" id="5"]
 [ext_resource type="PackedScene" uid="uid://bjqbi5kd08bsb" path="res://Scenes/UI/ConfirmationPopup.tscn" id="9_ynupv"]
 
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" groups=["Menu"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
