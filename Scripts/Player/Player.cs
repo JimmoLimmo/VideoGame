@@ -43,9 +43,6 @@ public partial class Player : CharacterBody2D {
 	[Export] public float AttackCooldown = 0.25f;
 	private float _attackTimer = 0f;
 	[Export] private bool hasSword = false;
-<<<<<<< HEAD
-	private Node2D clawSprites;
-=======
 	[Export] private bool hasClawTeleport = false;
 	private Node2D clawSprites;
 	
