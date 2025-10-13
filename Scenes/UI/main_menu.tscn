@@ -6,10 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://blemgugjlqkjd" path="res://Levels/room_01.tscn" id="4_gih0s"]
 [ext_resource type="Script" uid="uid://ppvmfg0i4lw2" path="res://Scripts/Menu/MenuSwapperButton.cs" id="5_wqme5"]
 [ext_resource type="Script" uid="uid://dy4nes267jpjv" path="res://Scripts/Menu/QuitButton.cs" id="6_jewm6"]
-<<<<<<< HEAD
-=======
 [ext_resource type="Script" path="res://Scripts/Menu/ContinueButton.cs" id="7_continue"]
->>>>>>> Aidan
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="8_k33u3"]
 
 [node name="MainMenu" type="Control" groups=["music_title"]]

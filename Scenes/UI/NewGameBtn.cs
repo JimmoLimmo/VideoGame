@@ -23,9 +23,7 @@ public partial class NewGameBtn : Button {
 		ReleaseFocus();
 		Disabled = true;
 
-<<<<<<< HEAD
-=======
-		// IMPORTANT: Reset save data for new game
+// IMPORTANT: Reset save data for new game
 		SaveManager.ResetToNewGame(true);
 		
 		// Reset GlobalRoomChange state for new game  
@@ -37,8 +35,7 @@ public partial class NewGameBtn : Button {
 		GlobalRoomChange.health = 5;
 		GlobalRoomChange.mana = 0;
 
->>>>>>> Aidan
-		var tree = GetTree();
+var tree = GetTree();
 		var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
 		if (fader != null)
 			await fader.FadeOut(0.4f);

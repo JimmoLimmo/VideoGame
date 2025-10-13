@@ -13,9 +13,7 @@ public partial class StartGameButton : Button {
 		if (_isTransitioning) return;
 		_isTransitioning = true;
 
-<<<<<<< HEAD
-=======
-		// Reset save data for new game
+// Reset save data for new game
 		SaveManager.ResetToNewGame(true);
 		
 		// Reset GlobalRoomChange state for new game
@@ -27,8 +25,7 @@ public partial class StartGameButton : Button {
 		GlobalRoomChange.health = 5;
 		GlobalRoomChange.mana = 0;
 
->>>>>>> Aidan
-		var tree = GetTree();
+var tree = GetTree();
 
 
 		ReleaseFocus();           // stop receiving further ui_accept input

@@ -3,10 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://bbcnskaswt6w0" path="res://Sprites/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="1_ryo1c"]
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="2_hlm3v"]
 [ext_resource type="PackedScene" uid="uid://c6qwdj501fg6f" path="res://old/player.tscn" id="3_xu5hj"]
-<<<<<<< HEAD
-[ext_resource type="PackedScene" uid="uid://c4jxu7rwtkoxu" path="res://Scenes/UI/HUD.tscn" id="4_spxb4"]
-=======
->>>>>>> Aidan
 [ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="6_vonpj"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="8_eypxs"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_gu0pg"]
@@ -165,12 +161,6 @@ boundsPath = NodePath("../CameraBounds/CameraCollsion")
 [node name="Player" parent="." groups=["enemies"] instance=ExtResource("3_xu5hj")]
 position = Vector2(-181, 146)
 
-<<<<<<< HEAD
-[node name="Hud" parent="." instance=ExtResource("4_spxb4")]
-MaskFull = ExtResource("6_vonpj")
-
-=======
->>>>>>> Aidan
 [node name="DoorArea2D" parent="." instance=ExtResource("8_eypxs")]
 position = Vector2(261, 42)
 ConnectedRoom = "res://Levels/test_room_03.tscn"
