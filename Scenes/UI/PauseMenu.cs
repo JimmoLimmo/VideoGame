@@ -107,4 +107,31 @@ public partial class PauseMenu : Control {
         if (what == 1000)
             HideAll();
     }
+
+    // Methods for PauseController compatibility
+    public void ShowMenu() {
+        var tree = GetTree();
+        tree.Paused = true;
+        Visible = true;
+        _pauseLayer.Visible = true;
+        _continueBtn.GrabFocus();
+
+        // Fade in overlay and menu
+        var tween = CreateTween();
+        _overlay.Modulate = new Color(0, 0, 0, 0);
+        Modulate = new Color(1, 1, 1, 0);
+        tween.TweenProperty(_overlay, "modulate:a", 0.6f, 0.25);
+        tween.TweenProperty(this, "modulate:a", 1.0f, 0.25);
+    }
+
+    public async void HideMenu() {
+        // Fade out overlay and menu
+        var tween = CreateTween();
+        tween.TweenProperty(_overlay, "modulate:a", 0.0f, 0.15);
+        tween.TweenProperty(this, "modulate:a", 0.0f, 0.15);
+        await ToSignal(tween, Tween.SignalName.Finished);
+
+        HideAll();
+        GetTree().Paused = false;
+    }
 }
