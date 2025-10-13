@@ -387,10 +387,11 @@ position = Vector2(1937, -389)
 
 [node name="FactoryCrusher" parent="." instance=ExtResource("4_pvlks")]
 position = Vector2(2047, 3711)
+movementTime = 0.5
 
 [node name="FactoryCrusher2" parent="." instance=ExtResource("4_pvlks")]
 position = Vector2(2432, 3710)
-downDuration = 2.0
+movementTime = 0.5
 
 [node name="MidTiles" type="Node2D" parent="."]
 
