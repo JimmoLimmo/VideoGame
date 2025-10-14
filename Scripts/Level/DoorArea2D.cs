@@ -14,10 +14,20 @@ public partial class DoorArea2D : Area2D {
 
 	private async void OnBodyEntered(Node body) {
 		if (_busy) return;
-		if (!body.IsInGroup("player")) return;
+		// if (!body.IsInGroup("player")) 
+		// 	return;
+
+		if (body is not Player player)
+			return;
+
+		if (!player.CanUseDoors)
+			return;
 		_busy = true;
 
 		var tree = GetTree();
+
+		GlobalRoomChange.LastExitName = Name;
+		GlobalRoomChange.LastExitRoom = GetTree().CurrentScene.SceneFilePath;
 
 		// Set spawn params for the next scene
 		GlobalRoomChange.Activate = true;
