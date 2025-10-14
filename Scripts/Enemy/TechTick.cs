@@ -11,17 +11,15 @@ public partial class TechTick : CharacterBody2D {
 	[Export] public NodePath LeftLimitPath;
 	[Export] public NodePath RightLimitPath;
 	[Export] public int ContactDamage = 1;
+	[Export] public float knockbackVelocity = 1500f;
+	[Export] public float knockbackDecceleration = 100f;
 
 	private int _currentHealth;
 	private Vector2 _leftLimit;
 	private Vector2 _rightLimit;
 	private bool _movingRight = true;
 	private bool _inHitBox = false;
-
-	// --- NEW stun fields ---
-	private bool _isStunned = false;
-	private float _stunTimer = 0f;
-	// -----------------------
+	private bool isDead = false;
 
 	private CpuParticles2D bloodEmitter;
 	private CpuParticles2D sparkEmitter;
@@ -45,59 +43,52 @@ public partial class TechTick : CharacterBody2D {
 	}
 
 	public override void _PhysicsProcess(double delta) {
-		// ---- STUN HANDLING ----
-		if (_isStunned) {
-			_stunTimer -= (float)delta;
-			if (_stunTimer <= 0f)
-				_isStunned = false;
-
-			// Slide with reduced momentum while stunned
-			Velocity = new Vector2(Velocity.X * 0.9f, Velocity.Y);
-			MoveAndSlide();
-			return;
-		}
-		// -----------------------
-
 		Vector2 velocity = Velocity;
-
-		if (_movingRight) {
-			velocity.X = Speed;
-			if (GlobalPosition.X >= _rightLimit.X)
-				_movingRight = false;
-
+		float goalSpeed = 0f;
+		
+		if (GlobalPosition.X >= _rightLimit.X) _movingRight = false;
+		else if (GlobalPosition.X < _leftLimit.X) _movingRight = true;
+		
+		if(_movingRight) {
+			goalSpeed  = Speed;
 			_sprite.FlipH = false;
-			_anim.Play("Walk");
-		}
-		else {
-			velocity.X = -Speed;
-			if (GlobalPosition.X <= _leftLimit.X)
-				_movingRight = true;
-
+		} else {
+			goalSpeed = -Speed;
 			_sprite.FlipH = true;
-			_anim.Play("Walk");
 		}
+		
+		_anim.Play("Walk");
+		
+		velocity.X = Mathf.MoveToward(velocity.X, goalSpeed, knockbackDecceleration);
 
 		if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
 		Velocity = velocity;
-		MoveAndSlide();
+		
+		if(!isDead) MoveAndSlide();
 	}
 
-	// --- Optional public accessors for helper reflection ---
-	public void SetStun(float time) {
-		_isStunned = true;
-		_stunTimer = time;
-	}
-	// --------------------------------------------------------
-
-	public void TakeDamage(int amount) {
+	public void TakeDamage(int amount, Vector2 source) {
 		_currentHealth -= amount;
 		bloodEmitter.Restart();
 		sparkEmitter.Restart();
+		ApplyKnockback(source);
 		CheckDeath();
+	}
+	
+	private void ApplyKnockback(Vector2 source) {
+		Vector2 velocity = new Vector2(0, 0);
+		
+		Vector2 dir = (GlobalPosition - source).Normalized();
+		
+		if(dir.X > 0) velocity = new Vector2(knockbackVelocity, 0);
+		else velocity = new Vector2(-knockbackVelocity, 0);
+		
+		Velocity = velocity;
 	}
 
 	private async void CheckDeath() {
 		if (_currentHealth <= 0) {
+			isDead = true;
 			_sprite.Visible = false;
 			hitBox.Monitoring = false;
 			await ToSignal(bloodEmitter, "finished");
