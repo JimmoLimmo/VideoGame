@@ -163,8 +163,9 @@ public partial class Player : CharacterBody2D {
 			HandleJump();
 			HandleDashInput();
 			HandleAttack(delta);
-			HandleAnimations();
 		}
+		
+		HandleAnimations();
 		// --- Landing detection ---
 		if (!_wasOnFloor && IsOnFloor()) {
 			// Just landed this frame
@@ -222,8 +223,11 @@ public partial class Player : CharacterBody2D {
 		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
-			sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
-			_sword?.SetFacingLeft(facingLeft);
+			
+			if(!swordAnimator.IsPlaying()) {
+				sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);	
+				_sword?.SetFacingLeft(facingLeft);
+			}
 		}
 		else velocity.X = Mathf.MoveToward(velocity.X, 0, Speed / div);
 
@@ -305,8 +309,7 @@ public partial class Player : CharacterBody2D {
 	}
 
 	private void StartDash(Vector2 direction) {
-		if (direction == Vector2.Zero)
-			direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
+		direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
 
 		_isDashing = true;
 		_dashTimer = DashDuration;
@@ -357,21 +360,20 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		}
-		else if (_isDashing) {
-			if (Velocity.Y < 0) nextAnimation = "Jump";
-			else nextAnimation = "Dash";
-		}
-		else if (_isWallSliding) {
-			if (lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+		} else if(_isDashing) {
+			if(Velocity.Y < 0) nextAnimation = "Jump";
+			else if (lastAnimation != "Dash") {
+				nextAnimation = "Dash";
+				
+			}
+		} else if(_isWallSliding) {
+			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
 			}
 			else {
 				nextAnimation = ("Wallslide");
 			}
-		}
-		else if (_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
-			GD.Print(lastAnimation);
+		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
 			nextAnimation = "Jump";
 		}
 		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
@@ -570,6 +572,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
+		GD.Print("HOLDING");
 
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;

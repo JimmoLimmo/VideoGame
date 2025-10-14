@@ -59,6 +59,7 @@ public partial class CrumbleFloor : Node2D {
 	}
 
 	private async void handleBreak(Player player) {
+		GD.Print(player);
 		breakTimer.Start(breakTime);
 		player.HoldPlayer(breakTime);
 		breakSound.Play(); // ✅ plays crumble SFX

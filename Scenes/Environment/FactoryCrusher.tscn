@@ -8,7 +8,7 @@
 size = Vector2(256, 37)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yo5wu"]
-size = Vector2(192, 123)
+size = Vector2(139, 123)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6asn"]
 size = Vector2(21.5, 128)
@@ -24,6 +24,7 @@ polygon = PackedVector2Array(-128, -896, -128, -384, 128, -384, 128, -896)
 
 [sub_resource type="Animation" id="Animation_jc7cj"]
 resource_name = "Drop"
+length = 0.06667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -31,10 +32,10 @@ tracks/0/path = NodePath("Top:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0666667, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.0666667),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 25), Vector2(0, 384), Vector2(0, 384)]
+"values": [Vector2(0, 25), Vector2(0, 384)]
 }
 
 [sub_resource type="Animation" id="Animation_tjs4c"]
