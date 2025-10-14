@@ -1,0 +1,125 @@
+[gd_scene load_steps=4 format=3 uid="uid://crmx8f4cjqwsk"]
+
+[ext_resource type="FontFile" uid="uid://d2hia3xtij0yu" path="res://Font/TIMES.TTF" id="1_726cd"]
+[ext_resource type="Script" uid="uid://deo7oynlpudta" path="res://Scripts/UI/Credits.cs" id="1_mbqqj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mbqqj"]
+font = ExtResource("1_726cd")
+font_size = 32
+
+[node name="Credits" type="Node2D"]
+script = ExtResource("1_mbqqj")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Scrum" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Scrum Master
+Jimmy Nguyen"
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Programming" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Programming
+
+Jimmy Nguyen
+Mark Hazen
+Aidan Hamm"
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Art" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Art Design
+
+Julien Macedo"
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Music" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Music
+
+Menu - \"Mementos\" by ATLUS Sound Team from Persona 5
+In Game - \"tartaris_0d01\" by ATLUS Sound Team from Persona 3
+Credits - \"\""
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SoundEffects" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Sound Effects
+
+From Team Cherry's Hollow Knight"
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThankYou" type="Label" parent="CanvasLayer/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Thank You for Playing
+
+BloodWorks - Demo -"
+label_settings = SubResource("LabelSettings_mbqqj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlideTimer" type="Timer" parent="."]

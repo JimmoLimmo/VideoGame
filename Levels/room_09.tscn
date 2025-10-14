@@ -241,7 +241,7 @@ color = Color(1, 1, 1, 0)
 tile_set = SubResource("TileSet_rkax3")
 
 [node name="Player" parent="." instance=ExtResource("4_23gfh")]
-position = Vector2(396, -109)
+position = Vector2(421, 2195)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -313,9 +313,9 @@ scale = Vector2(31.3407, 35.7428)
 texture = SubResource("GradientTexture2D_qqn31")
 
 [node name="FactoryBreakawayFloor2" parent="." instance=ExtResource("5_fri8c")]
+visible = false
 position = Vector2(0, 1024)
 breakTime = 0.5
-FloorID = "room_09_floor_02"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor2"]
 position = Vector2(-869, 673)
@@ -324,9 +324,9 @@ scale = Vector2(21.0816, 43.6318)
 texture = SubResource("GradientTexture2D_23gfh")
 
 [node name="FactoryBreakawayFloor" parent="." instance=ExtResource("5_fri8c")]
+visible = false
 position = Vector2(-1664, 0)
 breakTime = 0.5
-FloorID = "room_09_floor_01"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor"]
 position = Vector2(779.01, 671.238)
