@@ -1,11 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://bmrx72adb6qla"]
+[gd_scene load_steps=13 format=3 uid="uid://bmrx72adb6qla"]
 
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_d6asn"]
 [ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_jc7cj"]
 [ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_yo5wu"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jc7cj"]
-size = Vector2(256, 37)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yo5wu"]
 size = Vector2(139, 123)
@@ -103,26 +100,6 @@ _data = {
 [node name="FactoryCrusher" type="Node2D"]
 script = ExtResource("1_jc7cj")
 movementTime = 0.75
-
-[node name="Bottom" type="StaticBody2D" parent="."]
-
-[node name="LeftCaution" type="Sprite2D" parent="Bottom"]
-z_index = 1
-position = Vector2(-64, -27)
-texture = ExtResource("1_d6asn")
-region_enabled = true
-region_rect = Rect2(513, 1156, 128, 128)
-
-[node name="RightCaution" type="Sprite2D" parent="Bottom"]
-z_index = 1
-position = Vector2(64, -27)
-texture = ExtResource("1_d6asn")
-region_enabled = true
-region_rect = Rect2(896, 1156, 128, 128)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Bottom"]
-position = Vector2(0, 18.5)
-shape = SubResource("RectangleShape2D_jc7cj")
 
 [node name="DeathZone" type="Area2D" parent="."]
 collision_layer = 4
