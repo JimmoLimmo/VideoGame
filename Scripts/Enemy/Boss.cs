@@ -694,6 +694,21 @@ public partial class Boss : CharacterBody2D {
         GlobalPosition = new Vector2(x, GlobalPosition.Y);
     }
 
+
+    // ========================= Audio =========================
+    private AudioStreamPlayer2D _sfxSlash;
+    private AudioStreamPlayer2D _sfxDash;
+    private AudioStreamPlayer2D _sfxUppercut;
+    private AudioStreamPlayer2D _sfxLeap;
+    private AudioStreamPlayer2D _sfxRoar;
+    private AudioStreamPlayer2D _sfxHurt;
+    private AudioStreamPlayer2D _sfxDeath;
+
+    private void PlaySFX(AudioStreamPlayer2D sfx) {
+        if (sfx != null && sfx.Stream != null)
+            sfx.Play();
+    }
+
     // ========================= Lifecycle =========================
     public override void _Ready() {
         _hp = MaxHealth;
@@ -713,6 +728,16 @@ public partial class Boss : CharacterBody2D {
 
         _hurtbox = GetNodeOrNull<Area2D>("HurtBox");
         _hitbox = GetNodeOrNull<Area2D>("Hitbox");
+
+        // --- Audio Nodes ---
+        _sfxSlash = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Slash");
+        _sfxDash = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Dash");
+        _sfxUppercut = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Uppercut");
+        _sfxLeap = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Leap");
+        _sfxRoar = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Roar");
+        _sfxHurt = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Hurt");
+        _sfxDeath = GetNodeOrNull<AudioStreamPlayer2D>("SFX_Death");
+
 
         if (_hitbox != null) {
             _hitbox.BodyEntered += OnHitBoxBodyEntered;
@@ -740,7 +765,7 @@ public partial class Boss : CharacterBody2D {
         GD.Print("[Boss TEST] Forcing initial shockwave spawn for verification");
         SpawnShockwaves();
 
-
+        AddToGroup("boss");
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -978,6 +1003,8 @@ public partial class Boss : CharacterBody2D {
                     break;
                 case Attack.Roar:
                     SafePlay(ARoarPrep);
+                    PlaySFX(_sfxRoar);
+                    ShakeCamera(0.6f, Enraged ? 10f : 7f);
                     prep = 0.35f;
                     break;
             }
@@ -1011,6 +1038,7 @@ public partial class Boss : CharacterBody2D {
     private void S_Slash(double dt) {
         if (_stateNew) {
             SafePlay(ASlash);
+            PlaySFX(_sfxSlash);
             float speed = SlashSlideSpeed * (Enraged ? 1.15f : 1f);
             int dir = FacingDir();
             Velocity = new Vector2(dir * speed, 0);
@@ -1031,6 +1059,7 @@ public partial class Boss : CharacterBody2D {
     private void S_Dash(double dt) {
         if (_stateNew) {
             SafePlay(ADash);
+            PlaySFX(_sfxDash);
             int dir = FacingDir();
             float speed = DashSpeed * (Enraged ? 1.15f : 1f);
             Velocity = new Vector2(dir * speed, 0);
@@ -1056,6 +1085,7 @@ public partial class Boss : CharacterBody2D {
     private void S_Uppercut(double dt) {
         if (_stateNew) {
             SafePlay(AUppercut);
+            PlaySFX(_sfxUppercut);
             int dir = _playerPos.X >= GlobalPosition.X ? 1 : -1;
             float vx = UppercutHoriSpeed * (Enraged ? 1.15f : 1f);
             float vy = JumpVy * 1.1f;
@@ -1095,6 +1125,7 @@ public partial class Boss : CharacterBody2D {
     private void S_Leap(double dt) {
         if (_stateNew) {
             SafePlay(AJump);
+            PlaySFX(_sfxLeap);
             FloorSnapLength = 0f; _snapSuppressed = true;
             _leftGround = false; _airTime = 0f; _colliderReenabledMidair = false;
 
@@ -1183,6 +1214,7 @@ public partial class Boss : CharacterBody2D {
     private void S_Hurt(double dt) {
         if (_stateNew) {
             SafePlay(AStagger);
+            PlaySFX(_sfxHurt);
             int dir = _player != null && _playerPos.X < GlobalPosition.X ? 1 : -1;
             Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.25f);
             _stateTimer = 0.25f;
@@ -1204,6 +1236,7 @@ public partial class Boss : CharacterBody2D {
         if (_stateNew) {
             Velocity = Vector2.Zero;
             SafePlay(ADeath);
+            PlaySFX(_sfxDeath);
             _stateTimer = 1.0f;
         }
         _stateTimer -= (float)dt;
@@ -1244,4 +1277,23 @@ public partial class Boss : CharacterBody2D {
     }
 
     private void OnMateriaTimeout() => _sprite?.SetDeferred("self_modulate", Colors.White);
+    private void ShakeCamera(float duration = 0.4f, float strength = 6f) {
+        var camera = GetTree().GetFirstNodeInGroup("camera") as Node;
+        if (camera is CameraController cam)
+            cam.Shake(duration, strength);
+    }
+    // ========================= Blood Helpers =========================
+    private void EmitDirectionalBlood(Vector2 hitSource) {
+        if (_blood == null) return;
+
+        // Compute direction away from hit source
+        Vector2 dir = (GlobalPosition - hitSource).Normalized();
+        dir = dir.Rotated(_rng.RandfRange(-0.2f, 0.2f)); // slight randomization
+
+        // Give the emitter a short "kick" rotation
+        _blood.Rotation = dir.Angle();
+        _blood.Emitting = false; // reset first to retrigger properly
+        _blood.Restart();
+    }
+
 }

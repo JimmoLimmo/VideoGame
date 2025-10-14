@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://clsnwqds3l3uk" path="res://Scripts/Menu/RebindButton.cs" id="3"]
 [ext_resource type="Script" uid="uid://de6icwja2qak5" path="res://Scripts/UI/BackButton.cs" id="4"]
 
-[node name="InputMenu" type="Control"]
+[node name="InputMenu" type="Control" groups=["Menu"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

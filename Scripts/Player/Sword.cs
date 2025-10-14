@@ -28,30 +28,67 @@ public partial class Sword : Area2D {
 		if (VisualAnchor != null) VisualAnchor.Scale = new Vector2(left ? -1 : 1, 1);
 	}
 
+	// public void HitCheck() {
+	// 	Monitoring = true;
+	// 	var areas = GetOverlappingAreas();
+
+	// 	foreach(Area2D area in areas) {
+	// 		if(area.Name == "HitBox"){
+	// 			if(_hitEnemies.Add(area)) {
+	// 				Node current = area;
+	// 				while (current != null && !current.HasMethod("TakeDamage")) {
+	// 					current = current.GetParent();
+	// 				}
+
+	// 				if(current == null) {
+	// 					continue;
+	// 				}
+
+	// 				if(current.HasMethod("TakeDamage")) {
+	// 					current.CallDeferred("TakeDamage", Damage);
+	// 				}
+	// 				var player = GetParentOrNull<Player>();
+	// 				player?.AddMana(1);
+	// 				GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
+	// 			}
+	// 		}
+	// 	}
+	// }
 	public void HitCheck() {
 		Monitoring = true;
 		var areas = GetOverlappingAreas();
-		
-		foreach(Area2D area in areas) {
-			if(area.Name == "HitBox"){
-				if(_hitEnemies.Add(area)) {
+
+		foreach (Area2D area in areas) {
+			if (area.Name == "HitBox") {
+				if (_hitEnemies.Add(area)) {
 					Node current = area;
 					while (current != null && !current.HasMethod("TakeDamage")) {
 						current = current.GetParent();
 					}
-					
-					if(current == null) {
+
+					if (current == null)
 						continue;
-					}
-					
-					if(current.HasMethod("TakeDamage")) {
+
+					// Damage the enemy
+					if (current.HasMethod("TakeDamage")) {
 						current.CallDeferred("TakeDamage", Damage);
 					}
+
+					// Apply knockback to any CharacterBody2D enemy
 					var player = GetParentOrNull<Player>();
+					// Knockback
+					var body = current as CharacterBody2D ?? current.GetParent() as CharacterBody2D;
+					if (body != null) {
+						// var player = GetParentOrNull<Player>();
+						KnockbackHelper.ApplyImpulse(body, player?.GlobalPosition ?? GlobalPosition, 700f);
+					}
+
+					// Add mana reward
 					player?.AddMana(1);
 					GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
 				}
 			}
 		}
 	}
+
 }

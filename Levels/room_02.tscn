@@ -200,7 +200,7 @@ color = Color(1, 1, 1, 0)
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("3_vi02f")]
-position = Vector2(-138, -120)
+position = Vector2(-138, -105)
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -313,6 +313,8 @@ PlayerPos = Vector2(2332, 1046)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-227, -190)
 shape = SubResource("RectangleShape2D_kp4w0")
+
+[node name="Marker2D" type="Marker2D" parent="LeftExit"]
 
 [node name="Lighting" type="Node2D" parent="."]
 visible = false
