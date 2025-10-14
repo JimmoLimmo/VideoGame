@@ -1072,16 +1072,21 @@ public partial class Boss : CharacterBody2D {
             float speed = DashSpeed * (Enraged ? 1.15f : 1f);
             Velocity = new Vector2(dir * speed, 0);
             _stateTimer = 0.75f; // max dash time
+
+            _sword.EnableHitbox();    // enable sword hitbox during dash
+            _stateTimer = 0.75f;      // dash duration
         }
 
         ApplyGravityGroundAware(dt);
         MoveAndSlide();
+        _sword.HitCheck();
 
         bool hitLeft = GlobalPosition.X <= ArenaLeftX + 2f;
         bool hitRight = GlobalPosition.X >= ArenaRightX - 2f;
         _stateTimer -= (float)dt;
 
         if (hitLeft || hitRight || _stateTimer <= 0f) {
+            _sword.DisableHitbox();
             SafePlay(ADashStop);
             Change(State.Recover);
             _stateTimer = 0.25f;
@@ -1102,10 +1107,14 @@ public partial class Boss : CharacterBody2D {
             if (_col != null) _col.Disabled = true;
 
             Velocity = new Vector2(dir * vx, vy);
+            _sword.EnableHitbox();
         }
 
         ApplyGravityAlways(dt);
         MoveAndSlide();
+
+        if (_airTime < 0.25f)
+            _sword.HitCheck();
 
         if (!IsOnFloor()) _airTime += (float)dt;
         if (!_leftGround && !IsOnFloor()) _leftGround = true;
@@ -1119,6 +1128,7 @@ public partial class Boss : CharacterBody2D {
             Change(State.Fall);
 
         if (_colliderReenabledMidair && IsOnFloor()) {
+            _sword.DisableHitbox();
             SpawnShockwaves(); // <<< NEW
             Change(State.Recover);
             _stateTimer = SlamRecover;

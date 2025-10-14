@@ -25,6 +25,9 @@ public partial class GlobalRoomChange : Node {
 
 	private Node _lastScene;
 
+	public static string LastExitName = "";
+	public static string LastExitRoom = "";
+
 	// --------------------------------------------------------------------
 	// C# event (replaces [Signal])
 	// --------------------------------------------------------------------
@@ -159,4 +162,29 @@ public partial class GlobalRoomChange : Node {
 				break;
 		}
 	}
+	public static void SetRespawnToLastExit(Node scene) {
+		if (string.IsNullOrEmpty(LastExitName))
+			return;
+
+		var door = scene.GetNodeOrNull<DoorArea2D>(LastExitName);
+		if (door != null)
+			PlayerPos = door.PlayerPos;
+	}
+
+	public static Vector2 FindNearestDoor(Node scene, Vector2 deathPos) {
+		float minDist = float.MaxValue;
+		Vector2 closest = deathPos;
+
+		foreach (Node child in scene.GetChildren()) {
+			if (child is DoorArea2D door) {
+				float dist = door.GlobalPosition.DistanceTo(deathPos);
+				if (dist < minDist) {
+					minDist = dist;
+					closest = door.PlayerPos;
+				}
+			}
+		}
+		return closest;
+	}
+
 }
