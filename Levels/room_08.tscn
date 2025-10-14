@@ -236,7 +236,7 @@ tile_map_data = PackedByteArray("AADY/wIAAgACAAgAAADg/wIAAgACAAgAAADu/wIAAgACAAg
 tile_set = SubResource("TileSet_41axe")
 
 [node name="Player" parent="." instance=ExtResource("4_ohfrj")]
-position = Vector2(136, -113)
+position = Vector2(-6235, -121)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -331,7 +331,8 @@ position = Vector2(239.5, -127.5)
 shape = SubResource("RectangleShape2D_1blrs")
 
 [node name="LeftExit" parent="." instance=ExtResource("7_8visx")]
-ConnectedRoom = "res://Levels/room_08.tscn"
+ConnectedRoom = "res://Levels/room_09.tscn"
+PlayerPos = Vector2(396, -109)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-6373, -129)

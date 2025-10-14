@@ -8,12 +8,15 @@ public partial class CrumbleFloor : Node2D {
 	private AudioStreamPlayer2D breakSound;
 
 	[Export] public float breakTime = 1.0f;
+	[Export] public string FloorID = "room_xx_floor_xx";
 
 	public override void _Ready() {
 		collider = GetNode<Area2D>("PlayerCollider");
 		animator = GetNode<AnimationPlayer>("AnimationPlayer");
 		breakTimer = GetNode<Timer>("BreakTime");
 		breakSound = GetNode<AudioStreamPlayer2D>("Audio/BreakSound");
+		
+		if(GlobalRoomChange.IsWallBroken(FloorID)) QueueFree();
 
 		collider.BodyEntered += OnBodyEntered;
 	}
@@ -29,7 +32,8 @@ public partial class CrumbleFloor : Node2D {
 		GD.Print(player);
 		breakTimer.Start(breakTime);
 		player.HoldPlayer(breakTime);
-		breakSound.Play(); // ✅ plays crumble SFX
+		breakSound.Play();
+		GlobalRoomChange.MarkWallBroken(FloorID);
 		await ToSignal(breakTimer, Timer.SignalName.Timeout);
 		QueueFree();
 	}
