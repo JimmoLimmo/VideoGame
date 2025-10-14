@@ -12,7 +12,7 @@ public partial class MusicManager : Node {
     {
         { BgmTrack.Title,     "res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" },
         { BgmTrack.Overworld, "res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" },
-        // { BgmTrack.Boss,   "res://" },
+        { BgmTrack.Boss,   "res://Audio/Music/S61-216 Hollow Knight.wav" },
     };
 
     private AudioStreamPlayer _a, _b, _active, _inactive;

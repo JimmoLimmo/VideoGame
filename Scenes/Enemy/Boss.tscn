@@ -1,8 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://u5ti17mobc8c"]
+[gd_scene load_steps=13 format=3 uid="uid://u5ti17mobc8c"]
 
 [ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
 [ext_resource type="PackedScene" uid="uid://shockwave" path="res://Scenes/Enemy/Shockwave.tscn" id="2_ghr8m"]
 [ext_resource type="Texture2D" uid="uid://csw4j11liypac" path="res://PlayerCharacter_MockUp.png" id="2_okvah"]
+[ext_resource type="AudioStream" uid="uid://ckahw3jbohypt" path="res://Audio/SFX/hollow_knight_self_stab_prepare.wav" id="4_ykrhc"]
+[ext_resource type="AudioStream" uid="uid://cwv4gk3ni0usg" path="res://Audio/SFX/mage_knight_dash.wav" id="5_frr2l"]
+[ext_resource type="AudioStream" uid="uid://cbffhh8o3y85k" path="res://Audio/SFX/jump_out_of_snow.wav" id="6_us8nl"]
+[ext_resource type="AudioStream" uid="uid://uox8hgc43ji0" path="res://Audio/SFX/hollow_knight_bulging_start_scream.wav" id="7_kmfwt"]
+[ext_resource type="AudioStream" uid="uid://bnl0h0wtbayi3" path="res://Audio/SFX/Fknight_hit_02.wav" id="8_usne3"]
+[ext_resource type="AudioStream" uid="uid://dr514cs52fp5b" path="res://Audio/SFX/hollow_knight_scream_distant.wav" id="9_rkgoy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_okvah"]
 radius = 77.0
@@ -48,10 +54,8 @@ position = Vector2(-4, -8)
 shape = SubResource("CapsuleShape2D_ghr8m")
 
 [node name="BloodEmitter" type="CPUParticles2D" parent="."]
-visible = false
 
 [node name="SparkEmitter" type="CPUParticles2D" parent="."]
-visible = false
 
 [node name="ShockwaveSpawnLeft" type="Marker2D" parent="."]
 position = Vector2(-180, 112.835)
@@ -62,3 +66,31 @@ position = Vector2(180, 112.835)
 [node name="MateriaTimer" type="Timer" parent="."]
 wait_time = 0.15
 one_shot = true
+
+[node name="SFX_Slash" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_ykrhc")
+volume_db = 24.0
+
+[node name="SFX_Dash" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_frr2l")
+volume_db = 24.0
+
+[node name="SFX_Uppercut" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_ykrhc")
+volume_db = 24.0
+
+[node name="SFX_Leap" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_us8nl")
+volume_db = 24.0
+
+[node name="SFX_Roar" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_kmfwt")
+volume_db = 24.0
+
+[node name="SFX_Hurt" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_usne3")
+volume_db = 24.0
+
+[node name="SFX_Death" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_rkgoy")
+volume_db = 24.0

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cdk687jok4nwj"
+path="res://.godot/imported/S61-216 Hollow Knight.wav-43ed65a02609d916baa54e04e43118bb.sample"
+
+[deps]
+
+source_file="res://Audio/Music/S61-216 Hollow Knight.wav"
+dest_files=["res://.godot/imported/S61-216 Hollow Knight.wav-43ed65a02609d916baa54e04e43118bb.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=2
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
