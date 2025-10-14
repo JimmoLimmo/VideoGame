@@ -25,6 +25,7 @@ public partial class CrumbleFloor : Node2D {
 	}
 	
 	private async void handleBreak(Player player) {
+		GD.Print(player);
 		breakTimer.Start(breakTime);
 		player.HoldPlayer(breakTime);
 		await ToSignal(breakTimer, Timer.SignalName.Timeout);

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_6rrfu"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_eqk5l"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_emd5a"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/Player.tscn" id="3_emd5a"]
 [ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="4_pvlks"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="6_p6njx"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="9_6v2ye"]
@@ -272,12 +272,18 @@ sources/2 = SubResource("TileSetAtlasSource_3u35w")
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3iqsu"]
 texture = ExtResource("6_p6njx")
 texture_region_size = Vector2i(128, 128)
-6:7/size_in_atlas = Vector2i(2, 1)
 6:7/0 = 0
-6:7/0/texture_origin = Vector2i(-64, 0)
-6:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -42, 191, -43, 192, 64, -64, 64)
+6:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -38, 64, -39, 64, 64, -64, 57)
+7:7/0 = 0
+7:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -38, 64, -39, 64, 64, -64, 57)
+8:7/0 = 0
+8:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-46, -37, 0, -54, 45, -35, 54, 9, 50, 64, -49, 64, -56, 8)
+8:9/0 = 0
+8:9/0/physics_layer_0/polygon_0/points = PackedVector2Array(-49, -64, 48, -64, 48, 64, -49, 64)
+8:8/0 = 0
+8:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-49, -64, 48, -64, 48, 64, -49, 64)
 
-[sub_resource type="TileSet" id="TileSet_kum27"]
+[sub_resource type="TileSet" id="TileSet_3u35w"]
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
@@ -376,7 +382,7 @@ tile_map_data = PackedByteArray("AAAEABgAAgACAAgAAAAHABoAAgACAAgAAAAFAA8AAgACAAg
 tile_set = SubResource("TileSet_si834")
 
 [node name="Player" parent="." instance=ExtResource("3_emd5a")]
-position = Vector2(3515, 381)
+position = Vector2(-189, 2198)
 hasSword = true
 
 [node name="MechMosquito" parent="." instance=ExtResource("12_3iqsu")]
@@ -404,8 +410,8 @@ tile_map_data = PackedByteArray("AAD+/wAAAgAAAAAAAAAAAAAAAgAFAAAAAAACAAAAAgAFAAA
 tile_set = SubResource("TileSet_si834")
 
 [node name="Damage" type="TileMapLayer" parent="MidTiles"]
-tile_map_data = PackedByteArray("AAAKABMAAAAGAAcAAAAMABMAAAAGAAcAAAAPABMAAAAGAAcAAAARABMAAAAGAAcAAAATABMAAAAGAAcAAAAVABMAAAAGAAcAAAAXABMAAAAGAAcAAAAaABMAAAAGAAcAAAAcABMAAAAGAAcAAAA=")
-tile_set = SubResource("TileSet_kum27")
+tile_map_data = PackedByteArray("AAAKABIAAAAIAAcAAAALABEAAAAIAAcAAAAKABMAAAAIAAgAAAALABIAAAAIAAgAAAALABMAAAAIAAkAAAAMABIAAAAIAAcAAAAMABMAAAAIAAkAAAAPABIAAAAIAAcAAAAXABIAAAAIAAcAAAAQABMAAAAIAAcAAAARABMAAAAIAAcAAAASABMAAAAIAAcAAAATABMAAAAIAAcAAAAUABMAAAAIAAcAAAAVABMAAAAIAAcAAAAWABMAAAAIAAcAAAAXABMAAAAIAAgAAAAPABMAAAAIAAgAAAAcABEAAAAIAAcAAAAbABEAAAAIAAcAAAAaABIAAAAIAAcAAAAdABIAAAAIAAcAAAAaABMAAAAIAAkAAAAbABMAAAAIAAkAAAAbABIAAAAIAAgAAAAcABMAAAAIAAgAAAAcABIAAAAIAAkAAAAdABMAAAAIAAkAAAA=")
+tile_set = SubResource("TileSet_3u35w")
 
 [node name="DetailFront" type="TileMapLayer" parent="MidTiles"]
 tile_map_data = PackedByteArray("AAAJABYAAgAFAAcAAAAGAAgAAgAFAAcAAAAMAAgAAgAFAAcAAAAQAAIAAgAFAAcAAAAbAPr/AgAFAAcAAAAZAPr/AgAFAAcAAAAFABUAAgAFAAcAAAAHABYAAgAEAAcAAAAEABUAAgAEAAcAAAAFAAgAAgAEAAcAAAALAAgAAgAEAAcAAAAYAPr/AgAEAAcAAAAaAPr/AgAEAAcAAAA=")
@@ -523,7 +529,7 @@ shape = SubResource("RectangleShape2D_1h5ho")
 [node name="LeftMiddleExit" parent="." instance=ExtResource("9_6v2ye")]
 position = Vector2(-87, 2141)
 ConnectedRoom = "res://Levels/room_07.tscn"
-PlayerPos = Vector2(5926, -148)
+PlayerPos = Vector2(528, -107)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftMiddleExit"]
 position = Vector2(-200, -29)
@@ -553,6 +559,7 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light3" type="PointLight2D" parent="Lighting"]
+visible = false
 position = Vector2(-351, 2114.31)
 rotation = 3.14159
 scale = Vector2(10.4947, 6.02991)

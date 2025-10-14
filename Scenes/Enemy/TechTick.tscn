@@ -52,6 +52,8 @@ size = Vector2(4, 4)
 
 [node name="TechTick" type="CharacterBody2D" groups=["enemies"]]
 scale = Vector2(0.75, 0.75)
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_mw074")
 MaxHealth = 30
 Speed = 50.0

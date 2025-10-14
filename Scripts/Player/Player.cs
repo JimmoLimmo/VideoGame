@@ -146,8 +146,9 @@ public partial class Player : CharacterBody2D {
 			HandleJump();
 			HandleDashInput();
 			HandleAttack(delta);
-			HandleAnimations();
 		}
+		
+		HandleAnimations();
 
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
@@ -263,8 +264,7 @@ public partial class Player : CharacterBody2D {
 	}
 
 	private void StartDash(Vector2 direction) {
-		if (direction == Vector2.Zero)
-			direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
+		direction = sprites.Scale.X < 0 ? Vector2.Left : Vector2.Right;
 
 		_isDashing = true;
 		_dashTimer = DashDuration;
@@ -315,7 +315,10 @@ public partial class Player : CharacterBody2D {
 			nextAnimation = ("Stagger");
 		} else if(_isDashing) {
 			if(Velocity.Y < 0) nextAnimation = "Jump";
-			else nextAnimation = "Dash";
+			else if (lastAnimation != "Dash") {
+				nextAnimation = "Dash";
+				
+			}
 		} else if(_isWallSliding) {
 			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
@@ -520,6 +523,7 @@ public partial class Player : CharacterBody2D {
 
 	public async void HoldPlayer(float time) {
 		holdPlayer = true;
+		GD.Print("HOLDING");
 
 		await ToSignal(GetTree().CreateTimer(time), SceneTreeTimer.SignalName.Timeout);
 		holdPlayer = false;
