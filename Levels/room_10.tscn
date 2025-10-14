@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://c7fvywixt2cyf"]
+[gd_scene load_steps=35 format=4 uid="uid://cb0f77dgrked4"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_jsgsb"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_1vl50"]
@@ -296,7 +296,6 @@ texture = SubResource("GradientTexture2D_il8a8")
 visible = false
 position = Vector2(0, 1024)
 breakTime = 0.5
-FloorID = "room_09_floor_02"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor2"]
 position = Vector2(-869, 673)
@@ -308,7 +307,6 @@ texture = SubResource("GradientTexture2D_la440")
 visible = false
 position = Vector2(-1664, 0)
 breakTime = 0.5
-FloorID = "room_09_floor_01"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor"]
 position = Vector2(779.01, 671.238)
@@ -332,8 +330,8 @@ scale = Vector2(1.9425, 3.36786)
 texture = SubResource("GradientTexture2D_m7gmx")
 
 [node name="LeftExit" parent="." instance=ExtResource("8_0qgqw")]
-ConnectedRoom = "res://Levels/room_08.tscn"
-PlayerPos = Vector2(-6261, -115)
+ConnectedRoom = "res://Levels/room_09.tscn"
+PlayerPos = Vector2(421, 2195)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-227, -127)
