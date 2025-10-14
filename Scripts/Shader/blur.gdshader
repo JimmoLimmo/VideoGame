@@ -13,14 +13,14 @@ void fragment() {
 	vec2 uv = SCREEN_UV;
 	float blur = blur_power * 0.05;
 	vec4 sum = vec4(0.0);
-	
+
 	for(float i = 0.0; i < iterations; i++) {
 		vec2 circle = vec2(cos(TAU * i / iterations), sin(TAU * i / iterations));
 		float noise = hash12(vec2(i, uv.x + uv.y)) + blur;
 		vec2 shift = circle * blur * noise;
 		sum += texture(screen_texture, uv + shift);
 	}
-	
+
 	sum /= iterations;
 	COLOR = vec4(sum.rgb, sum.a);
 }
