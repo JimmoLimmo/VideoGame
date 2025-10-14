@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmrx72adb6qla"]
+[gd_scene load_steps=14 format=3 uid="uid://bmrx72adb6qla"]
 
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_d6asn"]
 [ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_jc7cj"]
+[ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_yo5wu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jc7cj"]
 size = Vector2(256, 37)
@@ -197,3 +198,8 @@ region_rect = Rect2(0, 897, 256, 127)
 libraries = {
 &"": SubResource("AnimationLibrary_4cr11")
 }
+
+[node name="BoomSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_yo5wu")
+volume_db = 24.0
+bus = &"SFX"
