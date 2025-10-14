@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public enum RoomGroup { Title, Overworld, Boss }
+public enum RoomGroup { Title, Overworld, Boss, Credits }
 
 public partial class GlobalRoomChange : Node {
 	// --------------------------------------------------------------------
@@ -117,6 +117,8 @@ public partial class GlobalRoomChange : Node {
 			return RoomGroup.Title;
 		if (path.Contains("boss") || name.Contains("boss"))
 			return RoomGroup.Boss;
+		if (path.Contains("credits") || name.Contains("credits"))
+			return RoomGroup.Credits;
 
 		return RoomGroup.Overworld;
 	}
