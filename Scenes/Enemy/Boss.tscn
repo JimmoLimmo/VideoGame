@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://u5ti17mobc8c"]
+[gd_scene load_steps=14 format=3 uid="uid://u5ti17mobc8c"]
 
 [ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
 [ext_resource type="PackedScene" uid="uid://shockwave" path="res://Scenes/Enemy/Shockwave.tscn" id="2_ghr8m"]
@@ -13,6 +13,9 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_okvah"]
 radius = 77.0
 height = 354.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykrhc"]
+size = Vector2(16.4218, 42.0263)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0puiv"]
 radius = 86.0
@@ -38,6 +41,14 @@ position = Vector2(0, -1)
 texture = ExtResource("2_okvah")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Sword" type="Area2D" parent="."]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
+position = Vector2(119, -9)
+scale = Vector2(7.995, 7.995)
+shape = SubResource("RectangleShape2D_ykrhc")
 
 [node name="Hitbox" type="Area2D" parent="."]
 position = Vector2(-1, 2)

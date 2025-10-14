@@ -9,6 +9,9 @@ public partial class Player : CharacterBody2D {
 	[Export] public float Speed = 700.0f;
 	[Export] public float JumpVelocity = -1250.0f;
 	[Export] public float fallAcceleration = 2.5f;
+	private float _doorGraceTimer = 0f;
+	public bool CanUseDoors => _doorGraceTimer <= 0f;
+
 
 	// Heal Settings (Hollow Knight style)
 	private float _healTimer = 0f;
@@ -178,6 +181,10 @@ public partial class Player : CharacterBody2D {
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
 		UpdateHitstun(delta);
+
+		if (_doorGraceTimer > 0f)
+			_doorGraceTimer -= (float)delta;
+
 	}
 
 	private void UpdateInvulnerability(double delta) {
@@ -518,6 +525,12 @@ public partial class Player : CharacterBody2D {
 		_anim.Play("Dead");
 		SetPhysicsProcess(false);
 		_anim.Connect("animation_finished", new Callable(this, nameof(OnDeathAnimationFinished)));
+
+		var gameOver = GetTree().Root.GetNodeOrNull<GameOverMenu>("/root/GameOverMenu");
+		if (gameOver != null)
+			gameOver.ShowGameOver();
+		else
+			GetTree().Paused = true;
 	}
 
 	private void OnDeathAnimationFinished(string animName) {
@@ -593,4 +606,9 @@ public partial class Player : CharacterBody2D {
 		GlobalRoomChange.mana = _mana;
 		return true;
 	}
+
+	public void BeginDoorGrace(float duration = 0.5f) {
+		_doorGraceTimer = duration;
+	}
+
 }

@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://7r4yxsapuvjr"]
+
+[ext_resource type="Script" path="res://Scripts/Player/ThrowableSword.cs" id="1_ts"]
+[ext_resource type="Texture2D" uid="uid://duith60v2w8n1" path="res://Sprites/Player/Claw_SpriteSheet.png" id="2_claw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(20, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(20, 8)
+
+[node name="ThrowableSword" type="RigidBody2D"]
+collision_layer = 2
+mass = 0.1
+gravity_scale = 0.0
+script = ExtResource("1_ts")
+Damage = null
+MaxRange = null
+ThrowSpeed = null
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_claw")
+hframes = 4
+vframes = 4
+frame = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_2")
