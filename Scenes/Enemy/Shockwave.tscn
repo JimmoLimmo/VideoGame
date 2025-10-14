@@ -15,4 +15,5 @@ shape = SubResource("1_cshape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -4)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_naly6")
