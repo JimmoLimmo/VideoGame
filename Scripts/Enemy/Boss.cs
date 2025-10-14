@@ -565,6 +565,8 @@ public partial class Boss : CharacterBody2D {
 
     private Marker2D _spawnLeft;
     private Marker2D _spawnRight;
+    private BossSword _sword;
+
 
 
     // ========================= Internals =========================
@@ -664,6 +666,7 @@ public partial class Boss : CharacterBody2D {
         if (_player == null || _spriteRoot == null) return;
         bool faceLeft = _playerPos.X < GlobalPosition.X;
         _spriteRoot.Scale = new Vector2(faceLeft ? 1 : -1, 1);
+        _sword?.SetFacingLeft(faceLeft);
     }
 
     private int FacingDir() => (_spriteRoot?.Scale.X ?? 1f) == 1f ? -1 : 1; // 1=right, -1=left mapping
@@ -719,6 +722,8 @@ public partial class Boss : CharacterBody2D {
 
         _anim = GetNodeOrNull<AnimationPlayer>("SpriteRoot/AnimationPlayer")
              ?? GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+
+        _sword = GetNode<BossSword>("Sword");
 
         _spriteRoot = GetNodeOrNull<Node2D>("SpriteRoot") ?? this;
         _sprite = GetNodeOrNull<Sprite2D>("SpriteRoot/Sprite2D");
@@ -1042,6 +1047,8 @@ public partial class Boss : CharacterBody2D {
             float speed = SlashSlideSpeed * (Enraged ? 1.15f : 1f);
             int dir = FacingDir();
             Velocity = new Vector2(dir * speed, 0);
+            _sword.EnableHitbox();
+            _sword.HitCheck();
             _stateTimer = 0.18f * (Enraged ? 1.05f : 1f); // active slide window
         }
 
@@ -1050,6 +1057,7 @@ public partial class Boss : CharacterBody2D {
 
         _stateTimer -= (float)dt;
         if (_stateTimer <= 0f) {
+            _sword.DisableHitbox();
             Change(State.Recover);
             _stateTimer = 0.18f;
         }
