@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="12_2nqbu"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="12_3iqsu"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
+=======
+[ext_resource type="PackedScene" uid="uid://xihmn3r0vjgr" path="res://Scenes/UI/CollectionOverlay.tscn" id="14_qf33d"]
+>>>>>>> Aidan
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="15_2cv0m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2a0kd"]
@@ -568,6 +571,8 @@ texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="ScreenFade" parent="." instance=ExtResource("12_2nqbu")]
 
+=======
+>>>>>>> Aidan
 [node name="CollectionOverlay" parent="." instance=ExtResource("14_qf33d")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

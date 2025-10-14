@@ -23,7 +23,19 @@ public partial class NewGameBtn : Button {
 		ReleaseFocus();
 		Disabled = true;
 
-		var tree = GetTree();
+// IMPORTANT: Reset save data for new game
+		SaveManager.ResetToNewGame(true);
+		
+		// Reset GlobalRoomChange state for new game  
+		GlobalRoomChange.Activate = false;
+		GlobalRoomChange.hasSword = false;
+		GlobalRoomChange.hasDash = false;
+		GlobalRoomChange.hasWalljump = false;
+		GlobalRoomChange.hasClawTeleport = false;
+		GlobalRoomChange.health = 5;
+		GlobalRoomChange.mana = 0;
+
+var tree = GetTree();
 		var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
 		if (fader != null)
 			await fader.FadeOut(0.4f);

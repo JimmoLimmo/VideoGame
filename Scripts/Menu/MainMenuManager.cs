@@ -4,32 +4,40 @@ using System.Collections.Generic;
 using System.Linq;
 
 public partial class MainMenuManager : Control {
-    List<int> goBackList = new();
+List<int> goBackList = new();
 
-    public override void _Ready() {
-        var first = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/NewGameBtn");
-        if (first != null)
-            first.GrabFocus();
-        else
-            GD.PushWarning("[MainMenuManager] StartGameBtn not found — check node path.");
-    }
+	public override void _Ready() {
+		// Defer the focus grab to ensure all nodes are fully initialized
+		CallDeferred(nameof(SetInitialFocus));
+	}
 
-    public void swapMenu(int menuIndex, int returnIndex) {
-        if (GetChild(menuIndex) is MenuTab menuTab)
-            menuTab.Visible = true;
+	private void SetInitialFocus() {
+		// Try both possible node paths for different menu structures
+		var first = GetNodeOrNull<Button>("CenterContainer/VBoxContainer/NewGameBtn") ?? 
+				   GetNodeOrNull<Button>("MenuTab/VBoxContainer/StartGameBtn");
+				   
+		if (first != null)
+			first.GrabFocus();
+		else
+			GD.PushWarning("[MainMenuManager] Neither NewGameBtn nor StartGameBtn found — check node path.");
+	}
 
-        if (returnIndex < 0) return;
-        goBackList.Add(returnIndex);
-    }
+	public void swapMenu(int menuIndex, int returnIndex) {
+		if (GetChild(menuIndex) is MenuTab menuTab)
+			menuTab.Visible = true;
 
-    public void swapMenuToPrevious() {
-        if (!goBackList.Any()) return;
-        swapMenu(goBackList[^1], -1);
-        goBackList.RemoveAt(goBackList.Count - 1);
-    }
+		if (returnIndex < 0) return;
+		goBackList.Add(returnIndex);
+	}
 
-    public void onSwapScene(PackedScene loadScene) {
-        GetTree().Root.AddChild(loadScene.Instantiate());
-        QueueFree();
-    }
+	public void swapMenuToPrevious() {
+		if (!goBackList.Any()) return;
+		swapMenu(goBackList[^1], -1);
+		goBackList.RemoveAt(goBackList.Count - 1);
+	}
+
+	public void onSwapScene(PackedScene loadScene) {
+		GetTree().Root.AddChild(loadScene.Instantiate());
+		QueueFree();
+	}
 }

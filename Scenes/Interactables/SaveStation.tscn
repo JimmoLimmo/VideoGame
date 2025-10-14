@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://savestation"]
+
+[ext_resource type="Script" path="res://Scripts/Menu/SaveStation.cs" id="1_ss"]
+[ext_resource type="Texture2D" uid="uid://bjmaqt0ehgdby" path="res://Sprites/Interactables/Lamp.png" id="2_lamp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(32, 48)
+
+[node name="SaveStation" type="CharacterBody2D"]
+script = ExtResource("1_ss")
+SavedFrame = 1
+IdleFrame = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_lamp")
+hframes = 2
+frame = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Detector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detector"]
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_1")
