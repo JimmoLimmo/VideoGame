@@ -352,7 +352,7 @@ public partial class Boss : CharacterBody2D {
 		}
 		else {
 			nextGearAnimation = "Idle";
-			nextBossAnimation = "Idle";
+			nextBossAnimation = "Walk";
 		}
 
 		if (gearAnimate.CurrentAnimation != nextGearAnimation && nextGearAnimation != "") {
@@ -807,7 +807,7 @@ public partial class Boss : CharacterBody2D {
 			Change(State.Die_2);
 	}
 
-	private void S_Die2(double dt) {
+	private async void S_Die2(double dt) {
 		if (_stateNew) {
 			_col?.SetDeferred("disabled", true);
 			_hurtbox?.SetDeferred("monitoring", false);
@@ -817,11 +817,12 @@ public partial class Boss : CharacterBody2D {
 			SetProcess(false);
 
 			// Spawn credits trigger pickup
-			var triggerScene = GD.Load<PackedScene>("res://Scenes/Level/CredditsTrigger.tscn");
-			var trigger = triggerScene.Instantiate<Area2D>();
-			trigger.GlobalPosition = GlobalPosition; ;
+			await ToSignal(_sfxDeath, AudioStreamPlayer2D.SignalName.Finished);
+			var triggerScene = GD.Load<PackedScene>("res://Scenes/Level/CreditsTriggerNode.tscn");
+			var trigger = triggerScene.Instantiate<Node2D>();
+			trigger.GlobalPosition = new Vector2(1019.0f, 700.0f);
 			GetTree().CurrentScene.AddChild(trigger);
-
+			QueueFree();
 		}
 	}
 

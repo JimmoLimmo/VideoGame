@@ -6,9 +6,12 @@ public partial class CreditsTrigger : Area2D {
 	[Export] public AudioStreamPlayer2D PickupSound;
 
 	private bool _activated = false;
+	private AnimationPlayer animator;
 
 	public override void _Ready() {
+		animator = GetNode<AnimationPlayer>("AnimationPlayer");
 		BodyEntered += OnBodyEntered;
+		animator.Play("Float");
 	}
 
 	private async void OnBodyEntered(Node body) {

@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://831fmhc36r3h"]
+[gd_scene load_steps=7 format=3 uid="uid://bhld8l2xanpyo"]
 
-[ext_resource type="Script" uid="uid://dl36pcgy56ktv" path="res://Scenes/Level/CreditsTrigger.cs" id="1_21g3f"]
-[ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="2_r0ghh"]
+[ext_resource type="Script" uid="uid://dl36pcgy56ktv" path="res://Scenes/Level/CreditsTrigger.cs" id="1_ott22"]
+[ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="2_2m7a6"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_pct48"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_vta3k"]
 radius = 49.2187
 
 [sub_resource type="Animation" id="Animation_2knnt"]
@@ -45,17 +45,19 @@ _data = {
 &"RESET": SubResource("Animation_lybio")
 }
 
-[node name="CredditsTrigger" type="Area2D"]
-script = ExtResource("1_21g3f")
+[node name="CreditsTriggerNode" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="CreditsTrigger" type="Area2D" parent="."]
+script = ExtResource("1_ott22")
+
+[node name="Sprite2D" type="Sprite2D" parent="CreditsTrigger"]
 position = Vector2(0, -1)
-texture = ExtResource("2_r0ghh")
+texture = ExtResource("2_2m7a6")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_pct48")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CreditsTrigger"]
+shape = SubResource("CircleShape2D_vta3k")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CreditsTrigger"]
 libraries = {
 &"": SubResource("AnimationLibrary_t8i6m")
 }

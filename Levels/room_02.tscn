@@ -23,7 +23,7 @@ shader = ExtResource("2_beo6d")
 shader_parameter/blur_power = 0.08
 shader_parameter/iterations = 100.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vyb1j"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_beo6d"]
 texture = ExtResource("4_vyb1j")
 texture_region_size = Vector2i(128, 128)
 0:2/0 = 0
@@ -128,7 +128,7 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_ma60x"]
 tile_size = Vector2i(128, 128)
-sources/2 = SubResource("TileSetAtlasSource_vyb1j")
+sources/2 = SubResource("TileSetAtlasSource_beo6d")
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_o1q8o"]
 polygon = PackedVector2Array(-64, -64, 192, -64, 192, 192, -64, 192)
@@ -279,7 +279,7 @@ gradient = SubResource("Gradient_vyb1j")
 fill_from = Vector2(0, 1)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ea4ct"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vyb1j"]
 texture = ExtResource("5_ma60x")
 texture_region_size = Vector2i(128, 128)
 0:4/0 = 0
@@ -319,7 +319,7 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_2s52b"]
 tile_size = Vector2i(128, 128)
-sources/0 = SubResource("TileSetAtlasSource_ea4ct")
+sources/0 = SubResource("TileSetAtlasSource_vyb1j")
 
 [sub_resource type="Gradient" id="Gradient_ea4ct"]
 offsets = PackedFloat32Array(0.0188679, 1)

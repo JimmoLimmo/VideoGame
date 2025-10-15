@@ -1,9 +1,10 @@
-[gd_scene load_steps=24 format=3 uid="uid://u5ti17mobc8c"]
+[gd_scene load_steps=29 format=3 uid="uid://u5ti17mobc8c"]
 
 [ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
 [ext_resource type="PackedScene" uid="uid://shockwave" path="res://Scenes/Enemy/Shockwave.tscn" id="2_ghr8m"]
 [ext_resource type="Texture2D" uid="uid://bvv274oq3t32j" path="res://Sprites/Enemies/UnhappyFrog_SpriteSheet.png" id="3_frr2l"]
 [ext_resource type="Script" uid="uid://dt7q8jvr5huvt" path="res://Scripts/Enemy/BossSword.cs" id="4_frr2l"]
+[ext_resource type="Texture2D" uid="uid://rqic5ar3smsu" path="res://Sprites/Enemies/UnhappyFrog_Attack_SpriteSheet.png" id="4_us8nl"]
 [ext_resource type="AudioStream" uid="uid://ckahw3jbohypt" path="res://Audio/SFX/hollow_knight_self_stab_prepare.wav" id="4_ykrhc"]
 [ext_resource type="AudioStream" uid="uid://cwv4gk3ni0usg" path="res://Audio/SFX/mage_knight_dash.wav" id="5_frr2l"]
 [ext_resource type="AudioStream" uid="uid://cbffhh8o3y85k" path="res://Audio/SFX/jump_out_of_snow.wav" id="6_us8nl"]
@@ -169,6 +170,146 @@ _data = {
 &"RESET": SubResource("Animation_4mmex")
 }
 
+[sub_resource type="Animation" id="Animation_rkgoy"]
+resource_name = "Idle"
+length = 0.0833375
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Arm:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [14]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Arm:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteRoot/Swing:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_w78de"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Arm:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [14]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Arm:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteRoot/Swing:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SpriteRoot/Swing:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_7sdn3"]
+resource_name = "Swing"
+length = 0.416671
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Arm:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.416667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Swing:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpriteRoot/Swing:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.416667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7sdn3"]
+_data = {
+&"Idle": SubResource("Animation_rkgoy"),
+&"RESET": SubResource("Animation_w78de"),
+&"Swing": SubResource("Animation_7sdn3")
+}
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykrhc"]
 size = Vector2(16.4218, 42.0263)
 
@@ -202,6 +343,11 @@ hframes = 7
 vframes = 3
 frame = 7
 
+[node name="Swing" type="Sprite2D" parent="SpriteRoot"]
+position = Vector2(541, 3)
+texture = ExtResource("4_us8nl")
+hframes = 5
+
 [node name="Body" type="Sprite2D" parent="SpriteRoot"]
 texture = ExtResource("3_frr2l")
 hframes = 7
@@ -215,6 +361,11 @@ libraries = {
 [node name="GearAnimation" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_w78de")
+}
+
+[node name="AttackAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_7sdn3")
 }
 
 [node name="Sword" type="Area2D" parent="."]

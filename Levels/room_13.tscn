@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://f7m471empmj8"]
+[gd_scene load_steps=35 format=4 uid="uid://dqcliyr6wbhoi"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_cjj1o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_tsv7c"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="6_tqt53"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="7_g2auc"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="8_uk2e3"]
-[ext_resource type="PackedScene" path="res://Scenes/Environment/FactoryCrusherSafe.tscn" id="9_rgbyj"]
+[ext_resource type="PackedScene" uid="uid://8eoje8g17g04" path="res://Scenes/Environment/FactoryCrusherSafe.tscn" id="9_rgbyj"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="10_tsv7c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g0h3y"]
