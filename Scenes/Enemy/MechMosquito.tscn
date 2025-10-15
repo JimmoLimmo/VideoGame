@@ -1,24 +1,81 @@
-[gd_scene load_steps=8 format=3 uid="uid://dajr1nqbjbtyb"]
+[gd_scene load_steps=12 format=3 uid="uid://dajr1nqbjbtyb"]
 
 [ext_resource type="Script" uid="uid://6wbco1f8d7ae" path="res://Scripts/Enemy/MechMosquito.cs" id="1_ajggc"]
-[ext_resource type="Texture2D" uid="uid://c3ujtkbyuw6xn" path="res://Sprites/Enemies/Mark_Mosquito.png" id="1_nst8m"]
+[ext_resource type="Texture2D" uid="uid://betqfeebqi15f" path="res://Sprites/Enemies/MechMosquito_SpriteSheet.png" id="2_nwvxj"]
 [ext_resource type="AudioStream" uid="uid://clwwdya4fluvb" path="res://Audio/SFX/sword_hit_reject.wav" id="3_nwvxj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_nst8m"]
 radius = 916.14
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ajggc"]
-radius = 24.0
-height = 110.0
+radius = 38.4007
+height = 185.12
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nwvxj"]
-radius = 38.8315
-height = 142.546
+radius = 55.02
+height = 216.933
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nst8m"]
 size = Vector2(4, 4)
 
+[sub_resource type="Animation" id="Animation_rh05c"]
+resource_name = "Fly"
+length = 0.333338
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_vw00c"]
+resource_name = "Dash"
+length = 0.06667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+
+[sub_resource type="Animation" id="Animation_7vq7n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w68l5"]
+_data = {
+&"Dash": SubResource("Animation_vw00c"),
+&"Fly": SubResource("Animation_rh05c"),
+&"RESET": SubResource("Animation_7vq7n")
+}
+
 [node name="MechMosquito" type="CharacterBody2D"]
+scale = Vector2(0.75, 0.75)
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_ajggc")
@@ -30,19 +87,21 @@ shape = SubResource("CircleShape2D_nst8m")
 debug_color = Color(0.865576, 0.782177, 0.246378, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_nst8m")
+texture = ExtResource("2_nwvxj")
 flip_h = true
+hframes = 4
+vframes = 2
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
-position = Vector2(-11, 22)
-rotation = 0.959931
+position = Vector2(5, -31)
+rotation = 0.715585
 shape = SubResource("CapsuleShape2D_ajggc")
 
 [node name="HitBox" type="Area2D" parent="."]
-rotation = 0.959931
+rotation = 0.715585
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
-position = Vector2(12.5312, 22.2029)
+position = Vector2(-17.1217, -28.8418)
 shape = SubResource("CapsuleShape2D_nwvxj")
 debug_color = Color(0.673059, 0.138718, 0.220696, 0.42)
 
@@ -84,6 +143,9 @@ initial_velocity_max = 628.0
 color = Color(1, 1, 0.356863, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_w68l5")
+}
 
 [node name="Hit" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_nwvxj")

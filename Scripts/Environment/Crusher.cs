@@ -48,7 +48,17 @@ public partial class Crusher : Node {
 			var overlaps = deathZone.GetOverlappingBodies();
 
 			foreach (PhysicsBody2D body in overlaps) {
-				if (body is Player player) {
+				if (body.IsInGroup("enemies")) {
+					if (body is TechTick tick) {
+						if (bodiesHit.Add(tick)) {
+							tick.Kill();
+						}
+					} else if (body is MechMosquito mosq) {
+						if (bodiesHit.Add(mosq)) {
+							mosq.Kill();
+						}
+					}
+				} else if (body is Player player) {
 					if (bodiesHit.Add(player)) {
 						player.Position = new Vector2(top.GlobalPosition.X, player.Position.Y);
 						player.areaHazard(deathZone);

@@ -108,4 +108,9 @@ public partial class TechTick : CharacterBody2D {
 		if (body is Player p)
 			p.ApplyHit(ContactDamage, GlobalPosition);
 	}
+	
+	public void Kill() {
+		_currentHealth = 0;
+		CheckDeath();
+	}
 }

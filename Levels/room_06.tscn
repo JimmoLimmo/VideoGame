@@ -255,7 +255,7 @@ tile_map_data = PackedByteArray("AAAqAAQAAgACAAgAAAAtAAYAAgACAAgAAAAuAAYAAgADAAg
 tile_set = SubResource("TileSet_3ikjv")
 
 [node name="Player" parent="." instance=ExtResource("4_kuq1f")]
-position = Vector2(6841, -176)
+position = Vector2(5412, 1258)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -302,7 +302,7 @@ RightLimitPath = NodePath("RightBound")
 position = Vector2(-856, 2.66667)
 
 [node name="RightBound" type="Marker2D" parent="TechTick"]
-position = Vector2(961.333, -6.66667)
+position = Vector2(1256, 5.33333)
 
 [node name="TechTick2" parent="." instance=ExtResource("12_6au6i")]
 position = Vector2(6386, -55)
