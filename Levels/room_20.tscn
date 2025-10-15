@@ -384,7 +384,7 @@ shape = SubResource("RectangleShape2D_k5trp")
 [node name="LeftExit" parent="." instance=ExtResource("7_uwnvm")]
 position = Vector2(-1, 0)
 ConnectedRoom = "res://Levels/room_21.tscn"
-PlayerPos = Vector2(551, -132)
+PlayerPos = Vector2(546, -4)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-8213, -191)

@@ -185,75 +185,94 @@ public partial class GlobalRoomChange : Node {
 	// ---- Checkpoint respawn helpers ----
 	public const string DefaultRoomPath = "res://Scenes/room_01.tscn";
 
-	public static string GetRespawnRoomPath() {
-		// Use the last collectable's room if we have one, else default to room_01
-		return HasCheckpoint && !string.IsNullOrEmpty(CheckpointRoom)
-			? CheckpointRoom
-			: DefaultRoomPath;
-	}
-	// public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
-	// 	if (loadedScene == null) return PlayerPos;
-	// 	var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
-	// 	return FindNearestDoor(loadedScene, refPos);
+	// public static string GetRespawnRoomPath() {
+	// 	// Use the last collectable's room if we have one, else default to room_01
+	// 	return HasCheckpoint && !string.IsNullOrEmpty(CheckpointRoom)
+	// 		? CheckpointRoom
+	// 		: DefaultRoomPath;
 	// }
-	public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
-		if (loadedScene == null)
-			return PlayerPos;
+	// // public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+	// // 	if (loadedScene == null) return PlayerPos;
+	// // 	var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
+	// // 	return FindNearestDoor(loadedScene, refPos);
+	// // }
+	// public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+	// 	if (loadedScene == null)
+	// 		return PlayerPos;
 
-		// Try to find a door that matches our last exit or checkpoint.
-		DoorArea2D bestDoor = null;
+	// 	// Try to find a door that matches our last exit or checkpoint.
+	// 	DoorArea2D bestDoor = null;
 
-		// 1. If we came from a door in another room, prefer the connected one.
-		if (!string.IsNullOrEmpty(LastExitRoom)) {
-			foreach (Node child in loadedScene.GetChildren()) {
-				if (child is DoorArea2D door) {
-					// Check if this door links back to the room we exited from
-					if (!string.IsNullOrEmpty(door.ConnectedRoom) &&
-						door.ConnectedRoom == LastExitRoom) {
-						bestDoor = door;
-						break;
-					}
-				}
-			}
+	// 	// 1. If we came from a door in another room, prefer the connected one.
+	// 	if (!string.IsNullOrEmpty(LastExitRoom)) {
+	// 		foreach (Node child in loadedScene.GetChildren()) {
+	// 			if (child is DoorArea2D door) {
+	// 				// Check if this door links back to the room we exited from
+	// 				if (!string.IsNullOrEmpty(door.ConnectedRoom) &&
+	// 					door.ConnectedRoom == LastExitRoom) {
+	// 					bestDoor = door;
+	// 					break;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+
+	// 	// 2. If no matching door found, find the *nearest* door to checkpoint position
+	// 	if (bestDoor == null) {
+	// 		var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
+	// 		float bestDist = float.MaxValue;
+
+	// 		void Search(Node node) {
+	// 			foreach (Node child in node.GetChildren()) {
+	// 				if (child is DoorArea2D door) {
+	// 					float dist = door.GlobalPosition.DistanceTo(refPos);
+	// 					if (dist < bestDist) {
+	// 						bestDist = dist;
+	// 						bestDoor = door;
+	// 					}
+	// 				}
+	// 				else if (child.GetChildCount() > 0)
+	// 					Search(child);
+	// 			}
+	// 		}
+
+	// 		Search(loadedScene);
+	// 	}
+
+	// 	// 3. If still none found, default to first door in scene
+	// 	if (bestDoor == null) {
+	// 		bestDoor = loadedScene.GetNodeOrNull<DoorArea2D>("DoorArea2D");
+	// 	}
+
+	// 	// 4. If no door exists at all, just use (0,0)
+	// 	if (bestDoor == null) {
+	// 		GD.PushWarning("[Respawn] No DoorArea2D found — falling back to origin (0,0).");
+	// 		return Vector2.Zero;
+	// 	}
+
+	// 	// Use the door’s assigned player position
+	// 	GD.Print($"[Respawn] Using door '{bestDoor.Name}' @ {bestDoor.PlayerPos}");
+	// 	return bestDoor.PlayerPos;
+	// }
+
+	public static string GetRespawnRoomPath() {
+		if (HasCheckpoint) {
+			GD.Print($"[Respawn] Returning checkpoint room: {CheckpointRoom}");
+			return CheckpointRoom;
 		}
 
-		// 2. If no matching door found, find the *nearest* door to checkpoint position
-		if (bestDoor == null) {
-			var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
-			float bestDist = float.MaxValue;
-
-			void Search(Node node) {
-				foreach (Node child in node.GetChildren()) {
-					if (child is DoorArea2D door) {
-						float dist = door.GlobalPosition.DistanceTo(refPos);
-						if (dist < bestDist) {
-							bestDist = dist;
-							bestDoor = door;
-						}
-					}
-					else if (child.GetChildCount() > 0)
-						Search(child);
-				}
-			}
-
-			Search(loadedScene);
-		}
-
-		// 3. If still none found, default to first door in scene
-		if (bestDoor == null) {
-			bestDoor = loadedScene.GetNodeOrNull<DoorArea2D>("DoorArea2D");
-		}
-
-		// 4. If no door exists at all, just use (0,0)
-		if (bestDoor == null) {
-			GD.PushWarning("[Respawn] No DoorArea2D found — falling back to origin (0,0).");
-			return Vector2.Zero;
-		}
-
-		// Use the door’s assigned player position
-		GD.Print($"[Respawn] Using door '{bestDoor.Name}' @ {bestDoor.PlayerPos}");
-		return bestDoor.PlayerPos;
+		GD.Print("[Respawn] No checkpoint found, using default room_01");
+		return DefaultRoomPath;
 	}
 
+	public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+		if (HasCheckpoint) {
+			GD.Print($"[Respawn] Using checkpoint position {CheckpointPos}");
+			return CheckpointPos + new Vector2(0, -120); // slight lift to avoid clipping
+		}
+
+		GD.Print("[Respawn] No checkpoint, fallback to 0,0");
+		return Vector2.Zero;
+	}
 
 }
