@@ -4,7 +4,7 @@
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
 [ext_resource type="PackedScene" uid="uid://76merjs60id2" path="res://Scenes/Environment/MediumGear.tscn" id="2_vi02f"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
-[ext_resource type="PackedScene" uid="uid://bl4mtdq514bn1" path="res://Scenes/Environment/BreakableDoor.tscn" id="4_dyub4"]
+[ext_resource type="PackedScene" path="res://Scenes/Environment/BreakableDoor.tscn" id="4_dyub4"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="PackedScene" uid="uid://c4l8w38r3nu8b" path="res://Scenes/Environment/BreakableWall.tscn" id="5_3n24a"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
