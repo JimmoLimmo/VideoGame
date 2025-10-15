@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://u5ti17mobc8c"]
+[gd_scene load_steps=15 format=3 uid="uid://u5ti17mobc8c"]
 
 [ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
 [ext_resource type="PackedScene" uid="uid://shockwave" path="res://Scenes/Enemy/Shockwave.tscn" id="2_ghr8m"]
 [ext_resource type="Texture2D" uid="uid://csw4j11liypac" path="res://PlayerCharacter_MockUp.png" id="2_okvah"]
+[ext_resource type="Script" uid="uid://dt7q8jvr5huvt" path="res://Scripts/Enemy/BossSword.cs" id="4_frr2l"]
 [ext_resource type="AudioStream" uid="uid://ckahw3jbohypt" path="res://Audio/SFX/hollow_knight_self_stab_prepare.wav" id="4_ykrhc"]
 [ext_resource type="AudioStream" uid="uid://cwv4gk3ni0usg" path="res://Audio/SFX/mage_knight_dash.wav" id="5_frr2l"]
 [ext_resource type="AudioStream" uid="uid://cbffhh8o3y85k" path="res://Audio/SFX/jump_out_of_snow.wav" id="6_us8nl"]
@@ -44,6 +45,7 @@ texture = ExtResource("2_okvah")
 
 [node name="Sword" type="Area2D" parent="."]
 monitoring = false
+script = ExtResource("4_frr2l")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
 position = Vector2(119, -9)

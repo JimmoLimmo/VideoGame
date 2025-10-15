@@ -1,11 +1,11 @@
 using Godot;
 using System.Collections.Generic;
 
-public enum RoomGroup { Title, Overworld, Boss, Credits }
+public enum RoomGroup { Title, Overworld, Boss, Credits, Ambiance }
 
 public partial class GlobalRoomChange : Node {
 	// --------------------------------------------------------------------
-	// Public static fields / properties
+	// Persistent Global Data
 	// --------------------------------------------------------------------
 	public static bool Activate { get; set; } = false;
 	public static Vector2 PlayerPos { get; set; } = new Vector2();
@@ -20,31 +20,32 @@ public partial class GlobalRoomChange : Node {
 	public static int maxMana = 9;
 	public static Dictionary<string, bool> destroyedWalls = new();
 
+	// Room / Group tracking
 	public static string CurrentRoom { get; private set; } = "";
 	public static RoomGroup CurrentGroup { get; private set; } = RoomGroup.Title;
-
 	private Node _lastScene;
 
 	public static string LastExitName = "";
 	public static string LastExitRoom = "";
 
+
+	public static string CheckpointRoom = "";
+	public static Vector2 CheckpointPos = Vector2.Zero;
+	public static bool HasCheckpoint => !string.IsNullOrEmpty(CheckpointRoom);
+
 	// --------------------------------------------------------------------
-	// C# event (replaces [Signal])
+	// Event
 	// --------------------------------------------------------------------
 	public delegate void RoomGroupChangedEventHandler(RoomGroup group);
 	public static event RoomGroupChangedEventHandler RoomGroupChanged;
 
 	// --------------------------------------------------------------------
-	// Node lifecycle
+	// Lifecycle
 	// --------------------------------------------------------------------
-	public override void _Ready() {
-		ProcessMode = Node.ProcessModeEnum.Always;
-	}
+	public override void _Ready() => ProcessMode = Node.ProcessModeEnum.Always;
 
 	public override void _Process(double delta) {
 		var scene = GetTree().CurrentScene;
-
-		// Scene temporarily missing?  Wait until next valid one
 		if (scene == null) return;
 
 		string sceneName = scene.Name ?? "";
@@ -55,48 +56,21 @@ public partial class GlobalRoomChange : Node {
 		}
 	}
 
-
 	// --------------------------------------------------------------------
-	// ForceUpdate — call this after ChangeSceneToPacked() to sync HUD/music
+	// Helpers
 	// --------------------------------------------------------------------
-	// public static async void ForceUpdate() {
-	// 	var tree = Engine.GetMainLoop() as SceneTree;
-	// 	if (tree == null) {
-	// 		GD.PushWarning("[GlobalRoomChange] ForceUpdate() called but SceneTree missing.");
-	// 		return;
-	// 	}
-
-	// 	// Wait a frame if the current scene isn't ready yet
-	// 	if (tree.CurrentScene == null) {
-	// 		await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-	// 	}
-
-	// 	var scene = tree.CurrentScene;
-	// 	if (scene == null) {
-	// 		GD.PushWarning("[GlobalRoomChange] ForceUpdate() still no scene after waiting — aborting.");
-	// 		return;
-	// 	}
-
-	// 	UpdateScene(scene);
-	// }
 	public static async void ForceUpdate() {
 		var tree = Engine.GetMainLoop() as SceneTree;
 		if (tree == null) return;
 
-		// Wait until CurrentScene is non-null
 		while (tree.CurrentScene == null)
 			await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
-		var scene = tree.CurrentScene;
-		UpdateScene(scene);
+		UpdateScene(tree.CurrentScene);
 	}
 
-
-	// --------------------------------------------------------------------
-	// Internal helpers
-	// --------------------------------------------------------------------
 	private static void UpdateScene(Node scene) {
-		RoomGroup group = DetectGroup(scene);
+		var group = DetectGroup(scene);
 
 		string roomName = !string.IsNullOrEmpty(scene.SceneFilePath)
 			? System.IO.Path.GetFileNameWithoutExtension(scene.SceneFilePath)
@@ -112,7 +86,8 @@ public partial class GlobalRoomChange : Node {
 
 		string path = scene.SceneFilePath?.ToLower() ?? "";
 		string name = scene.Name.ToString().ToLowerInvariant();
-
+		if (path.Contains("21"))
+			return RoomGroup.Ambiance;
 		if (path.Contains("title") || path.Contains("menu") || name.Contains("menu") || name.Contains("title"))
 			return RoomGroup.Title;
 		if (path.Contains("boss") || name.Contains("boss"))
@@ -122,6 +97,7 @@ public partial class GlobalRoomChange : Node {
 
 		return RoomGroup.Overworld;
 	}
+
 
 	// --------------------------------------------------------------------
 	// Public API
@@ -137,7 +113,6 @@ public partial class GlobalRoomChange : Node {
 		CurrentRoom = roomName;
 		CurrentGroup = group;
 
-		// Notify listeners (HUD, etc.)
 		RoomGroupChanged?.Invoke(group);
 
 		var mm = (Engine.GetMainLoop() as SceneTree)?.Root?.GetNodeOrNull<MusicManager>("MusicManager");
@@ -150,20 +125,25 @@ public partial class GlobalRoomChange : Node {
 
 		switch (group) {
 			case RoomGroup.Title:
-				if (!mm.IsPlaying(BgmTrack.Title))
-					mm.Play(BgmTrack.Title, 0.8);
+				if (!mm.IsPlaying(BgmTrack.Title)) mm.Play(BgmTrack.Title, 0.8);
 				break;
 
 			case RoomGroup.Overworld:
-				if (!mm.IsPlaying(BgmTrack.Overworld))
-					mm.Play(BgmTrack.Overworld, 0.8);
+				if (!mm.IsPlaying(BgmTrack.Overworld)) mm.Play(BgmTrack.Overworld, 0.8);
+				break;
+
+			case RoomGroup.Ambiance:
+				if (!mm.IsPlaying(BgmTrack.Ambiance)) mm.Play(BgmTrack.Ambiance, 0.8);
 				break;
 
 			case RoomGroup.Boss:
-				mm.StartBoss(0.8);
+				// Only play ambience first; BossDoor will switch to boss music later
+				if (!mm.IsPlaying(BgmTrack.Ambiance)) mm.Play(BgmTrack.Ambiance, 0.8);
 				break;
 		}
+
 	}
+
 	public static void SetRespawnToLastExit(Node scene) {
 		if (string.IsNullOrEmpty(LastExitName))
 			return;
@@ -173,20 +153,126 @@ public partial class GlobalRoomChange : Node {
 			PlayerPos = door.PlayerPos;
 	}
 
-	public static Vector2 FindNearestDoor(Node scene, Vector2 deathPos) {
+	// --------------------------------------------------------------------
+	// Door / Respawn Helpers
+	// --------------------------------------------------------------------
+	/// <summary>
+	/// Finds the nearest DoorArea2D in a scene to the given position.
+	/// Works even if doors are nested inside containers (recursive search).
+	/// </summary>
+	public static Vector2 FindNearestDoor(Node scene, Vector2 refPos) {
 		float minDist = float.MaxValue;
-		Vector2 closest = deathPos;
+		Vector2 closest = refPos;
 
-		foreach (Node child in scene.GetChildren()) {
-			if (child is DoorArea2D door) {
-				float dist = door.GlobalPosition.DistanceTo(deathPos);
-				if (dist < minDist) {
-					minDist = dist;
-					closest = door.PlayerPos;
+		void Search(Node node) {
+			foreach (Node child in node.GetChildren()) {
+				if (child is DoorArea2D door) {
+					float dist = door.GlobalPosition.DistanceTo(refPos);
+					if (dist < minDist) {
+						minDist = dist;
+						closest = door.PlayerPos;
+					}
 				}
+				else if (child.GetChildCount() > 0)
+					Search(child);
 			}
 		}
+
+		Search(scene);
 		return closest;
+	}
+
+	// ---- Checkpoint respawn helpers ----
+	public const string DefaultRoomPath = "res://Scenes/room_01.tscn";
+
+	// public static string GetRespawnRoomPath() {
+	// 	// Use the last collectable's room if we have one, else default to room_01
+	// 	return HasCheckpoint && !string.IsNullOrEmpty(CheckpointRoom)
+	// 		? CheckpointRoom
+	// 		: DefaultRoomPath;
+	// }
+	// // public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+	// // 	if (loadedScene == null) return PlayerPos;
+	// // 	var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
+	// // 	return FindNearestDoor(loadedScene, refPos);
+	// // }
+	// public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+	// 	if (loadedScene == null)
+	// 		return PlayerPos;
+
+	// 	// Try to find a door that matches our last exit or checkpoint.
+	// 	DoorArea2D bestDoor = null;
+
+	// 	// 1. If we came from a door in another room, prefer the connected one.
+	// 	if (!string.IsNullOrEmpty(LastExitRoom)) {
+	// 		foreach (Node child in loadedScene.GetChildren()) {
+	// 			if (child is DoorArea2D door) {
+	// 				// Check if this door links back to the room we exited from
+	// 				if (!string.IsNullOrEmpty(door.ConnectedRoom) &&
+	// 					door.ConnectedRoom == LastExitRoom) {
+	// 					bestDoor = door;
+	// 					break;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+
+	// 	// 2. If no matching door found, find the *nearest* door to checkpoint position
+	// 	if (bestDoor == null) {
+	// 		var refPos = HasCheckpoint ? CheckpointPos : Vector2.Zero;
+	// 		float bestDist = float.MaxValue;
+
+	// 		void Search(Node node) {
+	// 			foreach (Node child in node.GetChildren()) {
+	// 				if (child is DoorArea2D door) {
+	// 					float dist = door.GlobalPosition.DistanceTo(refPos);
+	// 					if (dist < bestDist) {
+	// 						bestDist = dist;
+	// 						bestDoor = door;
+	// 					}
+	// 				}
+	// 				else if (child.GetChildCount() > 0)
+	// 					Search(child);
+	// 			}
+	// 		}
+
+	// 		Search(loadedScene);
+	// 	}
+
+	// 	// 3. If still none found, default to first door in scene
+	// 	if (bestDoor == null) {
+	// 		bestDoor = loadedScene.GetNodeOrNull<DoorArea2D>("DoorArea2D");
+	// 	}
+
+	// 	// 4. If no door exists at all, just use (0,0)
+	// 	if (bestDoor == null) {
+	// 		GD.PushWarning("[Respawn] No DoorArea2D found — falling back to origin (0,0).");
+	// 		return Vector2.Zero;
+	// 	}
+
+	// 	// Use the door’s assigned player position
+	// 	GD.Print($"[Respawn] Using door '{bestDoor.Name}' @ {bestDoor.PlayerPos}");
+	// 	return bestDoor.PlayerPos;
+	// }
+
+	public static string GetRespawnRoomPath() {
+		if (HasCheckpoint) {
+			GD.Print($"[Respawn] Returning checkpoint room: {CheckpointRoom}");
+			return CheckpointRoom;
+		}
+
+		GD.Print("[Respawn] No checkpoint found, using default room_01");
+		return DefaultRoomPath;
+	}
+
+	public static Vector2 GetRespawnPositionForLoadedScene(Node loadedScene) {
+		if (HasCheckpoint) {
+			GD.Print($"[Respawn] Using checkpoint position {CheckpointPos}");
+			return CheckpointPos + new Vector2(0, -120); // slight lift to avoid clipping
+		}
+
+		GD.Print("[Respawn] No checkpoint, fallback to 0,0");
+		return Vector2.Zero;
 	}
 
 }

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://tgfubdsd1ywp"
+path="res://.godot/imported/Period - Persona 4 (No Beat).mp3-3effa929f47b843dbeebb9c0af70bdb8.mp3str"
+
+[deps]
+
+source_file="res://Audio/Music/Period - Persona 4 (No Beat).mp3"
+dest_files=["res://.godot/imported/Period - Persona 4 (No Beat).mp3-3effa929f47b843dbeebb9c0af70bdb8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
