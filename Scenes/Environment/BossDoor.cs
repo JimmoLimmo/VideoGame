@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 public partial class BossDoor : Node2D {
     [Export] public NodePath BossPath;
-    [Export] public Vector2 ClosedOffset = new(0, -300);
+    [Export] public Vector2 ClosedOffset = new(0, 500);
     [Export] public float CloseSpeed = 1200f;
     [Export] public float BossActivationDelay = 1.0f;
 
@@ -53,7 +53,8 @@ public partial class BossDoor : Node2D {
 
         _triggered = true; //  mark as used
         var trigger = GetNode<Area2D>("Trigger");
-        trigger.Monitoring = false; //  stop future signals
+        // trigger.Monitoring = false; //  stop future signals
+        trigger.SetDeferred("monitoring", false);
 
         GD.Print("[BossDoor] Player entered boss arena — closing door and starting intro.");
 
@@ -81,18 +82,36 @@ public partial class BossDoor : Node2D {
         if (_isClosed) return;
         _isClosed = true;
 
+        //  Enable collision before closing
+        foreach (var shape in _doorBody.GetChildren()) {
+            if (shape is CollisionShape2D cs)
+                cs.SetDeferred("disabled", false);
+        }
+
         var tween = GetTree().CreateTween();
+        tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
         tween.TweenProperty(_doorBody, "position", _closedPos, 0.5);
         await ToSignal(tween, Tween.SignalName.Finished);
+
+        GD.Print("[BossDoor] Closed and collision enabled.");
     }
+
 
     public async void OpenDoor() {
         if (!_isClosed) return;
         _isClosed = false;
 
         var tween = GetTree().CreateTween();
+        tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.InOut);
         tween.TweenProperty(_doorBody, "position", _openPos, 0.8);
         await ToSignal(tween, Tween.SignalName.Finished);
-        GD.Print("[BossDoor] Door reopened.");
+
+        //  Disable collision once open
+        foreach (var shape in _doorBody.GetChildren()) {
+            if (shape is CollisionShape2D cs)
+                cs.SetDeferred("disabled", true);
+        }
+
+        GD.Print("[BossDoor] Door reopened and collision disabled.");
     }
 }
