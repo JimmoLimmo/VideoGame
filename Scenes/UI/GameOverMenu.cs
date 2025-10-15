@@ -82,6 +82,11 @@ public partial class GameOverMenu : Control {
 		HideAll();
 		tree.Paused = false;
 
+
+		GlobalRoomChange.Activate = true;
+		GlobalRoomChange.PlayerJumpOnEnter = false;
+		GlobalRoomChange.PlayerPos = Vector2.Zero;   // will override below
+
 		// 1  Decide which room to load
 		string roomPath = GlobalRoomChange.GetRespawnRoomPath();
 		tree.ChangeSceneToFile(roomPath);
@@ -103,7 +108,7 @@ public partial class GameOverMenu : Control {
 		// Use %Player so it finds by unique name anywhere in the scene
 		var player = scene.GetNodeOrNull<Player>("%Player");
 		if (player == null) {
-			GD.PushError("[GameOver] Player not found in scene!");
+			// GD.PushError("[GameOver] Player not found in scene!");
 			return;
 		}
 
