@@ -30,9 +30,10 @@ public partial class Collectable : Area2D {
 		if (body is Player player) {
 			player.OnCollect(Type);
 
-			GlobalRoomChange.CheckpointRoom = GetTree().CurrentScene.SceneFilePath;
-			GlobalRoomChange.CheckpointPos = GlobalPosition;
-			GD.Print($"[Checkpoint] Saved at {GlobalRoomChange.CheckpointRoom}  →  {GlobalRoomChange.CheckpointPos}");
+			var currentScene = GetTree().CurrentScene;
+			GlobalRoomChange.CheckpointRoom = currentScene.SceneFilePath;
+			GlobalRoomChange.CheckpointPos = GlobalPosition; // used to find nearest door
+			GD.Print($"[Checkpoint] Saved room checkpoint at {GlobalRoomChange.CheckpointRoom}");
 
 			ShowPickupOverlay();
 		}

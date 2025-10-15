@@ -177,6 +177,7 @@ tile_size = Vector2i(128, 128)
 sources/0 = SubResource("TileSetAtlasSource_1hv4j")
 
 [node name="Room03" type="Node2D"]
+position = Vector2(1, 0)
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -771.0
@@ -314,7 +315,7 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light2" type="PointLight2D" parent="Lighting"]
-position = Vector2(2349, -175)
+position = Vector2(2356, -175)
 scale = Vector2(15.1067, 6.57224)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
