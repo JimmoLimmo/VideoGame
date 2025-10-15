@@ -170,7 +170,7 @@ color = Color(1, 1, 1, 0)
 
 [node name="Boss" parent="." instance=ExtResource("14_pfkkc")]
 position = Vector2(296, 941)
-MaxHealth = 50
+MaxHealth = 300
 WalkSpeed = 250.0
 JumpVy = -1000.0
 JumpVx = -181.4

@@ -262,13 +262,11 @@ downDuration = 1.0
 [node name="FactoryCrusher2" parent="." instance=ExtResource("9_rgbyj")]
 position = Vector2(5632, -131)
 rotation = -3.14159
-upDuration = 1.25
 downDuration = 1.0
 
 [node name="FactoryCrusher3" parent="." instance=ExtResource("9_rgbyj")]
 position = Vector2(6912, -131)
 rotation = -3.14159
-upDuration = 1.5
 downDuration = 1.0
 offset = 1.0
 
