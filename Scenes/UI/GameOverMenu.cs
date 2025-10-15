@@ -82,8 +82,6 @@ public partial class GameOverMenu : Control {
 		HideAll();
 		tree.Paused = false;
 
-		GlobalRoomChange.health = 5;
-		GlobalRoomChange.mana = 0;
 
 		GlobalRoomChange.Activate = true;
 		GlobalRoomChange.PlayerJumpOnEnter = false;
