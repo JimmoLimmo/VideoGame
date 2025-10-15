@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://cyr4ejhyrgm4b"]
+[gd_scene load_steps=33 format=4 uid="uid://cyr4ejhyrgm4b"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_c8iti"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_tuau3"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_qkxc1"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_2l3ox"]
+[ext_resource type="PackedScene" uid="uid://76merjs60id2" path="res://Scenes/Environment/MediumGear.tscn" id="12_o45sl"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="13_qlb0f"]
 [ext_resource type="Shader" uid="uid://cpw60ms6btn2x" path="res://Scripts/Shader/blurTextureRect.gdshader" id="15_u616v"]
 
@@ -131,15 +132,6 @@ fill_to = Vector2(1, 0.495726)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1h5ho"]
 size = Vector2(46, 385)
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_8a3ol"]
-polygon = PackedVector2Array(-5, -770, 250, -770, 251, -1537, 1275.02, -1537, 1275, -1793, 121, -1792, 122, -1025, -5, -1025)
-
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_u616v"]
-polygon = PackedVector2Array(1152, -1152, 1152, -1408, 2560, -1409, 2560, -385, 2176, -384, 2176, -1152)
-
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_jdm6u"]
-polygon = PackedVector2Array(2688, -383, 2688, -1, -128, 0, -128, -384)
-
 [sub_resource type="Gradient" id="Gradient_r1pom"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_cukd5"]
@@ -180,10 +172,10 @@ sources/0 = SubResource("TileSetAtlasSource_1hv4j")
 position = Vector2(1, 0)
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -771.0
-offset_top = -1703.0
-offset_right = 4003.34
-offset_bottom = 1056.0
+offset_left = -271.0
+offset_top = -1406.0
+offset_right = 3207.0
+offset_bottom = 709.0
 scale = Vector2(0.78, 0.835)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
@@ -296,17 +288,6 @@ shape = SubResource("RectangleShape2D_1h5ho")
 
 [node name="Lighting" type="Node2D" parent="."]
 
-[node name="TopLeftOcclude" type="LightOccluder2D" parent="Lighting"]
-position = Vector2(-251, 385)
-occluder = SubResource("OccluderPolygon2D_8a3ol")
-
-[node name="TopRightOcclude" type="LightOccluder2D" parent="Lighting"]
-occluder = SubResource("OccluderPolygon2D_u616v")
-
-[node name="BottomHalfOcclude" type="LightOccluder2D" parent="Lighting"]
-position = Vector2(-256, 384)
-occluder = SubResource("OccluderPolygon2D_jdm6u")
-
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
 position = Vector2(-215.746, -193.089)
 rotation = 3.14159
@@ -345,3 +326,29 @@ tile_set = SubResource("TileSet_cacw8")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_qlb0f")
 volume_db = -10.306
+
+[node name="MediumGear" parent="." instance=ExtResource("12_o45sl")]
+position = Vector2(1030, -1329)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+
+[node name="MediumGear2" parent="." instance=ExtResource("12_o45sl")]
+position = Vector2(2088, -980)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+spinClockwise = false
+
+[node name="MediumGear3" parent="." instance=ExtResource("12_o45sl")]
+position = Vector2(2016, 163)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+
+[node name="MediumGear4" parent="." instance=ExtResource("12_o45sl")]
+position = Vector2(-66, -953)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+spinClockwise = false

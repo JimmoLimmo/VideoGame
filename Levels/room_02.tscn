@@ -366,25 +366,24 @@ modulate = Color(0.4, 0.4, 0.4, 1)
 scroll_scale = Vector2(0.8, 0.8)
 
 [node name="MediumGear" parent="Background" instance=ExtResource("2_vi02f")]
-position = Vector2(1602, 1892)
+position = Vector2(1619, 1892)
 scale = Vector2(3, 3)
 gearSize = 2
 gearScale = 3.0
 spinClockwise = false
 
 [node name="MediumGear2" parent="Background" instance=ExtResource("2_vi02f")]
-position = Vector2(2285, 2773)
+position = Vector2(2302, 2773)
 scale = Vector2(3, 3)
 gearSize = 2
 gearScale = 3.0
 
 [node name="BackgroundBlur" type="ColorRect" parent="."]
-visible = false
 material = SubResource("ShaderMaterial_rav4g")
 offset_left = -253.0
-offset_top = -604.0
-offset_right = 2147.0
-offset_bottom = 1138.0
+offset_top = 104.0
+offset_right = 2440.0
+offset_bottom = 4232.0
 color = Color(1, 1, 1, 0)
 
 [node name="detailBackBack" type="TileMapLayer" parent="."]
