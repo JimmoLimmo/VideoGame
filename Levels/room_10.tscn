@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_jsgsb"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_1vl50"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_3cbvf"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/Player.tscn" id="4_gickc"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_gickc"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="7_fk00x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="8_0qgqw"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_nf0iw"]
@@ -136,7 +136,7 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 sources/2 = SubResource("TileSetAtlasSource_ojaaw")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s6or5"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kvxvt"]
 texture = ExtResource("3_3cbvf")
 texture_region_size = Vector2i(128, 128)
 6:7/0 = 0
@@ -154,7 +154,7 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_s6or5")
+sources/0 = SubResource("TileSetAtlasSource_kvxvt")
 
 [sub_resource type="Gradient" id="Gradient_oci5r"]
 offsets = PackedFloat32Array(0.36478, 1)

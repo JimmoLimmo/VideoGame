@@ -9,6 +9,7 @@ public partial class Crusher : Node {
 	[Export] public float movementTime = 0.5f;
 	[Export] public bool isDown = false;
 	[Export] public bool halt = false;
+	[Export] public bool doesDamage = true;
 	
 	private StaticBody2D top;
 	private Area2D deathZone;
@@ -35,7 +36,7 @@ public partial class Crusher : Node {
 	}
 
 	public override void _Process(double delta) {
-		if (top.Position.Y > 150 && !isDown) {
+		if (top.Position.Y > 150 && !isDown && doesDamage) {
 			deathZone.Monitoring = true;
 
 			if (!hasPlayedBoom && top.Position.Y >= 370 && top.Position.Y <= 385) {

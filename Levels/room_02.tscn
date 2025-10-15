@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/Player.tscn" id="3_vi02f"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_wdo57"]
@@ -180,7 +180,6 @@ playerPath = NodePath("../Player")
 boundsPath = NodePath("../CameraBounds/CameraCollsion")
 
 [node name="CameraBounds" type="Area2D" parent="."]
-visible = false
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
 position = Vector2(1144.42, 1361.26)
@@ -201,8 +200,10 @@ color = Color(1, 1, 1, 0)
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("3_vi02f")]
-visible = false
 position = Vector2(-138, -105)
+hasWalljump = true
+hasDash = true
+hasSword = true
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -221,7 +222,6 @@ position = Vector2(-1654, -867)
 tile_set = SubResource("TileSet_jg4gg")
 
 [node name="FactoryBreakawayFloor" parent="." instance=ExtResource("14_beo6d")]
-visible = false
 position = Vector2(1152, 0)
 
 [node name="RightDropoff" type="Sprite2D" parent="FactoryBreakawayFloor"]
