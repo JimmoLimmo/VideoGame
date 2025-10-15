@@ -1,10 +1,12 @@
-[gd_scene load_steps=24 format=4 uid="uid://cpotf3frxxlp"]
+[gd_scene load_steps=27 format=4 uid="uid://cpotf3frxxlp"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_3y6oe"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_pfkkc"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_h74ac"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_gh6ww"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_52mge"]
+[ext_resource type="PackedScene" uid="uid://b533htuagsdxy" path="res://Scenes/Environment/BossDoor.tscn" id="8_hotvb"]
+[ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="9_fh6qp"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="11_mnije"]
 [ext_resource type="PackedScene" uid="uid://u5ti17mobc8c" path="res://Scenes/Enemy/Boss.tscn" id="14_pfkkc"]
 
@@ -94,7 +96,7 @@ tile_size = Vector2i(128, 128)
 sources/2 = SubResource("TileSetAtlasSource_wlflr")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7ql3"]
-size = Vector2(2795, 0)
+size = Vector2(2, 0)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_r1pom"]
 polygon = PackedVector2Array(-133, -706, -133, 255, -261, 255, -261, 383, 122, 383, 123, -513, 2427, -513, 2427, 384, 2683, 384, 2683, -706)
@@ -141,12 +143,15 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 sources/0 = SubResource("TileSetAtlasSource_flkfy")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ijhtq"]
+size = Vector2(33, 384)
+
 [node name="Room" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -594.0
 offset_top = -438.0
-offset_right = 7607.0
+offset_right = 3802.0
 offset_bottom = 2321.0
 scale = Vector2(0.695, 0.695)
 color = Color(0.147672, 0.147672, 0.147672, 1)
@@ -181,11 +186,12 @@ DashStopAccel = 2500.05
 PlayerPath = NodePath("")
 
 [node name="MidTiles" type="Node2D" parent="."]
+z_index = 2
 position = Vector2(1654, 867)
 
 [node name="ground" type="TileMapLayer" parent="MidTiles"]
 position = Vector2(-1654, -867)
-tile_map_data = PackedByteArray("AAD9/wkAAgAFAAAAAAD//wkAAgAFAAAAAAABAAkAAgAFAAAAAAADAAkAAgAFAAAAAAAFAAkAAgAFAAAAAAAHAAkAAgAFAAAAAAAJAAkAAgAFAAAAAAALAAkAAgAFAAAAAAANAAkAAgAFAAAAAAAPAAkAAgAFAAAAAAARAAkAAgACAAAAAAD9/wcAAgAAAAAAAAD9/wQAAgAFAAAAAAD9/wIAAgACAAAAAAD+/wAAAgAEAAAAAAD9/wEAAgAFAAEAAAD9//7/AgAAAAAAAAD9/wAAAgAFAAEAAAD///7/AgAFAAAAAAABAP7/AgAFAAAAAAADAP7/AgAFAAAAAAAFAP7/AgAFAAAAAAAHAP7/AgAFAAAAAAAJAP7/AgAFAAAAAAALAP7/AgAFAAAAAAANAP7/AgAFAAAAAAAPAP7/AgAFAAAAAAARAP7/AgAAAAAAAAARAAQAAgACAAAAAAARAAMAAgAFAAEAAAASAAIAAgAEAAAAAAARAAEAAgAEAAAAAAARAAAAAgAFAAAAAAASAAEAAgAFAAEAAAD8/wUAAgAFAAAAAAD+/wUAAgAFAAEAAAD9/wYAAgAFAAAAAAATAAkAAgAFAAAAAAAUAAoAAgAFAAAAAAAVAAkAAgAFAAAAAAAWAAoAAgAFAAAAAAAXAAkAAgAFAAAAAAATAAUAAgAFAAAAAAAUAAQAAgAFAAAAAAAVAAUAAgAFAAAAAAAWAAQAAgAFAAAAAAATAAoAAgAFAAEAAAATAAQAAgAFAAEAAAAYAAoAAgAFAAAAAAAXAAUAAgAFAAAAAAAYAAQAAgAFAAAAAAAZAAkAAgAFAAAAAAAZAAUAAgAFAAAAAAAaAAQAAgAFAAAAAAAaAAoAAgAFAAAAAAAbAAkAAgAFAAAAAAAcAAoAAgAFAAAAAAAbAAUAAgAFAAAAAAAcAAQAAgAFAAAAAAAdAAUAAgAFAAAAAAAdAAkAAgAFAAAAAAAeAAoAAgAFAAAAAAAeAAQAAgAFAAAAAAAfAAUAAgAFAAAAAAAgAAQAAgAFAAAAAAAfAAkAAgAFAAAAAAAgAAoAAgAFAAAAAAAhAAkAAgAFAAAAAAAhAAUAAgAFAAAAAAAiAAQAAgAFAAAAAAAiAAoAAgAFAAAAAAAjAAUAAgAFAAAAAAAjAAkAAgAFAAAAAAAkAAoAAgAFAAAAAAAkAAQAAgAFAAAAAAAlAAkAAgAFAAEAAAAlAAUAAgAFAAEAAAAmAAkAAgAAAAAAAAAmAAQAAgAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAD9/wkAAgAFAAAAAAD//wkAAgAFAAAAAAABAAkAAgAFAAAAAAADAAkAAgAFAAAAAAAFAAkAAgAFAAAAAAAHAAkAAgAFAAAAAAAJAAkAAgAFAAAAAAALAAkAAgAFAAAAAAANAAkAAgAFAAAAAAAPAAkAAgAFAAAAAAARAAkAAgACAAAAAAD9/wcAAgAAAAAAAAD9/wQAAgAFAAAAAAD9/wIAAgACAAAAAAD+/wAAAgAEAAAAAAD9/wEAAgAFAAEAAAD9//7/AgAAAAAAAAD9/wAAAgAFAAEAAAD///7/AgAFAAAAAAABAP7/AgAFAAAAAAADAP7/AgAFAAAAAAAFAP7/AgAFAAAAAAAHAP7/AgAFAAAAAAAJAP7/AgAFAAAAAAALAP7/AgAFAAAAAAANAP7/AgAFAAAAAAAPAP7/AgAFAAAAAAARAP7/AgAAAAAAAAARAAQAAgACAAAAAAARAAMAAgAFAAEAAAASAAIAAgAEAAAAAAARAAEAAgAEAAAAAAARAAAAAgAFAAAAAAASAAEAAgAFAAEAAAD8/wUAAgAFAAAAAAD+/wUAAgAFAAEAAAD9/wYAAgAFAAAAAAA=")
 tile_set = SubResource("TileSet_ykuuq")
 
 [node name="detailBack" type="TileMapLayer" parent="MidTiles"]
@@ -199,10 +205,11 @@ tile_set = SubResource("TileSet_i48qr")
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(2415.5, 535)
+position = Vector2(1019, 535)
 shape = SubResource("RectangleShape2D_j7ql3")
 
 [node name="Lighting" type="Node2D" parent="."]
+z_index = 2
 
 [node name="TopHalfOcclude" type="LightOccluder2D" parent="Lighting"]
 position = Vector2(-251, 385)
@@ -220,7 +227,7 @@ color = Color(0.999999, 0.995279, 0.695077, 1)
 energy = 0.25
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(4720, 954)
+position = Vector2(2062, 954)
 scale = Vector2(11.3594, 6.71533)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_y5lni")
@@ -233,6 +240,7 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_jd76r")
 
 [node name="MidDropoff" type="Node2D" parent="."]
+z_index = 2
 
 [node name="RightDropoff" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(2303.28, 247.187)
@@ -255,18 +263,6 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="TopDropoff2" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(-288, 497.264)
 scale = Vector2(2.9227, 25.5855)
-texture = SubResource("GradientTexture2D_rntpy")
-
-[node name="BottomDropoff2" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(3690, 1262)
-rotation = -1.5708
-scale = Vector2(16.1574, 43.9227)
-texture = SubResource("GradientTexture2D_rntpy")
-
-[node name="TopDropoff3" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(3721, 374)
-rotation = 1.5708
-scale = Vector2(22.3306, 42.6425)
 texture = SubResource("GradientTexture2D_rntpy")
 
 [node name="Foreground" type="Parallax2D" parent="."]
@@ -294,7 +290,20 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="ScreenFade" parent="." instance=ExtResource("7_52mge")]
 
 [node name="Player" parent="." instance=ExtResource("11_mnije")]
-position = Vector2(4711, 1001)
+position = Vector2(2300, 991)
 hasWalljump = true
 hasDash = true
 hasSword = true
+
+[node name="BossDoor" parent="." instance=ExtResource("8_hotvb")]
+z_index = 1
+position = Vector2(2303, 511)
+BossPath = NodePath("../Boss")
+
+[node name="RightExit" parent="." instance=ExtResource("9_fh6qp")]
+ConnectedRoom = "res://Levels/room_21.tscn"
+PlayerPos = Vector2(-1441, -129)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
+position = Vector2(2438, 954)
+shape = SubResource("RectangleShape2D_ijhtq")
