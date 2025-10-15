@@ -5,7 +5,7 @@ public partial class DoorArea2D : Area2D {
 	[Export] public string ConnectedRoom;
 	[Export] public Vector2 PlayerPos;
 	[Export] public bool PlayerJumpOnEnter = false;
-
+	[Export] public bool IsBossEntrance = false;
 	private bool _busy;
 
 	public override void _Ready() {
@@ -28,6 +28,12 @@ public partial class DoorArea2D : Area2D {
 
 		GlobalRoomChange.LastExitName = Name;
 		GlobalRoomChange.LastExitRoom = GetTree().CurrentScene.SceneFilePath;
+
+		if (IsBossEntrance) {
+			GlobalRoomChange.CheckpointRoom = GlobalRoomChange.LastExitRoom;
+			GlobalRoomChange.CheckpointPos = PlayerPos; // spawn just outside boss door
+			GD.Print($"[Checkpoint] Saved before boss at {GlobalRoomChange.CheckpointRoom} → {GlobalRoomChange.CheckpointPos}");
+		}
 
 		// Set spawn params for the next scene
 		GlobalRoomChange.Activate = true;
