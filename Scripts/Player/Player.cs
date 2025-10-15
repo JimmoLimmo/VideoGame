@@ -93,6 +93,9 @@ public partial class Player : CharacterBody2D {
 	// Initialization
 	// -------------------------------
 	public override void _Ready() {
+		hasSword = GlobalRoomChange.hasSword;
+		hasDash = GlobalRoomChange.hasDash;
+		hasWalljump = GlobalRoomChange.hasWalljump;
 		if (GlobalRoomChange.Activate) {
 			GlobalPosition = GlobalRoomChange.PlayerPos;
 			if (GlobalRoomChange.PlayerJumpOnEnter)
