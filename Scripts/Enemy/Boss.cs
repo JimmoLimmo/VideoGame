@@ -819,7 +819,7 @@ public partial class Boss : CharacterBody2D {
 			// Spawn credits trigger pickup
 			var triggerScene = GD.Load<PackedScene>("res://Scenes/Level/CredditsTrigger.tscn");
 			var trigger = triggerScene.Instantiate<Area2D>();
-			trigger.GlobalPosition = GlobalPosition + new Vector2(0, -80);
+			trigger.GlobalPosition = GlobalPosition; ;
 			GetTree().CurrentScene.AddChild(trigger);
 
 		}
