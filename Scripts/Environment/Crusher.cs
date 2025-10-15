@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 
 public partial class Crusher : Node {
-
-	[Export] public float upDuration = 1.0f;
-	[Export] public float downDuration = 1.0f;
+	
+	[Export] public float upDuration = 1f;
+	[Export] public float downDuration = 0.5f;
 	[Export] public float movementTime = 0.5f;
 	[Export] public bool isDown = false;
-
+	[Export] public bool halt = false;
+	
 	private StaticBody2D top;
 	private Area2D deathZone;
 	private Timer cycleTimer;
@@ -25,10 +26,12 @@ public partial class Crusher : Node {
 		boomSound = GetNode<AudioStreamPlayer2D>("BoomSound");
 
 		top.Position = new Vector2(0, 50);
-
-		cycleTimer.OneShot = true;
-		cycleTimer.Timeout += OnCycleTimeout;
-		cycleTimer.Start(upDuration);
+		
+		if(!halt) {
+			cycleTimer.OneShot = true;
+			cycleTimer.Timeout += OnCycleTimeout;
+			cycleTimer.Start(upDuration);
+		}
 	}
 
 	public override void _Process(double delta) {
@@ -65,7 +68,7 @@ public partial class Crusher : Node {
 		if (isDown) {
 			Vector2 midPosition = new Vector2(0, 50);
 			Vector2 downPosition = new Vector2(0, 384);
-			nextStateDuration = upDuration;
+			nextStateDuration = downDuration;
 			isDown = !isDown;
 
 			animate.Play("DropPrep");
@@ -77,7 +80,7 @@ public partial class Crusher : Node {
 		}
 		else {
 			Vector2 position = new Vector2(0, 50);
-			nextStateDuration = downDuration;
+			nextStateDuration = upDuration;
 			isDown = !isDown;
 
 			var tween = GetTree().CreateTween();
@@ -86,6 +89,8 @@ public partial class Crusher : Node {
 				.SetEase(Tween.EaseType.InOut);
 
 			top.CollisionLayer = 1;
+			
+			await ToSignal(tween, Tween.SignalName.Finished);
 		}
 
 		cycleTimer.Start(nextStateDuration);

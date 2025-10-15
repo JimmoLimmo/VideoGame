@@ -1,9 +1,9 @@
-[gd_scene load_steps=37 format=4 uid="uid://ccaul74w3d7u6"]
+[gd_scene load_steps=38 format=4 uid="uid://641es3coh6tl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_fri8c"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_7a47q"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_i3say"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_23gfh"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/Player.tscn" id="4_23gfh"]
 [ext_resource type="PackedScene" uid="uid://ddti75ydnggyo" path="res://Scenes/Environment/FactoryBreakawayFloor.tscn" id="5_fri8c"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_oci5r"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_bvo2d"]
@@ -173,11 +173,18 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
 [sub_resource type="Gradient" id="Gradient_wwd5y"]
+offsets = PackedFloat32Array(0.830189, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_23gfh"]
+gradient = SubResource("Gradient_wwd5y")
+
+[sub_resource type="Gradient" id="Gradient_lg0cl"]
 offsets = PackedFloat32Array(0.0188679, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_nflet"]
-gradient = SubResource("Gradient_wwd5y")
+gradient = SubResource("Gradient_lg0cl")
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(1, 0.495726)
 
@@ -190,18 +197,18 @@ size = Vector2(38, 255)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_23gfh"]
 size = Vector2(35, 254.563)
 
-[sub_resource type="Gradient" id="Gradient_lg0cl"]
+[sub_resource type="Gradient" id="Gradient_thak2"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2vm6y"]
-gradient = SubResource("Gradient_lg0cl")
+gradient = SubResource("Gradient_thak2")
 
 [node name="Room09" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -2231.0
-offset_top = -887.0
+offset_top = -1509.0
 offset_right = 1359.0
-offset_bottom = 3117.0
+offset_bottom = 3240.0
 scale = Vector2(0.78, 0.835)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
@@ -235,21 +242,13 @@ color = Color(1, 1, 1, 0)
 tile_set = SubResource("TileSet_rkax3")
 
 [node name="Player" parent="." instance=ExtResource("4_23gfh")]
-position = Vector2(320, -138)
+position = Vector2(421, 2195)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
 hasWalljump = true
 hasDash = true
 hasSword = true
-
-[node name="FactoryBreakawayFloor" parent="." instance=ExtResource("5_fri8c")]
-position = Vector2(-1792, 0)
-breakTime = 0.5
-
-[node name="FactoryBreakawayFloor2" parent="." instance=ExtResource("5_fri8c")]
-position = Vector2(0, 1024)
-breakTime = 0.5
 
 [node name="MechMosquito" parent="." instance=ExtResource("10_i3say")]
 position = Vector2(-761, 1965)
@@ -272,7 +271,7 @@ position = Vector2(634.667, -8)
 tile_set = SubResource("TileSet_v2olg")
 
 [node name="Ground" type="TileMapLayer" parent="MidTiles"]
-tile_map_data = PackedByteArray("AAD+/wAAAgAFAAAAAAD8/wAAAgAFAAAAAAD6/wAAAgAFAAAAAAD4/wAAAgAFAAAAAAD2/wAAAgAFAAAAAAACAPz/AgACAAAAAAACAAAAAgACAAAAAAAAAAAAAgAFAAAAAAD0/wAAAgAFAAAAAAD0/wEAAgAEAAAAAAD0/wMAAgAEAAAAAADw/wgAAgAFAAAAAADy/wgAAgAFAAAAAAD0/wgAAgAFAAAAAAD2/wgAAgAFAAAAAAD4/wgAAgAFAAAAAAD6/wgAAgAFAAAAAAACAAIAAgAEAAAAAAACAAQAAgAEAAAAAAACAAYAAgAEAAAAAAACAAgAAgAEAAAAAAD8/wgAAgAFAAAAAAD9/wkAAgAEAAAAAAD9/wsAAgAEAAAAAAACAAoAAgAEAAAAAAACAAwAAgAEAAAAAAACABIAAgAFAAAAAAACAA4AAgACAAAAAAAAABIAAgAFAAAAAAD+/xIAAgAFAAAAAAD8/xIAAgAFAAAAAAD6/xIAAgAFAAAAAAD4/xIAAgAFAAAAAAD2/xIAAgAFAAAAAAD0/xIAAgAFAAAAAADy/xIAAgAFAAAAAADw/xIAAgAFAAAAAADv/xEAAgAEAAAAAADv/w8AAgAEAAAAAADv/w0AAgAEAAAAAADv/wsAAgAEAAAAAADv/wkAAgAEAAAAAADv/wcAAgAEAAAAAADv/wUAAgAEAAAAAADv/wMAAgAEAAAAAADv/wEAAgAEAAAAAADv////AgAEAAAAAADv//3/AgAEAAAAAADv//v/AgAEAAAAAAACAPr/AgAEAAAAAAD+//r/AgAEAAAAAADw//r/AgAFAAAAAADy//r/AgAFAAAAAAD0//r/AgAFAAAAAAD2//r/AgAFAAAAAAD4//r/AgAFAAAAAAD6//r/AgAFAAAAAAD8//r/AgAFAAAAAAACAPj/AgAEAAAAAADv//n/AgAEAAAAAADv//f/AgAEAAAAAADv//X/AgAEAAAAAADz//b/AgAEAAAAAADz//X/AgAFAAAAAAD1//X/AgAFAAAAAAD3//X/AgAFAAAAAAD5//X/AgAFAAAAAAD7//X/AgAFAAAAAAD9//X/AgAFAAAAAAD///X/AgAFAAAAAAABAPX/AgAFAAAAAAACAPb/AgAEAAAAAAA=")
+tile_map_data = PackedByteArray("AAD+/wAAAgAFAAAAAAD8/wAAAgAFAAAAAAD6/wAAAgAFAAAAAAD4/wAAAgAFAAAAAAD2/wAAAgAFAAAAAAACAPz/AgACAAAAAAACAAAAAgACAAAAAAAAAAAAAgAFAAAAAADw/wgAAgAEAAAAAADy/wgAAgAFAAAAAAD0/wgAAgAFAAAAAAD2/wgAAgAFAAAAAAD4/wgAAgAFAAAAAAD6/wgAAgAFAAAAAAACAAIAAgAEAAAAAAACAAQAAgAEAAAAAAACAAYAAgAEAAAAAAACAAgAAgAEAAAAAAD8/wgAAgAFAAAAAAD9/wkAAgAEAAAAAAD9/wsAAgAEAAAAAAACAAoAAgAEAAAAAAACAAwAAgAEAAAAAAACABIAAgAFAAAAAAACAA4AAgACAAAAAAAAABIAAgAFAAAAAAD+/xIAAgAFAAAAAAD8/xIAAgAFAAAAAAD6/xIAAgAFAAAAAAD4/xIAAgAFAAAAAAD2/xIAAgAFAAAAAAD0/xIAAgAFAAAAAADy/xIAAgAFAAAAAADw/xIAAgAFAAAAAADv/xEAAgAEAAAAAADv/w8AAgAEAAAAAADv/w0AAgAEAAAAAADv/wsAAgAEAAAAAADv/wkAAgAEAAAAAADv/wcAAgAEAAAAAADv/wUAAgAEAAAAAADv/wMAAgAEAAAAAADv/wEAAgAEAAAAAADv////AgAEAAAAAADv//3/AgAEAAAAAADv//v/AgAEAAAAAAACAPr/AgAEAAAAAAD+//r/AgAEAAAAAADw//r/AgAEAAAAAADy//r/AgAFAAAAAAD0//r/AgAFAAAAAAD2//r/AgAFAAAAAAD4//r/AgAFAAAAAAD6//r/AgAFAAAAAAD8//r/AgAFAAAAAAACAPj/AgAEAAAAAADv//n/AgAEAAAAAADv//f/AgAEAAAAAADv//X/AgAEAAAAAAD1//X/AgAFAAAAAAD3//X/AgAFAAAAAAD5//X/AgAFAAAAAAD7//X/AgAFAAAAAAD9//X/AgAFAAAAAAD///X/AgAFAAAAAAABAPX/AgAFAAAAAAACAPb/AgAEAAAAAAADAAMAAgAEAAAAAAADAAUAAgAEAAAAAAADAAcAAgAEAAAAAAADAAkAAgAEAAAAAAADAAsAAgAEAAAAAAADAPn/AgAEAAAAAAADAPf/AgAEAAAAAAADAPX/AgAEAAAAAAACAPT/AgAFAAAAAAAAAPT/AgAFAAAAAAD+//T/AgAFAAAAAAD8//T/AgAFAAAAAAD6//T/AgAFAAAAAAD4//T/AgAFAAAAAAD2//T/AgAFAAAAAAD0//T/AgAFAAAAAAABABMAAgAFAAAAAAADABMAAgAFAAAAAAD//xMAAgAFAAAAAAD9/xMAAgAFAAAAAAD7/xMAAgAFAAAAAAD5/xMAAgAFAAAAAAD3/xMAAgAFAAAAAAD1/xMAAgAFAAAAAADz/xMAAgAFAAAAAADx/xMAAgAFAAAAAADv/xMAAgAFAAAAAADw/xAAAgAEAAAAAADw/w4AAgAEAAAAAADw/wwAAgAEAAAAAADw/woAAgAEAAAAAADx/wgAAgAFAAEAAAD1/wAAAgAFAAEAAAD1/wEAAgAEAAAAAAD1/wMAAgAEAAAAAADw/wYAAgAEAAAAAADw/wQAAgAEAAAAAADw/wIAAgAEAAAAAADw/wAAAgAEAAAAAADw//7/AgAEAAAAAADw//z/AgAEAAAAAADx//r/AgAFAAEAAADw//j/AgAEAAAAAADw//b/AgAEAAAAAADw//T/AgAEAAAAAAD0//X/AgAEAAAAAAD1//b/AgAEAAAAAAD0//f/AgAFAAEAAAADAPv/AgAFAAEAAAADAAIAAgAFAAEAAAADAA0AAgAFAAEAAAA=")
 tile_set = SubResource("TileSet_rkax3")
 
 [node name="Damage" type="TileMapLayer" parent="MidTiles"]
@@ -284,43 +283,57 @@ tile_set = SubResource("TileSet_v2olg")
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="MidDropoff" type="Node2D" parent="."]
-visible = false
 
-[node name="T" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-3028.59, -681.511)
-rotation = 1.5708
-scale = Vector2(5.14231, 99.8835)
+[node name="L" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(-2102.22, 517)
+scale = Vector2(5.71178, 64.2074)
 texture = SubResource("GradientTexture2D_0xiy8")
 
 [node name="B" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-2941.68, 781.43)
+position = Vector2(-768.19, 2436.01)
 rotation = -1.5708
-scale = Vector2(4.0394, 95.3881)
+scale = Vector2(4.0394, 44.05)
 texture = SubResource("GradientTexture2D_0xiy8")
 
-[node name="TL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-6693, -942)
+[node name="TR" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(-408.973, -2250.75)
 rotation = -1.5708
-scale = Vector2(19.5275, 20.0996)
-texture = SubResource("GradientTexture2D_qqn31")
-
-[node name="BL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-6351.63, 919.622)
-rotation = -1.5708
-scale = Vector2(28.7581, 26.4717)
+scale = Vector2(29.9377, 34.8535)
 texture = SubResource("GradientTexture2D_qqn31")
 
 [node name="BR" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(59, 643)
+position = Vector2(1412.05, 1024.33)
 rotation = -1.5708
-scale = Vector2(18.3264, 19.6839)
+scale = Vector2(31.9893, 35.795)
 texture = SubResource("GradientTexture2D_qqn31")
 
-[node name="TR" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(594, -937)
+[node name="MR" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(1415.58, -1250.02)
 rotation = -1.5708
-scale = Vector2(19.5275, 20.0996)
+scale = Vector2(31.3407, 35.7428)
 texture = SubResource("GradientTexture2D_qqn31")
+
+[node name="FactoryBreakawayFloor2" parent="." instance=ExtResource("5_fri8c")]
+visible = false
+position = Vector2(0, 1024)
+breakTime = 0.5
+
+[node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor2"]
+position = Vector2(-869, 673)
+rotation = -1.5708
+scale = Vector2(21.0816, 43.6318)
+texture = SubResource("GradientTexture2D_23gfh")
+
+[node name="FactoryBreakawayFloor" parent="." instance=ExtResource("5_fri8c")]
+visible = false
+position = Vector2(-1664, 0)
+breakTime = 0.5
+
+[node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor"]
+position = Vector2(779.01, 671.238)
+rotation = -1.5708
+scale = Vector2(21.0816, 43.6318)
+texture = SubResource("GradientTexture2D_23gfh")
 
 [node name="Checkpoints" type="Node2D" parent="."]
 
@@ -342,11 +355,12 @@ ConnectedRoom = "res://Levels/room_11.tscn"
 PlayerJumpOnEnter = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TopExit"]
-position = Vector2(-1857.25, -1392)
+position = Vector2(-1729, -1390)
 shape = SubResource("RectangleShape2D_gq3dw")
 
 [node name="MidRightExit" parent="." instance=ExtResource("6_oci5r")]
 ConnectedRoom = "res://Levels/room_08.tscn"
+PlayerPos = Vector2(-6261, -115)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MidRightExit"]
 position = Vector2(493, -128.5)
@@ -354,6 +368,7 @@ shape = SubResource("RectangleShape2D_i3say")
 
 [node name="BotRightExit" parent="." instance=ExtResource("6_oci5r")]
 ConnectedRoom = "res://Levels/room_10.tscn"
+PlayerPos = Vector2(-150, -108)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BotRightExit"]
 position = Vector2(492.5, 2176.72)
