@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bcm8cay7pje61"]
+[gd_scene load_steps=7 format=3 uid="uid://g63h10c3sjsi"]
 
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="2_v0dgo"]
 [ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="3_olvd5"]

@@ -83,6 +83,7 @@ public partial class Boss : CharacterBody2D {
 	private AnimationPlayer _anim;
 	private AnimationPlayer bossAnimate;
 	private AnimationPlayer gearAnimate;
+	private AnimationPlayer swordAnimate;
 	private string lastGearAnimation;
 	private string lastBossAnimation;
 	private Sprite2D _sprite;
@@ -235,6 +236,7 @@ public partial class Boss : CharacterBody2D {
 
 		bossAnimate = GetNode<AnimationPlayer>("BossAnimation");
 		gearAnimate = GetNode<AnimationPlayer>("GearAnimation");
+		swordAnimate = GetNode<AnimationPlayer>("AttackAnimation");
 
 		_sword = GetNode<BossSword>("Sword");
 
@@ -313,7 +315,7 @@ public partial class Boss : CharacterBody2D {
 			case State.Prep: S_Prep(delta); break;
 			case State.Slash: S_Slash(delta); break;
 			case State.Dash: S_Dash(delta); break;
-			case State.Uppercut: S_Uppercut(delta); break;
+			// case State.Uppercut: S_Uppercut(delta); break;
 			case State.Leap: S_Leap(delta); break;
 			case State.Fall: S_Fall(delta); break;
 			case State.Recover: S_Recover(delta); break;
@@ -364,6 +366,11 @@ public partial class Boss : CharacterBody2D {
 			bossAnimate.Play(nextBossAnimation);
 			lastBossAnimation = nextBossAnimation;
 		}
+
+		// if (swordAnimate.CurrentAnimation != nextBossAnimation && nextBossAnimation != "") {
+		// 	swordAnimate.Play(nextBossAnimation);
+		// 	lastBossAnimation = nextBossAnimation;
+		// }
 	}
 
 	// ================================================
@@ -504,7 +511,7 @@ public partial class Boss : CharacterBody2D {
 		void addIfReady(Attack a, float w) { if (OffCooldown(a) && w > 0.05f) candidates.Add((a, w)); }
 		addIfReady(Attack.Slash, wSlash);
 		addIfReady(Attack.Dash, wDash);
-		addIfReady(Attack.Uppercut, wUpper);
+		// addIfReady(Attack.Uppercut, wUpper);
 		addIfReady(Attack.Leap, wLeap);
 		addIfReady(Attack.Roar, wRoar);
 
@@ -542,10 +549,10 @@ public partial class Boss : CharacterBody2D {
 					SafePlay(ADashPrep);
 					prep = 0.26f;
 					break;
-				case Attack.Uppercut:
-					SafePlay(AUppercutPrep);
-					prep = 0.25f;
-					break;
+				// case Attack.Uppercut:
+				// 	SafePlay(AUppercutPrep);
+				// 	prep = 0.25f;
+				// 	break;
 				case Attack.Leap:
 					SafePlay(AJump);
 					prep = 0.18f;
@@ -572,7 +579,7 @@ public partial class Boss : CharacterBody2D {
 		switch (_currentAttack) {
 			case Attack.Slash: Change(State.Slash); break;
 			case Attack.Dash: Change(State.Dash); break;
-			case Attack.Uppercut: Change(State.Uppercut); break;
+			// case Attack.Uppercut: Change(State.Uppercut); break;
 			case Attack.Leap: Change(State.Leap); break;
 			case Attack.Roar:
 				SafePlay(ARoar);
@@ -584,24 +591,31 @@ public partial class Boss : CharacterBody2D {
 	}
 
 	// Short HK-style sliding slash
-	private void S_Slash(double dt) {
+	private async void S_Slash(double dt) {
 		if (_stateNew) {
 			SafePlay(ASlash);
+			swordAnimate.Play("Swing");
 			PlaySFX(_sfxSlash);
+
 			float speed = SlashSlideSpeed * (Enraged ? 1.15f : 1f);
 			int dir = FacingDir();
 			Velocity = new Vector2(dir * speed, 0);
-			_sword.EnableHitbox();
-			_sword.HitCheck();
+			// _sword.EnableHitbox();
+			// _sword.HitCheck();
 			_stateTimer = 0.18f * (Enraged ? 1.05f : 1f); // active slide window
 		}
 
 		ApplyGravityGroundAware(dt);
 		MoveAndSlide();
 
-		_stateTimer -= (float)dt;
-		if (_stateTimer <= 0f) {
-			_sword.DisableHitbox();
+		// _stateTimer -= (float)dt;
+		// if (_stateTimer <= 0f) {
+		// 	// _sword.DisableHitbox();
+		// 	Change(State.Recover);
+		// 	_stateTimer = 0.18f;
+		// }
+		if (swordAnimate.IsPlaying() == false) {
+			//_sword.DisableHitbox();
 			Change(State.Recover);
 			_stateTimer = 0.18f;
 		}
