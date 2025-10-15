@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_h74ac"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_gh6ww"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_52mge"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/Player.tscn" id="11_mnije"]
+[ext_resource type="PackedScene" uid="uid://bd0w1ls0vyoad" path="res://Scenes/Player/Player.tscn" id="11_mnije"]
 [ext_resource type="PackedScene" uid="uid://u5ti17mobc8c" path="res://Scenes/Enemy/Boss.tscn" id="14_pfkkc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y5lni"]

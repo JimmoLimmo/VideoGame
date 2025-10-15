@@ -1,10 +1,11 @@
-[gd_scene load_steps=34 format=4 uid="uid://dlnaabg72t3lr"]
+[gd_scene load_steps=39 format=4 uid="uid://cbn8ldt61lap1"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_4swi0"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_lpoby"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_7ny57"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_a8rni"]
+[ext_resource type="PackedScene" uid="uid://bd0w1ls0vyoad" path="res://Scenes/Player/Player.tscn" id="4_a8rni"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="5_6ac7e"]
+[ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="6_7ny57"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="6_bmwwr"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="7_b555a"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="8_g5sun"]
@@ -33,7 +34,7 @@ polygon = PackedVector2Array(-64, -64, 191.615, -64.7713, 191, 62, -64, 64)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_3u35w"]
 polygon = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0qgqw"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lpoby"]
 texture = ExtResource("3_7ny57")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
@@ -78,12 +79,12 @@ tile_size = Vector2i(128, 128)
 occlusion_layer_0/light_mask = 1
 physics_layer_0/collision_layer = 3
 physics_layer_0/collision_mask = 3
-sources/2 = SubResource("TileSetAtlasSource_0qgqw")
+sources/2 = SubResource("TileSetAtlasSource_lpoby")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lpoby"]
 size = Vector2(512, 20)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4daad"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7ny57"]
 texture = ExtResource("3_7ny57")
 texture_region_size = Vector2i(128, 128)
 0:2/0 = 0
@@ -136,9 +137,9 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_tth6v"]
 tile_size = Vector2i(128, 128)
-sources/2 = SubResource("TileSetAtlasSource_4daad")
+sources/2 = SubResource("TileSetAtlasSource_7ny57")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4swi0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a8rni"]
 texture = ExtResource("3_7ny57")
 texture_region_size = Vector2i(128, 128)
 6:7/0 = 0
@@ -156,34 +157,51 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_4swi0")
+sources/0 = SubResource("TileSetAtlasSource_a8rni")
 
-[sub_resource type="Gradient" id="Gradient_el1si"]
+[sub_resource type="Gradient" id="Gradient_6ac7e"]
 offsets = PackedFloat32Array(0.36478, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_3hqdi"]
-gradient = SubResource("Gradient_el1si")
+gradient = SubResource("Gradient_6ac7e")
 fill_from = Vector2(0, 1)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="Gradient" id="Gradient_o1q8o"]
+[sub_resource type="Gradient" id="Gradient_7ny57"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.798742, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mj7xw"]
-gradient = SubResource("Gradient_o1q8o")
+gradient = SubResource("Gradient_7ny57")
 fill = 2
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
-[sub_resource type="Gradient" id="Gradient_y5lni"]
+[sub_resource type="Gradient" id="Gradient_a8rni"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.584906, 0.867925)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6ac7e"]
+gradient = SubResource("Gradient_a8rni")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ac7e"]
+size = Vector2(1299, 483)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a8rni"]
+size = Vector2(167, 386)
+
+[sub_resource type="Gradient" id="Gradient_b555a"]
 offsets = PackedFloat32Array(0.0188679, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ojaaw"]
-gradient = SubResource("Gradient_y5lni")
+gradient = SubResource("Gradient_b555a")
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(1, 0.495726)
 
@@ -193,17 +211,17 @@ size = Vector2(57, 256)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7baxb"]
 size = Vector2(383.25, 27.125)
 
-[sub_resource type="Gradient" id="Gradient_r1pom"]
+[sub_resource type="Gradient" id="Gradient_g5sun"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_s6or5"]
-gradient = SubResource("Gradient_r1pom")
+gradient = SubResource("Gradient_g5sun")
 
 [node name="Room11" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -8853.0
+offset_left = -8869.0
 offset_top = -1151.0
-offset_right = 3493.0
+offset_right = 3477.0
 offset_bottom = 988.0
 scale = Vector2(0.78, 0.835)
 color = Color(0.147672, 0.147672, 0.147672, 1)
@@ -239,7 +257,7 @@ tile_map_data = PackedByteArray("AADY////AgACAAgAAADj////AgACAAgAAADZ////AgADAAg
 tile_set = SubResource("TileSet_nf0iw")
 
 [node name="Player" parent="." instance=ExtResource("4_a8rni")]
-position = Vector2(-8394, -108)
+position = Vector2(-366, -120)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -271,10 +289,11 @@ shape = SubResource("RectangleShape2D_lpoby")
 [node name="MidTiles" type="Node2D" parent="."]
 
 [node name="DetailBack" type="TileMapLayer" parent="MidTiles"]
+tile_map_data = PackedByteArray("AADj//n/AgAEAAcAAADk//n/AgAFAAcAAADY//n/AgAEAAcAAADZ//n/AgAFAAcAAAA=")
 tile_set = SubResource("TileSet_tth6v")
 
 [node name="Ground" type="TileMapLayer" parent="MidTiles"]
-tile_map_data = PackedByteArray("AAABAAAAAgAFAAAAAAD8/wAAAgAFAAAAAAD9/wEAAgAEAAAAAAABAAEAAgAEAAAAAAADAAAAAgAFAAAAAAACAAEAAgAFAAAAAAAEAAEAAgAFAAAAAAAFAP//AgAEAAAAAAAEAP7/AgAEAAAAAAAFAP3/AgAEAAAAAAAEAPz/AgAEAAAAAAAFAPv/AgAEAAAAAAAEAPr/AgAEAAAAAAAFAPn/AgAEAAAAAAD6/wAAAgAFAAAAAAD4/wAAAgAFAAAAAAD4/wEAAgAEAAAAAAD7/wEAAgAFAAAAAAD5/wEAAgAFAAAAAAD5/wIAAgAEAAAAAAD3/wMAAgAFAAAAAAD1/wMAAgAFAAAAAADz/wMAAgAFAAAAAADx/wMAAgAFAAAAAAD4/wQAAgAFAAAAAAD2/wQAAgAFAAAAAAD0/wQAAgAFAAAAAADy/wQAAgAFAAAAAADy//7/AgAEAAAAAADy//3/AgAFAAEAAADw/wQAAgAFAAAAAADv/wMAAgAFAAAAAADu/wQAAgAFAAAAAADt/wMAAgAFAAAAAADs/wQAAgAFAAAAAADr/wMAAgAFAAAAAADq/wQAAgAFAAAAAADp/wMAAgAFAAAAAADr//3/AgAEAAAAAADr////AgAFAAEAAADj////AgAEAAgAAADk////AgAGAAgAAADY////AgAEAAgAAADZ////AgAGAAgAAADo/wQAAgAFAAAAAADn/wMAAgAFAAAAAADm/wQAAgAFAAAAAADl/wMAAgAFAAAAAADk/wQAAgAFAAAAAADj/wMAAgAFAAAAAADi/wQAAgAFAAAAAADh/wMAAgAFAAAAAADg/wQAAgAFAAAAAADf/wMAAgAFAAAAAADe/wQAAgAFAAAAAADd/wMAAgAFAAAAAADc/wQAAgAFAAAAAADb/wMAAgAFAAAAAADa/wQAAgAFAAAAAADZ/wMAAgAFAAAAAADY/wQAAgAFAAAAAADX/wMAAgAFAAAAAADW/wQAAgAFAAAAAADV/wMAAgAFAAAAAADU/wQAAgAFAAAAAADT/wMAAgAFAAAAAADS/wQAAgAFAAAAAADR/wMAAgAFAAAAAADQ/wQAAgAFAAAAAADP/wMAAgAFAAAAAADM/wAAAgAFAAAAAADN/wEAAgAEAAAAAADN/wMAAgAEAAAAAADO/wAAAgAEAAAAAADO/wIAAgAEAAAAAADO/wQAAgAFAAAAAADL/wEAAgAFAAAAAADK/wAAAgAFAAAAAADJ/wEAAgAFAAAAAADI/wAAAgAFAAAAAADH/wEAAgAFAAAAAAAEAPj/AgAEAAAAAAAFAPf/AgAEAAAAAAAAAPj/AgAFAAAAAAABAPf/AgAFAAAAAAACAPj/AgAFAAAAAAADAPf/AgAFAAAAAAD8//j/AgAFAAAAAAD9//f/AgAFAAAAAAD+//j/AgAFAAAAAAD///f/AgAFAAAAAAD4//j/AgAFAAAAAAD5//f/AgAFAAAAAAD6//j/AgAFAAAAAAD7//f/AgAFAAAAAAD0//j/AgAFAAAAAAD1//f/AgAFAAAAAAD2//j/AgAFAAAAAAD3//f/AgAFAAAAAADw//j/AgAFAAAAAADx//f/AgAFAAAAAADy//j/AgAFAAAAAADz//f/AgAFAAAAAADs//j/AgAFAAAAAADt//f/AgAFAAAAAADu//j/AgAFAAAAAADv//f/AgAFAAAAAADo//j/AgAFAAAAAADp//f/AgAFAAAAAADq//j/AgAFAAAAAADr//f/AgAFAAAAAADk//j/AgAFAAAAAADl//f/AgAFAAAAAADm//j/AgAFAAAAAADn//f/AgAFAAAAAADg//j/AgAFAAAAAADh//f/AgAFAAAAAADi//j/AgAFAAAAAADj//f/AgAFAAAAAADc//j/AgAFAAAAAADd//f/AgAFAAAAAADe//j/AgAFAAAAAADf//f/AgAFAAAAAADY//j/AgAFAAAAAADZ//f/AgAFAAAAAADa//j/AgAFAAAAAADb//f/AgAFAAAAAADU//j/AgAFAAAAAADV//f/AgAFAAAAAADW//j/AgAFAAAAAADX//f/AgAFAAAAAADQ//j/AgAFAAAAAADR//f/AgAFAAAAAADS//j/AgAFAAAAAADT//f/AgAFAAAAAADO//j/AgAFAAAAAADP//f/AgAFAAAAAADN//j/AgAEAAAAAADO//n/AgAEAAAAAADN//r/AgAEAAAAAADO//v/AgAFAAEAAADN//f/AgAFAAAAAADG//r/AgAFAAAAAADL//r/AgAAAAAAAADJ//r/AgAAAAAAAADH//v/AgAFAAAAAADF/wEAAgAAAAAAAADH/wAAAgAFAAEAAADG//z/AgAFAAAAAADE//z/AgAFAAAAAADF//v/AgAFAAAAAADI//z/AgAFAAEAAADN//z/AgAFAAAAAADD/wEAAgAAAAAAAADC/wAAAgAEAAAAAADA/wEAAgAFAAAAAAC+/wEAAgAFAAAAAAC//wAAAgAFAAAAAAC9/wAAAgAFAAAAAAC8/wEAAgAFAAAAAAC7/wAAAgAFAAAAAAC7//3/AgAFAAAAAAC9//3/AgAFAAAAAAC8//z/AgAFAAAAAAC///3/AgAFAAAAAAC+//z/AgAFAAAAAADB//z/AgAEAAAAAADC//z/AgAFAAAAAADD//v/AgAFAAAAAADB//v/AgAFAAAAAADA//v/AgAEAAAAAADB/wAAAgAFAAEAAAA=")
+tile_map_data = PackedByteArray("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")
 tile_set = SubResource("TileSet_nf0iw")
 
 [node name="Damage" type="TileMapLayer" parent="MidTiles"]
@@ -287,45 +306,70 @@ tile_set = SubResource("TileSet_tth6v")
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="MidDropoff" type="Node2D" parent="."]
-visible = false
 
 [node name="T" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-3028.59, -681.511)
+position = Vector2(-3005.47, -1058)
 rotation = 1.5708
-scale = Vector2(5.14231, 99.8835)
+scale = Vector2(5.14231, 117.867)
 texture = SubResource("GradientTexture2D_3hqdi")
 
 [node name="B" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-2941.68, 781.43)
+position = Vector2(-3498, 552.165)
 rotation = -1.5708
-scale = Vector2(4.0394, 95.3881)
+scale = Vector2(5.04455, 95.3881)
 texture = SubResource("GradientTexture2D_3hqdi")
 
 [node name="TL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-6693, -942)
+position = Vector2(-7836, -1112)
 rotation = -1.5708
-scale = Vector2(19.5275, 20.0996)
+scale = Vector2(19.5275, 48.5809)
 texture = SubResource("GradientTexture2D_mj7xw")
 
 [node name="BL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-6351.63, 919.622)
+position = Vector2(-7640.07, 1277.57)
 rotation = -1.5708
-scale = Vector2(28.7581, 26.4717)
+scale = Vector2(40.102, 42.6259)
 texture = SubResource("GradientTexture2D_mj7xw")
 
 [node name="BR" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(59, 643)
+position = Vector2(-644, 475)
 rotation = -1.5708
-scale = Vector2(18.3264, 19.6839)
-texture = SubResource("GradientTexture2D_mj7xw")
+scale = Vector2(13.4799, 9.46925)
+texture = SubResource("GradientTexture2D_6ac7e")
 
 [node name="TR" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(594, -937)
+position = Vector2(1213.1, 878.142)
 rotation = -1.5708
-scale = Vector2(19.5275, 20.0996)
+scale = Vector2(27.1882, 33.4465)
 texture = SubResource("GradientTexture2D_mj7xw")
 
+[node name="T2" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(696.907, -459.607)
+rotation = -3.14159
+scale = Vector2(5.88926, 23.6668)
+skew = 8.27312e-05
+texture = SubResource("GradientTexture2D_3hqdi")
+
 [node name="Checkpoints" type="Node2D" parent="."]
+
+[node name="Checkpoint" parent="Checkpoints" instance=ExtResource("6_7ny57")]
+position = Vector2(-590, -123)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint"]
+position = Vector2(452.5, -121.5)
+shape = SubResource("RectangleShape2D_6ac7e")
+debug_color = Color(0.203922, 0.47451, 0.207843, 0.419608)
+
+[node name="Checkpoint2" parent="Checkpoints" instance=ExtResource("6_7ny57")]
+position = Vector2(-6407, -68)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoints/Checkpoint2"]
+position = Vector2(12, -128)
+shape = SubResource("RectangleShape2D_a8rni")
+debug_color = Color(0.203922, 0.47451, 0.207843, 0.419608)
+
+[node name="Checkpoint3" parent="Checkpoints" instance=ExtResource("6_7ny57")]
+position = Vector2(-7932, -57)
 
 [node name="Foreground" type="Parallax2D" parent="."]
 scroll_scale = Vector2(1.1, 1.1)
@@ -342,7 +386,7 @@ texture = SubResource("GradientTexture2D_ojaaw")
 
 [node name="LeftExit" parent="." instance=ExtResource("5_6ac7e")]
 ConnectedRoom = "res://Levels/room_12.tscn"
-PlayerPos = Vector2(-1770, -1260)
+PlayerPos = Vector2(80, -108)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-8614.5, -128)
