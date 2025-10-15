@@ -717,6 +717,9 @@ public partial class Boss : CharacterBody2D {
 		_hp = MaxHealth;
 		UpDirection = Vector2.Up;
 
+		SetPhysicsProcess(false);
+		ProcessMode = ProcessModeEnum.Disabled;
+
 		RefreshWorldGravity();
 		GD.Print($"[Boss READY] JumpVy = {JumpVy}, Gravity={_worldGravity}");
 
@@ -1267,7 +1270,9 @@ public partial class Boss : CharacterBody2D {
 			_col?.SetDeferred("disabled", true);
 			_hurtbox?.SetDeferred("monitoring", false);
 			_hitbox?.SetDeferred("monitoring", false);
+			MusicManager.Instance?.EndBoss(1.0);
 			SetPhysicsProcess(false);
+			SetProcess(false);
 		}
 	}
 
