@@ -8,7 +8,7 @@ public enum CollectableType {
 	Throw
 }
 
-public partial class Collectable : Area2D {
+public partial class Collectable : Node2D {
 	[Export] public CollectableType Type { get; set; } = CollectableType.Sword;
 	[Export] public Texture2D PickupTexture;
 	[Export] public string ItemName = "Item";
@@ -18,15 +18,18 @@ public partial class Collectable : Area2D {
 
 	private bool canDismiss = false;
 	private AnimationPlayer animate;
+	private Area2D area;
 
 	public override void _Ready() {
-		BodyEntered += OnBodyEntered;
+		area = GetNode<Area2D>("Area2D");
+		
+		area.BodyEntered += OnBodyEntered;
 		ProcessMode = Node.ProcessModeEnum.Always;
 		if (GlobalRoomChange.hasSword == true && Type == CollectableType.Sword) QueueFree();
 		else if (GlobalRoomChange.hasDash == true && Type == CollectableType.Dash) QueueFree();
 		else if (GlobalRoomChange.hasWalljump == true && Type == CollectableType.Walljump) QueueFree();
 		
-		animate = GetNode<AnimationPlayer>("../AnimationPlayer");
+		animate = GetNode<AnimationPlayer>("AnimationPlayer");
 		animate.Play("Float");
 	}
 
