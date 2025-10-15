@@ -178,6 +178,7 @@ DashSpeed = 485.57
 DashStopAccel = 2500.05
 ArenaRightX = 2000.0
 PlayerPath = NodePath("../Player")
+RunWithoutAnimations = false
 
 [node name="Player" parent="." instance=ExtResource("11_mnije")]
 position = Vector2(2300, 991)
