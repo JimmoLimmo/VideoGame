@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://dqcliyr6wbhoi"]
+[gd_scene load_steps=35 format=4 uid="uid://dqcliyr6wbhoi"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_cjj1o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_tsv7c"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="7_g2auc"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="8_uk2e3"]
 [ext_resource type="PackedScene" uid="uid://8eoje8g17g04" path="res://Scenes/Environment/FactoryCrusherSafe.tscn" id="9_rgbyj"]
+[ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="10_tsv7c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g0h3y"]
 size = Vector2(9456, 0)
@@ -201,6 +202,9 @@ size = Vector2(255, 34.7813)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_4usqy"]
 gradient = SubResource("Gradient_r1pom")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4wgjk"]
+size = Vector2(422, 581)
+
 [node name="Room13" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
@@ -390,3 +394,19 @@ texture = SubResource("GradientTexture2D_4usqy")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_uk2e3")
 volume_db = -10.306
+
+[node name="Checkpoint" parent="." instance=ExtResource("10_tsv7c")]
+position = Vector2(959, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint"]
+position = Vector2(4, -161.5)
+shape = SubResource("RectangleShape2D_4wgjk")
+debug_color = Color(0.220989, 0.634189, 0.227454, 0.42)
+
+[node name="Checkpoint2" parent="." instance=ExtResource("10_tsv7c")]
+position = Vector2(10353, -109)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
+position = Vector2(14, -185)
+shape = SubResource("RectangleShape2D_4wgjk")
+debug_color = Color(0.297586, 0.621368, 0.281269, 0.42)

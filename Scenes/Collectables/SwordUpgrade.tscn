@@ -1,14 +1,52 @@
-[gd_scene load_steps=5 format=3 uid="uid://bcm8cay7pje61"]
+[gd_scene load_steps=8 format=3 uid="uid://bcm8cay7pje61"]
 
-[ext_resource type="Texture2D" uid="uid://duith60v2w8n1" path="res://Sprites/Player/Claw_SpriteSheet.png" id="2_olvd5"]
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="2_v0dgo"]
 [ext_resource type="Texture2D" uid="uid://dlp0xpmc8va38" path="res://Sprites/Player/Claw_Upgrade_Image.png" id="2_wtmdk"]
+[ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="3_olvd5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_muhdk"]
-size = Vector2(355, 220.5)
+[sub_resource type="CircleShape2D" id="CircleShape2D_wtmdk"]
+radius = 51.1566
+
+[sub_resource type="Animation" id="Animation_2knnt"]
+resource_name = "Float"
+length = 0.833338
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.416667, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -10), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lybio"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t8i6m"]
+_data = {
+&"Float": SubResource("Animation_2knnt"),
+&"RESET": SubResource("Animation_lybio")
+}
 
 [node name="SwordUpgrade" type="Node2D"]
-position = Vector2(-55, -49)
 
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("2_v0dgo")
@@ -19,11 +57,14 @@ Description = "Slash your way through enemies and weak structures."
 WaitTime = 1.5
 
 [node name="Sprite2D" type="Sprite2D" parent="Area2D"]
-texture = ExtResource("2_olvd5")
-hframes = 6
-vframes = 2
-frame = 2
+texture = ExtResource("3_olvd5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(54.5, 48.75)
-shape = SubResource("RectangleShape2D_muhdk")
+shape = SubResource("CircleShape2D_wtmdk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Area2D")
+libraries = {
+&"": SubResource("AnimationLibrary_t8i6m")
+}
+speed_scale = 0.75

@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://cyr4ejhyrgm4b"]
+[gd_scene load_steps=38 format=4 uid="uid://cyr4ejhyrgm4b"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_c8iti"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
@@ -21,26 +21,46 @@ shader = ExtResource("2_cp1p4")
 shader_parameter/blur_power = 0.08
 shader_parameter/iterations = 100.0
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_o45sl"]
+polygon = PackedVector2Array(-64, -64, 192, -64, 192, 192, -64, 192)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_c8iti"]
+polygon = PackedVector2Array(-64, -64, 192, -64, 192, 192, -64, 192)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_cp1p4"]
+polygon = PackedVector2Array(-64, -64, 64, -64, 64, 192, -64, 192)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_u616v"]
+polygon = PackedVector2Array(-64, -64, 192, -64, 192, 64, -64, 64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f4wdb"]
+polygon = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hty6v"]
 texture = ExtResource("4_f4wdb")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(-64, -64)
+0:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_o45sl")
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
 2:0/size_in_atlas = Vector2i(2, 2)
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(-64, -64)
+2:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_c8iti")
 2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 192.089, -64.0297, 192.089, 191.909, -63.8498, 191.909)
 4:0/size_in_atlas = Vector2i(1, 2)
 4:0/0 = 0
 4:0/0/texture_origin = Vector2i(0, -64)
+4:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_cp1p4")
 4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 63.8498, 192.089, -63.8498, 191.909)
 5:1/0 = 0
+5:1/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_f4wdb")
 5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 5:0/size_in_atlas = Vector2i(2, 1)
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(-64, 0)
+5:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_u616v")
 5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 191.816, -64.0448, 191.816, 64.3634, -64, 64)
 0:4/size_in_atlas = Vector2i(1, 2)
 0:4/0 = 0
@@ -48,6 +68,7 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_si834"]
 tile_size = Vector2i(128, 128)
+occlusion_layer_0/light_mask = 1
 physics_layer_0/collision_layer = 1
 sources/2 = SubResource("TileSetAtlasSource_hty6v")
 
@@ -195,13 +216,38 @@ shape = SubResource("RectangleShape2D_2a0kd")
 [node name="Background" type="Parallax2D" parent="."]
 scroll_scale = Vector2(0.8, 0.8)
 
+[node name="MediumGear" parent="Background" instance=ExtResource("12_o45sl")]
+position = Vector2(1030, -1329)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+
+[node name="MediumGear2" parent="Background" instance=ExtResource("12_o45sl")]
+position = Vector2(2088, -980)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+spinClockwise = false
+
+[node name="MediumGear3" parent="Background" instance=ExtResource("12_o45sl")]
+position = Vector2(2016, 163)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+
+[node name="MediumGear4" parent="Background" instance=ExtResource("12_o45sl")]
+position = Vector2(-66, -953)
+scale = Vector2(3, 3)
+gearSize = 2
+gearScale = 3.0
+spinClockwise = false
+
 [node name="BackgroundBlur" type="ColorRect" parent="."]
-visible = false
 material = SubResource("ShaderMaterial_lybi4")
-offset_left = -253.0
-offset_top = -604.0
-offset_right = 2147.0
-offset_bottom = 1138.0
+offset_left = -275.0
+offset_top = -1278.0
+offset_right = 2375.0
+offset_bottom = 22.0
 color = Color(1, 1, 1, 0)
 
 [node name="Gears" type="Node2D" parent="."]
@@ -210,8 +256,7 @@ color = Color(1, 1, 1, 0)
 position = Vector2(-139, -126)
 
 [node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
-position = Vector2(1024, 54)
-rotation = -1.35961
+position = Vector2(1030, -214)
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)
@@ -289,6 +334,7 @@ shape = SubResource("RectangleShape2D_1h5ho")
 [node name="Lighting" type="Node2D" parent="."]
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
+visible = false
 position = Vector2(-215.746, -193.089)
 rotation = 3.14159
 scale = Vector2(14.6509, 5.86323)
@@ -296,13 +342,14 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="Door Light2" type="PointLight2D" parent="Lighting"]
+visible = false
 position = Vector2(2356, -175)
 scale = Vector2(15.1067, 6.57224)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_cukd5")
 
 [node name="PointLight2D" type="PointLight2D" parent="Lighting"]
-position = Vector2(1077, -1544)
+position = Vector2(1128, -1814)
 scale = Vector2(22.0469, 58.6484)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_h8xti")
@@ -326,29 +373,3 @@ tile_set = SubResource("TileSet_cacw8")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_qlb0f")
 volume_db = -10.306
-
-[node name="MediumGear" parent="." instance=ExtResource("12_o45sl")]
-position = Vector2(1030, -1329)
-scale = Vector2(3, 3)
-gearSize = 2
-gearScale = 3.0
-
-[node name="MediumGear2" parent="." instance=ExtResource("12_o45sl")]
-position = Vector2(2088, -980)
-scale = Vector2(3, 3)
-gearSize = 2
-gearScale = 3.0
-spinClockwise = false
-
-[node name="MediumGear3" parent="." instance=ExtResource("12_o45sl")]
-position = Vector2(2016, 163)
-scale = Vector2(3, 3)
-gearSize = 2
-gearScale = 3.0
-
-[node name="MediumGear4" parent="." instance=ExtResource("12_o45sl")]
-position = Vector2(-66, -953)
-scale = Vector2(3, 3)
-gearSize = 2
-gearScale = 3.0
-spinClockwise = false

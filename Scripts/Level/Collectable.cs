@@ -17,6 +17,7 @@ public partial class Collectable : Area2D {
 	[Export] public double WaitTime = 2;
 
 	private bool canDismiss = false;
+	private AnimationPlayer animate;
 
 	public override void _Ready() {
 		BodyEntered += OnBodyEntered;
@@ -24,6 +25,9 @@ public partial class Collectable : Area2D {
 		if (GlobalRoomChange.hasSword == true && Type == CollectableType.Sword) QueueFree();
 		else if (GlobalRoomChange.hasDash == true && Type == CollectableType.Dash) QueueFree();
 		else if (GlobalRoomChange.hasWalljump == true && Type == CollectableType.Walljump) QueueFree();
+		
+		animate = GetNode<AnimationPlayer>("../AnimationPlayer");
+		animate.Play("Float");
 	}
 
 	private void OnBodyEntered(Node2D body) {
