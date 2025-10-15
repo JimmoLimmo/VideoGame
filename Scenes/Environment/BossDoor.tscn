@@ -1,8 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://b533htuagsdxy"]
+[gd_scene load_steps=7 format=3 uid="uid://b533htuagsdxy"]
 
 [ext_resource type="Script" uid="uid://bx5rflayaasdp" path="res://Scenes/Environment/BossDoor.cs" id="1_s4pxd"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_3yph4"]
 [ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_j52aj"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_j52aj"]
+polygon = PackedVector2Array(-118, -255, 119, -254, 118, 252, -118, 252)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j52aj"]
 size = Vector2(231, 507)
@@ -16,6 +19,9 @@ CloseSound = NodePath("CloseSound")
 
 [node name="DoorBody" type="StaticBody2D" parent="."]
 collision_layer = 2
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="DoorBody"]
+occluder = SubResource("OccluderPolygon2D_j52aj")
 
 [node name="Sprite2D" type="Sprite2D" parent="DoorBody"]
 texture = ExtResource("2_3yph4")

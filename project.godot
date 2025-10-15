@@ -28,6 +28,7 @@ GameOverMenu="*res://Scenes/UI/GameOverMenu.tscn"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/borderless=true
 window/stretch/mode="viewport"
 window/stretch/aspect="ignore"
 
@@ -116,7 +117,3 @@ move_down={
 [physics]
 
 2d/default_gravity=1960.0
-
-[rendering]
-
-environment/defaults/default_clear_color=Color(0, 0, 0, 1)

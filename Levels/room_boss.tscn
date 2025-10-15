@@ -228,7 +228,7 @@ color = Color(0.999999, 0.995279, 0.695077, 1)
 energy = 0.25
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(2062, 954)
+position = Vector2(2319, 965)
 scale = Vector2(11.3594, 6.71533)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_y5lni")

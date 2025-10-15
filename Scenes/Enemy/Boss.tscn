@@ -419,6 +419,8 @@ shape = SubResource("CapsuleShape2D_ghr8m")
 [node name="BloodEmitter" type="CPUParticles2D" parent="."]
 
 [node name="SparkEmitter" type="CPUParticles2D" parent="."]
+emitting = false
+one_shot = true
 
 [node name="ShockwaveSpawnLeft" type="Marker2D" parent="."]
 position = Vector2(-180, 112.835)
