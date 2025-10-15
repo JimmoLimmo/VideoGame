@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public enum RoomGroup { Title, Overworld, Boss, Credits }
+public enum RoomGroup { Title, Overworld, Boss, Credits, Ambiance }
 
 public partial class GlobalRoomChange : Node {
 	// --------------------------------------------------------------------
@@ -28,7 +28,7 @@ public partial class GlobalRoomChange : Node {
 	public static string LastExitName = "";
 	public static string LastExitRoom = "";
 
-	// ✅ New: Checkpoint system
+
 	public static string CheckpointRoom = "";
 	public static Vector2 CheckpointPos = Vector2.Zero;
 	public static bool HasCheckpoint => !string.IsNullOrEmpty(CheckpointRoom);
@@ -86,6 +86,8 @@ public partial class GlobalRoomChange : Node {
 
 		string path = scene.SceneFilePath?.ToLower() ?? "";
 		string name = scene.Name.ToString().ToLowerInvariant();
+		if (path.Contains("21"))
+			return RoomGroup.Ambiance;
 		if (path.Contains("title") || path.Contains("menu") || name.Contains("menu") || name.Contains("title"))
 			return RoomGroup.Title;
 		if (path.Contains("boss") || name.Contains("boss"))
@@ -125,13 +127,21 @@ public partial class GlobalRoomChange : Node {
 			case RoomGroup.Title:
 				if (!mm.IsPlaying(BgmTrack.Title)) mm.Play(BgmTrack.Title, 0.8);
 				break;
+
 			case RoomGroup.Overworld:
 				if (!mm.IsPlaying(BgmTrack.Overworld)) mm.Play(BgmTrack.Overworld, 0.8);
 				break;
+
+			case RoomGroup.Ambiance:
+				if (!mm.IsPlaying(BgmTrack.Ambiance)) mm.Play(BgmTrack.Ambiance, 0.8);
+				break;
+
 			case RoomGroup.Boss:
-				mm.StartBoss(0.8);
+				// Only play ambience first; BossDoor will switch to boss music later
+				if (!mm.IsPlaying(BgmTrack.Ambiance)) mm.Play(BgmTrack.Ambiance, 0.8);
 				break;
 		}
+
 	}
 
 	public static void SetRespawnToLastExit(Node scene) {
