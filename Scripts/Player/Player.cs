@@ -84,6 +84,11 @@ public partial class Player : CharacterBody2D {
 	private AudioStreamPlayer2D _swingPlayer;
 	private AudioStreamPlayer2D _wallJumpPlayer;
 	private AudioStreamPlayer2D _landPlayer;
+	private AudioStreamPlayer2D _healLoopPlayer;
+	private AudioStreamPlayer2D _healCompletePlayer;
+	private AudioStreamPlayer2D _healReadyPlayer;
+
+
 	private bool _wasOnFloor = false;
 	private bool hasSwung = false;
 
@@ -138,6 +143,10 @@ public partial class Player : CharacterBody2D {
 		_swingPlayer = GetNode<AudioStreamPlayer2D>("Audio/SwordSwingPlayer");
 		_wallJumpPlayer = GetNode<AudioStreamPlayer2D>("Audio/WallJumpPlayer");
 		_landPlayer = GetNode<AudioStreamPlayer2D>("Audio/LandPlayer");
+		_healLoopPlayer = GetNode<AudioStreamPlayer2D>("Audio/Heal_Charging");
+		_healCompletePlayer = GetNode<AudioStreamPlayer2D>("Audio/Heal_Finish");
+		_healReadyPlayer = GetNode<AudioStreamPlayer2D>("Audio/Heal_Ready");
+
 
 		AddToGroup("player");
 	}
@@ -168,7 +177,8 @@ public partial class Player : CharacterBody2D {
 			HandleDashInput();
 			HandleAttack(delta);
 		}
-		
+		_wasOnFloor = IsOnFloor();
+
 		HandleAnimations();
 		// --- Landing detection ---
 		if (!_wasOnFloor && IsOnFloor()) {
@@ -244,9 +254,9 @@ public partial class Player : CharacterBody2D {
 		if (Mathf.Abs(inputX) > 0.01f) {
 			velocity.X = inputX * Speed;
 			bool facingLeft = inputX < 0f;
-			
-			if(!swordAnimator.IsPlaying()) {
-				sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);	
+
+			if (!swordAnimator.IsPlaying()) {
+				sprites.Scale = new Vector2(facingLeft ? -1 : 1, 1);
 				_sword?.SetFacingLeft(facingLeft);
 			}
 		}
@@ -381,20 +391,23 @@ public partial class Player : CharacterBody2D {
 
 		if (holdPlayer) {
 			nextAnimation = ("Stagger");
-		} else if(_isDashing) {
-			if(Velocity.Y < 0) nextAnimation = "Jump";
+		}
+		else if (_isDashing) {
+			if (Velocity.Y < 0) nextAnimation = "Jump";
 			else if (lastAnimation != "Dash") {
 				nextAnimation = "Dash";
-				
+
 			}
-		} else if(_isWallSliding) {
-			if(lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
+		}
+		else if (_isWallSliding) {
+			if (lastAnimation != "IntoWallslide" && lastAnimation != "Wallslide") {
 				nextAnimation = ("IntoWallslide");
 			}
 			else {
 				nextAnimation = ("Wallslide");
 			}
-		} else if(_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
+		}
+		else if (_wallJumpLockTimer > 0f && (lastAnimation == "IntoWallslide" || lastAnimation == "Wallslide")) {
 			nextAnimation = "Jump";
 		}
 		else if (Velocity.Y < -10f && Velocity.Y > -200f) {
@@ -479,6 +492,9 @@ public partial class Player : CharacterBody2D {
 				if (_anim.HasAnimation("FocusStart"))
 					_anim.Play("FocusStart");
 			}
+			if (!_healLoopPlayer.Playing) {
+				_healLoopPlayer.Play();
+			}
 
 			// Always advance timer while healing
 			if (_isHealing) {
@@ -487,9 +503,14 @@ public partial class Player : CharacterBody2D {
 				if (_healTimer >= HealDuration) {
 					GD.Print("[Heal] Finished");
 					Heal(HealAmount);
+					_healCompletePlayer.Play();
 					StopHealing();
 					return;
 				}
+				else if (_isHealing) {
+					StopHealing();
+				}
+
 
 				// Small debug print
 				if (((int)(Time.GetTicksMsec() / 250)) % 5 == 0)
@@ -507,6 +528,7 @@ public partial class Player : CharacterBody2D {
 
 
 	private void StopHealing() {
+		_healLoopPlayer.Stop();
 		GD.Print("[Heal] StopHealing called");
 		_isHealing = false;
 		holdPlayer = false;
@@ -608,6 +630,9 @@ public partial class Player : CharacterBody2D {
 	public int MaxMana => GlobalRoomChange.maxMana;
 
 	public void AddMana(int amount) {
+		bool justReachedHealThreshold = _mana - amount < HealManaCost && _mana >= HealManaCost;
+		if (justReachedHealThreshold)
+			_healReadyPlayer.Play();
 		_mana = Mathf.Min(_mana + amount, MaxMana);
 		_hud?.SetMana(_mana);
 		GlobalRoomChange.mana = _mana;

@@ -23,6 +23,8 @@ public partial class TechTick : CharacterBody2D {
 
 	private CpuParticles2D bloodEmitter;
 	private CpuParticles2D sparkEmitter;
+	private AudioStreamPlayer2D hitSound;
+
 
 	public override void _Ready() {
 		_currentHealth = MaxHealth;
@@ -40,49 +42,55 @@ public partial class TechTick : CharacterBody2D {
 
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
 		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
+		hitSound = GetNode<AudioStreamPlayer2D>("Hit");
+
 	}
 
 	public override void _PhysicsProcess(double delta) {
 		Vector2 velocity = Velocity;
 		float goalSpeed = 0f;
-		
+
 		if (GlobalPosition.X >= _rightLimit.X) _movingRight = false;
 		else if (GlobalPosition.X < _leftLimit.X) _movingRight = true;
-		
-		if(_movingRight) {
-			goalSpeed  = Speed;
+
+		if (_movingRight) {
+			goalSpeed = Speed;
 			_sprite.FlipH = false;
-		} else {
+		}
+		else {
 			goalSpeed = -Speed;
 			_sprite.FlipH = true;
 		}
-		
+
 		_anim.Play("Walk");
-		
+
 		velocity.X = Mathf.MoveToward(velocity.X, goalSpeed, knockbackDecceleration);
 
 		if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
 		Velocity = velocity;
-		
-		if(!isDead) MoveAndSlide();
+
+		if (!isDead) MoveAndSlide();
 	}
 
 	public void TakeDamage(int amount, Vector2 source) {
 		_currentHealth -= amount;
 		bloodEmitter.Restart();
 		sparkEmitter.Restart();
+
+		hitSound.Play();
+
 		ApplyKnockback(source);
 		CheckDeath();
 	}
-	
+
 	private void ApplyKnockback(Vector2 source) {
 		Vector2 velocity = new Vector2(0, 0);
-		
+
 		Vector2 dir = (GlobalPosition - source).Normalized();
-		
-		if(dir.X > 0) velocity = new Vector2(knockbackVelocity, 0);
+
+		if (dir.X > 0) velocity = new Vector2(knockbackVelocity, 0);
 		else velocity = new Vector2(-knockbackVelocity, 0);
-		
+
 		Velocity = velocity;
 	}
 

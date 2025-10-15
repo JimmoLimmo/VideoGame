@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://ndjhcd7ysgc1"]
+[gd_scene load_steps=10 format=3 uid="uid://ndjhcd7ysgc1"]
 
 [ext_resource type="Script" uid="uid://dlj8nmsfw8xvs" path="res://Scripts/Enemy/TechTick.cs" id="1_mw074"]
 [ext_resource type="Texture2D" uid="uid://d1eewalalqkgk" path="res://Sprites/Enemies/TechTick_SpriteSheet.png" id="2_nvvbs"]
+[ext_resource type="AudioStream" uid="uid://clwwdya4fluvb" path="res://Audio/SFX/sword_hit_reject.wav" id="3_k5g0d"]
 
 [sub_resource type="Animation" id="Animation_dmwl5"]
 length = 0.001
@@ -118,5 +119,10 @@ emission_sphere_radius = 14.37
 initial_velocity_min = 628.0
 initial_velocity_max = 628.0
 color = Color(1, 1, 0.356863, 1)
+
+[node name="Hit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_k5g0d")
+volume_db = 24.0
+bus = &"SFX"
 
 [connection signal="area_entered" from="HitBox" to="." method="OnHitBoxEntered"]

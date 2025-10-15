@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bl57h6bp50oo2"]
+[gd_scene load_steps=37 format=3 uid="uid://bl57h6bp50oo2"]
 
 [ext_resource type="Script" uid="uid://cj3m61nrxyuet" path="res://Scripts/Player/Player.cs" id="1_evcib"]
 [ext_resource type="Texture2D" uid="uid://cxsd8pejh6ld4" path="res://Sprites/Player/PlayerCharacter_SpriteSheet.png" id="1_whvb5"]
@@ -11,6 +11,9 @@
 [ext_resource type="AudioStream" uid="uid://cdfq3g3ygkqlj" path="res://Audio/SFX/sword_1.wav" id="8_oikmp"]
 [ext_resource type="AudioStream" uid="uid://bohsgl5oe3nrd" path="res://Audio/SFX/hero_wall_jump.wav" id="9_06tpx"]
 [ext_resource type="AudioStream" uid="uid://c20c38kqnpt1i" path="res://Audio/SFX/hero_land_soft.wav" id="10_jhyir"]
+[ext_resource type="AudioStream" uid="uid://cd0jlbih5scu8" path="res://Audio/SFX/focus_ready.wav" id="12_7g0yx"]
+[ext_resource type="AudioStream" uid="uid://x3jryqpnmpyv" path="res://Audio/SFX/focus_health_charging.wav" id="13_dey5f"]
+[ext_resource type="AudioStream" uid="uid://c1cr4vldn0e0i" path="res://Audio/SFX/focus_health_heal.wav" id="14_r5xpd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_whvb5"]
 radius = 75.0
@@ -1418,4 +1421,18 @@ stream = ExtResource("9_06tpx")
 [node name="LandPlayer" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("10_jhyir")
 volume_db = 20.0
+bus = &"SFX"
+
+[node name="Heal_Ready" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("12_7g0yx")
+volume_db = 24.0
+bus = &"SFX"
+
+[node name="Heal_Charging" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("13_dey5f")
+bus = &"SFX"
+
+[node name="Heal_Finish" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("14_r5xpd")
+volume_db = 24.0
 bus = &"SFX"

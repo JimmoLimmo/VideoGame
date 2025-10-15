@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=4 uid="uid://641es3coh6tl"]
+[gd_scene load_steps=42 format=4 uid="uid://641es3coh6tl"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_fri8c"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_7a47q"]
@@ -12,7 +12,6 @@
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="9_lg0cl"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="10_i3say"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="11_23gfh"]
-[ext_resource type="PackedScene" uid="uid://cftj27ntihf13" path="res://Scenes/Environment/MovingPlatform.tscn" id="12_23gfh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thak2"]
 size = Vector2(5, 2498)
@@ -400,7 +399,7 @@ shape = SubResource("RectangleShape2D_i3say")
 
 [node name="BotRightExit" parent="." instance=ExtResource("6_oci5r")]
 ConnectedRoom = "res://Levels/room_10.tscn"
-PlayerPos = Vector2(-150, -108)
+PlayerPos = Vector2(-83, -108)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BotRightExit"]
 position = Vector2(492.5, 2176.72)
@@ -423,6 +422,3 @@ texture = SubResource("GradientTexture2D_2vm6y")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_lg0cl")
 volume_db = -10.306
-
-[node name="MovingPlatform" parent="." instance=ExtResource("12_23gfh")]
-position = Vector2(-582, -225)
