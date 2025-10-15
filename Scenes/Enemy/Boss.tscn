@@ -247,7 +247,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -302,6 +302,29 @@ tracks/2/keys = {
 "update": 1,
 "values": [true, false]
 }
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sword")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.25, 0.416667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"EnableHitbox"
+}, {
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"HitCheck"
+}, {
+"args": [],
+"method": &"DisableHitbox"
+}]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7sdn3"]
 _data = {
@@ -311,7 +334,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykrhc"]
-size = Vector2(16.4218, 42.0263)
+size = Vector2(45.6939, 36.0851)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_frr2l"]
 radius = 195.003
@@ -344,6 +367,7 @@ vframes = 3
 frame = 7
 
 [node name="Swing" type="Sprite2D" parent="SpriteRoot"]
+visible = false
 position = Vector2(541, 3)
 texture = ExtResource("4_us8nl")
 hframes = 5
@@ -369,14 +393,14 @@ libraries = {
 }
 
 [node name="Sword" type="Area2D" parent="."]
-visible = false
 monitoring = false
 script = ExtResource("4_frr2l")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]
-position = Vector2(119, -9)
+position = Vector2(418.662, 101.25)
 scale = Vector2(7.995, 7.995)
 shape = SubResource("RectangleShape2D_ykrhc")
+debug_color = Color(0.994374, 0, 0.223101, 0.42)
 
 [node name="HitBox" type="Area2D" parent="."]
 position = Vector2(-1, 2)

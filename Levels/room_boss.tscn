@@ -141,10 +141,10 @@ size = Vector2(33, 384)
 [node name="Room" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
-offset_left = -594.0
-offset_top = -438.0
-offset_right = 3802.0
-offset_bottom = 2321.0
+offset_left = -374.0
+offset_top = -300.0
+offset_right = 3632.0
+offset_bottom = 2141.0
 scale = Vector2(0.695, 0.695)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
@@ -160,7 +160,7 @@ scroll_scale = Vector2(0.8, 0.8)
 
 [node name="BackgroundBlur" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y5lni")
-offset_left = -775.0
+offset_left = -812.0
 offset_top = -490.0
 offset_right = 3921.0
 offset_bottom = 1625.0
@@ -170,7 +170,7 @@ color = Color(1, 1, 1, 0)
 
 [node name="Boss" parent="." instance=ExtResource("14_pfkkc")]
 position = Vector2(287, 895)
-MaxHealth = 10
+MaxHealth = 300
 WalkSpeed = 250.0
 JumpVy = -1000.0
 JumpVx = -181.4

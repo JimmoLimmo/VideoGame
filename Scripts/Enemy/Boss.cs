@@ -615,7 +615,7 @@ public partial class Boss : CharacterBody2D {
 		// 	_stateTimer = 0.18f;
 		// }
 		if (swordAnimate.IsPlaying() == false) {
-			_sword.DisableHitbox();
+			//_sword.DisableHitbox();
 			Change(State.Recover);
 			_stateTimer = 0.18f;
 		}
