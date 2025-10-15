@@ -305,7 +305,7 @@ BossPath = NodePath("../Boss")
 
 [node name="RightExit" parent="." instance=ExtResource("9_fh6qp")]
 ConnectedRoom = "res://Levels/room_21.tscn"
-PlayerPos = Vector2(-1441, -129)
+PlayerPos = Vector2(-1425, -10)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(2438, 954)
