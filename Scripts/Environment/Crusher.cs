@@ -7,8 +7,10 @@ public partial class Crusher : Node {
 	[Export] public float upDuration = 1f;
 	[Export] public float downDuration = 0.5f;
 	[Export] public float movementTime = 0.5f;
+	[Export] public float offset = 0f;
 	[Export] public bool isDown = false;
 	[Export] public bool halt = false;
+	[Export] public bool doesDamage = true;
 	
 	private StaticBody2D top;
 	private Area2D deathZone;
@@ -30,12 +32,12 @@ public partial class Crusher : Node {
 		if(!halt) {
 			cycleTimer.OneShot = true;
 			cycleTimer.Timeout += OnCycleTimeout;
-			cycleTimer.Start(upDuration);
+			cycleTimer.Start(upDuration + offset);
 		}
 	}
 
 	public override void _Process(double delta) {
-		if (top.Position.Y > 150 && !isDown) {
+		if (top.Position.Y > 150 && !isDown && doesDamage) {
 			deathZone.Monitoring = true;
 
 			if (!hasPlayedBoom && top.Position.Y >= 370 && top.Position.Y <= 385) {
