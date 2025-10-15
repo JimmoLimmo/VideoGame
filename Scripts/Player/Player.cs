@@ -507,9 +507,6 @@ public partial class Player : CharacterBody2D {
 					StopHealing();
 					return;
 				}
-				else if (_isHealing) {
-					StopHealing();
-				}
 
 
 				// Small debug print
