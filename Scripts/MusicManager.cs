@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public enum BgmTrack { None, Title, Overworld, Boss }
+public enum BgmTrack { None, Title, Overworld, Boss, Ambiance }
 
 public partial class MusicManager : Node {
     // ---- Singleton instance ----
@@ -13,6 +13,7 @@ public partial class MusicManager : Node {
         { BgmTrack.Title,     "res://Audio/Music/The Voice Someone Calls - Persona 3 Reload OST [Extended] [Rl1qXhmKYfM].mp3" },
         { BgmTrack.Overworld, "res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" },
         { BgmTrack.Boss,   "res://Audio/Music/S61-216 Hollow Knight.wav" },
+        { BgmTrack.Ambiance, "res://Audio/SFX/mines_machinery_atmos.wav"}
     };
 
     private AudioStreamPlayer _a, _b, _active, _inactive;
