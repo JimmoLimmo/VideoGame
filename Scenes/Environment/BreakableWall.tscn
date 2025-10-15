@@ -22,21 +22,11 @@ texture = ExtResource("2_3x67c")
 region_enabled = true
 region_rect = Rect2(256, 0, 256, 256)
 
-[node name="Sprite2D2" type="Sprite2D" parent="StaticBody2D"]
-texture = ExtResource("2_3x67c")
-region_enabled = true
-region_rect = Rect2(0, 256, 256, 256)
-
-[node name="Sprite2D3" type="Sprite2D" parent="StaticBody2D"]
-texture = ExtResource("2_3x67c")
-region_enabled = true
-region_rect = Rect2(256, 256, 256, 256)
-
 [node name="Sprite2D4" type="Sprite2D" parent="StaticBody2D"]
 scale = Vector2(-1, -1)
 texture = ExtResource("2_3x67c")
 region_enabled = true
-region_rect = Rect2(512, 256, 256, 256)
+region_rect = Rect2(1407.44, 1023.8, 256, 256)
 
 [node name="WallHitbox" type="Area2D" parent="."]
 
