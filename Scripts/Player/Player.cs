@@ -177,6 +177,19 @@ public partial class Player : CharacterBody2D {
 		}
 		_wasOnFloor = IsOnFloor();
 
+		// -------------------------------------------------------------
+		// Follow moving platforms when standing on them
+		// -------------------------------------------------------------
+		if (IsOnFloor()) {
+			KinematicCollision2D floorCollision = GetSlideCollisionCount() > 0 ? GetSlideCollision(0) : null;
+			if (floorCollision != null) {
+				var collider = floorCollision.GetCollider() as Node2D;
+				if (collider != null && collider.GetParent() is MovingPlatform platform) {
+					// Move the player along with the platform
+					GlobalPosition += platform.LastMotion;
+				}
+			}
+		}
 
 		HandleHeal(delta);
 		UpdateInvulnerability(delta);
