@@ -200,7 +200,7 @@ size = Vector2(75, 385)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_pc3pq"]
 gradient = SubResource("Gradient_hm1th")
 
-[node name="Room20" type="Node2D"]
+[node name="Room21" type="Node2D"]
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -8690.0
