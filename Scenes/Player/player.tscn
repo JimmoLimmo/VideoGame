@@ -13,7 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://c20c38kqnpt1i" path="res://Audio/SFX/hero_land_soft.wav" id="10_jhyir"]
 [ext_resource type="AudioStream" uid="uid://cd0jlbih5scu8" path="res://Audio/SFX/focus_ready.wav" id="12_7g0yx"]
 [ext_resource type="AudioStream" uid="uid://x3jryqpnmpyv" path="res://Audio/SFX/focus_health_charging.wav" id="13_dey5f"]
-[ext_resource type="AudioStream" uid="uid://c1cr4vldn0e0i" path="res://Audio/SFX/focus_health_heal.wav" id="14_r5xpd"]
+[ext_resource type="AudioStream" uid="uid://c1cr4vldn0e0i" path="res://Audio/focus_health_heal.wav" id="14_r5xpd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_whvb5"]
 radius = 75.0
