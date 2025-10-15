@@ -36,6 +36,42 @@ public partial class GameOverMenu : Control {
 		tween.TweenProperty(this, "modulate:a", 1.0f, 0.4);
 	}
 
+	// private async void OnRetryPressed() {
+	// 	var tree = GetTree();
+	// 	var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
+
+	// 	if (fader != null)
+	// 		await fader.FadeOut(0.4f);
+
+	// 	HideAll();
+	// 	tree.Paused = false;
+
+	// 	// 1) Decide which room to load (checkpoint room if available, else room_01)
+	// 	string roomPath = GlobalRoomChange.GetRespawnRoomPath();
+
+	// 	// 2) Change scene to that room
+	// 	tree.ChangeSceneToFile(roomPath);
+
+	// 	// 3) Wait for the scene to be fully ready
+	// 	await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+	// 	await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+
+	// 	// 4) Compute a good spawn (nearest door to the checkpoint position)
+	// 	var scene = tree.CurrentScene;
+	// 	var targetPos = GlobalRoomChange.GetRespawnPositionForLoadedScene(scene);
+
+	// 	// 5) Place player and give a brief door grace
+	// 	var player = scene?.GetNodeOrNull<Player>("Player");
+	// 	if (player != null) {
+	// 		GlobalRoomChange.PlayerPos = targetPos; // keep global in sync
+	// 		player.GlobalPosition = targetPos;
+	// 		player.BeginDoorGrace(0.6f);
+	// 	}
+	// 	GD.Print($"[Respawn Debug] Player found? {player != null}, position={player?.GlobalPosition}");
+
+	// 	if (fader != null)
+	// 		await fader.FadeIn(0.4f);
+	// }
 	private async void OnRetryPressed() {
 		var tree = GetTree();
 		var fader = tree.Root.GetNodeOrNull<ScreenFader>("/root/ScreenFader");
@@ -46,33 +82,62 @@ public partial class GameOverMenu : Control {
 		HideAll();
 		tree.Paused = false;
 
-		tree.ReloadCurrentScene();
 
-		// Wait a few frames for scene load
+		GlobalRoomChange.Activate = true;
+		GlobalRoomChange.PlayerJumpOnEnter = false;
+		GlobalRoomChange.PlayerPos = Vector2.Zero;   // will override below
+
+		// 1  Decide which room to load
+		string roomPath = GlobalRoomChange.GetRespawnRoomPath();
+		tree.ChangeSceneToFile(roomPath);
+
+		// 2️  Wait for scene to be ready
 		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
 
-		// Now reposition player to last exit
-		var currentScene = tree.CurrentScene;
-		GlobalRoomChange.SetRespawnToLastExit(currentScene);
-
-		var player = currentScene.GetNodeOrNull<Player>("Player");
-		if (player != null) {
-			player.GlobalPosition = GlobalRoomChange.PlayerPos;
-			player.BeginDoorGrace(0.6f);
+		var scene = tree.CurrentScene;
+		if (scene == null) {
+			GD.PushError("[GameOver] Scene failed to load!");
+			return;
 		}
 
+		// 3️ Find a valid door spawn point in that scene
+		Vector2 targetPos = GlobalRoomChange.GetRespawnPositionForLoadedScene(scene);
+
+		// 4  Get the Player node
+		// Use %Player so it finds by unique name anywhere in the scene
+		var player = scene.GetNodeOrNull<Player>("%Player");
+		if (player == null) {
+			// GD.PushError("[GameOver] Player not found in scene!");
+			return;
+		}
+
+		// 5️  Apply position and door grace
+		player.GlobalPosition = targetPos;
+		player.BeginDoorGrace(0.6f);
+
+		// 6️  Force the camera to follow again
+		var cam = player.GetNodeOrNull<Camera2D>("Camera2D");
+		if (cam != null)
+			cam.MakeCurrent();
+
+		// 7️ (Optional) visualize spawn point for debugging
+		var marker = new ColorRect {
+			Color = new Color(1, 0, 0, 0.6f),
+			Size = new Vector2(16, 16),
+			Position = targetPos - new Vector2(8, 8)
+		};
+		scene.AddChild(marker);
+		marker.ZIndex = 1000;
+		GD.Print($"[GameOver] Respawn marker created at {targetPos}");
+
+		// 8️  Fade back in
 		if (fader != null)
 			await fader.FadeIn(0.4f);
 
-		if (string.IsNullOrEmpty(GlobalRoomChange.LastExitName)) {
-			GlobalRoomChange.PlayerPos = GlobalRoomChange.FindNearestDoor(currentScene, player.GlobalPosition);
-		}
-		player.GlobalPosition = GlobalRoomChange.PlayerPos;
-		player.BeginDoorGrace(0.6f);
-
-
+		GD.Print($"[GameOver] Player respawned at {targetPos}");
 	}
+
 
 
 	private async void OnQuitPressed() {
@@ -93,6 +158,10 @@ public partial class GameOverMenu : Control {
 		GlobalRoomChange.mana = 0;
 		GlobalRoomChange.Activate = false;
 
+		GlobalRoomChange.CheckpointRoom = "";
+		GlobalRoomChange.CheckpointPos = Vector2.Zero;
+
+
 		tree.ChangeSceneToFile("res://Scenes/UI/MainMenu.tscn");
 
 		if (fader != null)
@@ -104,4 +173,5 @@ public partial class GameOverMenu : Control {
 		if (_layer != null)
 			_layer.Visible = false;
 	}
+
 }

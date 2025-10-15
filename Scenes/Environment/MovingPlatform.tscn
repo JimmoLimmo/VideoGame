@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://cftj27ntihf13"]
+
+[ext_resource type="Script" uid="uid://dyldkgwwsl07q" path="res://Scenes/Environment/MovingPlatform.cs" id="1_ek86t"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_hclp8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f4825"]
+size = Vector2(257, 122)
+
+[node name="MovingPlatform" type="Node2D"]
+script = ExtResource("1_ek86t")
+
+[node name="Platform" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform"]
+position = Vector2(0, 1)
+texture = ExtResource("2_hclp8")
+region_enabled = true
+region_rect = Rect2(636.112, 1.0008, 258.303, 125.178)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+position = Vector2(1.5, 2)
+shape = SubResource("RectangleShape2D_f4825")
+
+[node name="CycleTimer" type="Timer" parent="."]
