@@ -11,10 +11,19 @@ public partial class MusicManager : Node {
     private readonly Dictionary<BgmTrack, string> _paths = new()
     {
         { BgmTrack.Title,     "res://Audio/Music/The Voice Someone Calls - Persona 3 Reload OST [Extended] [Rl1qXhmKYfM].mp3" },
-        { BgmTrack.Overworld, "res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" },
-        { BgmTrack.Boss,   "res://Audio/Music/S61-216 Hollow Knight.wav" },
+        { BgmTrack.Overworld, "res://Audio/Music/Gear_Trains_FINAL.mp3" },
+        { BgmTrack.Boss,   "res://Audio/Music/The_Halting_of_Gears_in_a_System_LOOP_FINAL.mp3" },
         { BgmTrack.Ambiance, "res://Audio/SFX/mines_machinery_atmos.wav"}
     };
+    // --- Per-track gain offsets (in decibels) ---
+    private readonly Dictionary<BgmTrack, float> _trackGain = new()
+    {
+    { BgmTrack.Title, 0f },
+    { BgmTrack.Overworld, 24f }, // +3 dB boost
+    { BgmTrack.Boss, 24f },      // +5 dB boost
+    { BgmTrack.Ambiance, 0f }  // quieter ambience
+};
+
 
     private AudioStreamPlayer _a, _b, _active, _inactive;
     private BgmTrack _current = BgmTrack.None;
@@ -68,8 +77,16 @@ public partial class MusicManager : Node {
         _isFading = true;
 
         _inactive.Stream = stream;
-        _inactive.VolumeDb = StartGainDb;
+
+        // Apply per-track gain offset if one exists
+        float gainOffset = _trackGain.TryGetValue(track, out var offset) ? offset : 0f;
+        _inactive.VolumeDb = StartGainDb + gainOffset;
+
+        // Optional: ensure it never exceeds 0 dB
+        _inactive.VolumeDb = Mathf.Min(_inactive.VolumeDb, 0f);
+
         _inactive.Play();
+
 
         if (_active.Playing && crossfadeSeconds > 0) {
             await FadePair(_active, FadeOutDb, _inactive, 0f, crossfadeSeconds);
