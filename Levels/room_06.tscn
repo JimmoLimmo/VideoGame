@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_q12ft"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="10_7n36c"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="12_6au6i"]
-[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/Upgrade.tscn" id="12_kuq1f"]
+[ext_resource type="PackedScene" uid="uid://g63h10c3sjsi" path="res://Scenes/Collectables/Upgrade.tscn" id="12_kuq1f"]
 [ext_resource type="Texture2D" uid="uid://b4664oktyypy0" path="res://Sprites/Player/Dash_Upgrade_Image.png" id="13_kuq1f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rky6a"]
