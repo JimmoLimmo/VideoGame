@@ -30,6 +30,11 @@ public partial class Collectable : Area2D {
 		if (body is Player player) {
 			player.OnCollect(Type);
 
+			var currentScene = GetTree().CurrentScene;
+			GlobalRoomChange.CheckpointRoom = currentScene.SceneFilePath;
+			GlobalRoomChange.CheckpointPos = GlobalPosition; // used to find nearest door
+			GD.Print($"[Checkpoint] Saved room checkpoint at {GlobalRoomChange.CheckpointRoom}");
+
 			ShowPickupOverlay();
 		}
 	}
@@ -44,10 +49,10 @@ public partial class Collectable : Area2D {
 		var descLabel = ui.GetNode<Label>("Control/Description");
 
 		var image = ui.GetNode<TextureRect>("Control/ItemImage");
-		
+
 		string actionType = "";
-			
-		switch(Type) {
+
+		switch (Type) {
 			case CollectableType.Sword:
 				actionType = "attack";
 				break;
@@ -61,23 +66,24 @@ public partial class Collectable : Area2D {
 				actionType = "sword_throw";
 				break;
 		}
-		
+
 		var binds = InputMap.ActionGetEvents(actionType);
 		string bindText = "";
-		
-		if(binds.Count == 0) {
+
+		if (binds.Count == 0) {
 			bindText = "Missing Bind";
-		} else {
+		}
+		else {
 			var firstEvent = binds[0];
-			
+
 			bindText = firstEvent switch {
-				InputEventKey keyEvent => keyEvent.AsText(), 
+				InputEventKey keyEvent => keyEvent.AsText(),
 				InputEventMouseButton mouseEvent => mouseEvent.AsText(),
 				InputEventJoypadButton joyEvent => joyEvent.AsText(),
 				_ => firstEvent.AsText()
 			};
 		}
-		
+
 		string useString = keybindDesc.Replace("<button>", bindText);
 
 		nameLabel.Text = ItemName;

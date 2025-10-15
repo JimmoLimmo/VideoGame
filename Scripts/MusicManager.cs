@@ -10,7 +10,7 @@ public partial class MusicManager : Node {
 
     private readonly Dictionary<BgmTrack, string> _paths = new()
     {
-        { BgmTrack.Title,     "res://Audio/Music/Mementos - Persona 5 OST [Extended].wav" },
+        { BgmTrack.Title,     "res://Audio/Music/The Voice Someone Calls - Persona 3 Reload OST [Extended] [Rl1qXhmKYfM].mp3" },
         { BgmTrack.Overworld, "res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" },
         { BgmTrack.Boss,   "res://Audio/Music/S61-216 Hollow Knight.wav" },
     };
