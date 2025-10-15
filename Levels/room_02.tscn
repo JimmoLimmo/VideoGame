@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_o1q8o"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_beo6d"]
-[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_vi02f"]
+[ext_resource type="PackedScene" uid="uid://bd0w1ls0vyoad" path="res://Scenes/Player/Player.tscn" id="3_vi02f"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_vyb1j"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_ma60x"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_wdo57"]
@@ -18,7 +18,7 @@ shader = ExtResource("2_beo6d")
 shader_parameter/blur_power = 0.08
 shader_parameter/iterations = 100.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_beo6d"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4de1t"]
 texture = ExtResource("4_vyb1j")
 texture_region_size = Vector2i(128, 128)
 0:0/size_in_atlas = Vector2i(2, 2)
@@ -46,7 +46,7 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSet" id="TileSet_a0oyl"]
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 1
-sources/2 = SubResource("TileSetAtlasSource_beo6d")
+sources/2 = SubResource("TileSetAtlasSource_4de1t")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vi02f"]
 texture = ExtResource("4_vyb1j")
@@ -166,9 +166,9 @@ gradient = SubResource("Gradient_2s52b")
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -771.0
-offset_top = -3818.0
-offset_right = 4003.0
-offset_bottom = -73.0
+offset_top = -1703.0
+offset_right = 3369.0
+offset_bottom = 1056.0
 scale = Vector2(0.78, 2.145)
 color = Color(0.147672, 0.147672, 0.147672, 1)
 
@@ -302,7 +302,6 @@ scale = Vector2(1.9425, 3.36786)
 texture = SubResource("GradientTexture2D_hst8f")
 
 [node name="RightExit" parent="." instance=ExtResource("6_wdo57")]
-visible = false
 position = Vector2(2429, 3777)
 ConnectedRoom = "res://Levels/room_03.tscn"
 
@@ -311,7 +310,6 @@ position = Vector2(-20, -2)
 shape = SubResource("RectangleShape2D_kp4w0")
 
 [node name="LeftExit" parent="." instance=ExtResource("6_wdo57")]
-visible = false
 ConnectedRoom = "res://Levels/room_01.tscn"
 PlayerPos = Vector2(2332, 1046)
 
