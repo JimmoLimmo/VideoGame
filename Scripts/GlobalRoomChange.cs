@@ -27,6 +27,9 @@ public partial class GlobalRoomChange : Node {
 
 	public static string LastExitName = "";
 	public static string LastExitRoom = "";
+	public static string CheckpointRoom = "";
+	public static Vector2 CheckpointPos = Vector2.Zero;
+	public static bool HasCheckpoint => !string.IsNullOrEmpty(CheckpointRoom);
 
 	// --------------------------------------------------------------------
 	// C# event (replaces [Signal])
@@ -162,14 +165,14 @@ public partial class GlobalRoomChange : Node {
 				break;
 		}
 	}
-	public static void SetRespawnToLastExit(Node scene) {
-		if (string.IsNullOrEmpty(LastExitName))
-			return;
+	// public static void SetRespawnToLastExit(Node scene) {
+	// 	if (string.IsNullOrEmpty(LastExitName))
+	// 		return;
 
-		var door = scene.GetNodeOrNull<DoorArea2D>(LastExitName);
-		if (door != null)
-			PlayerPos = door.PlayerPos;
-	}
+	// 	var door = scene.GetNodeOrNull<DoorArea2D>(LastExitName);
+	// 	if (door != null)
+	// 		PlayerPos = door.PlayerPos;
+	// }
 
 	public static Vector2 FindNearestDoor(Node scene, Vector2 deathPos) {
 		float minDist = float.MaxValue;

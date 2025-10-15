@@ -43,36 +43,34 @@ public partial class GameOverMenu : Control {
 		if (fader != null)
 			await fader.FadeOut(0.4f);
 
-		HideAll();
-		tree.Paused = false;
+		string targetRoom;
+		Vector2 spawnPos;
 
-		tree.ReloadCurrentScene();
-
-		// Wait a few frames for scene load
-		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
-
-		// Now reposition player to last exit
-		var currentScene = tree.CurrentScene;
-		GlobalRoomChange.SetRespawnToLastExit(currentScene);
-
-		var player = currentScene.GetNodeOrNull<Player>("Player");
-		if (player != null) {
-			player.GlobalPosition = GlobalRoomChange.PlayerPos;
-			player.BeginDoorGrace(0.6f);
+		if (GlobalRoomChange.HasCheckpoint) {
+			targetRoom = GlobalRoomChange.CheckpointRoom;
+			spawnPos = GlobalRoomChange.CheckpointPos;
+			GD.Print($"[Retry] Respawning at checkpoint {targetRoom} → {spawnPos}");
 		}
+		else {
+			// fallback to current scene
+			targetRoom = tree.CurrentScene.SceneFilePath;
+			spawnPos = Vector2.Zero; // or your default spawn
+			GD.Print("[Retry] No checkpoint found, restarting current room.");
+		}
+
+		GlobalRoomChange.Activate = true;
+		GlobalRoomChange.PlayerPos = spawnPos;
+		GlobalRoomChange.PlayerJumpOnEnter = false;
+
+		tree.ChangeSceneToFile(targetRoom);
+
+		await ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+		GlobalRoomChange.ForceUpdate();
 
 		if (fader != null)
-			await fader.FadeIn(0.4f);
-
-		if (string.IsNullOrEmpty(GlobalRoomChange.LastExitName)) {
-			GlobalRoomChange.PlayerPos = GlobalRoomChange.FindNearestDoor(currentScene, player.GlobalPosition);
-		}
-		player.GlobalPosition = GlobalRoomChange.PlayerPos;
-		player.BeginDoorGrace(0.6f);
-
-
+			await fader.FadeIn(0.4f, true);
 	}
+
 
 
 	private async void OnQuitPressed() {
