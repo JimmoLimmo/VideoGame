@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://d2hia3xtij0yu" path="res://Font/TIMES.TTF" id="1_726cd"]
 [ext_resource type="Script" uid="uid://deo7oynlpudta" path="res://Scripts/UI/Credits.cs" id="1_mbqqj"]
-[ext_resource type="AudioStream" uid="uid://tgfubdsd1ywp" path="res://Audio/Music/Period - Persona 4 (No Beat).mp3" id="3_mn1va"]
+[ext_resource type="AudioStream" uid="uid://bhsbsr1ti0y6t" path="res://Audio/Music/Chris Christodoulou - con lentitud poderosa Risk of Rain 2 Short.wav" id="3_mn1va"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mbqqj"]
 font = ExtResource("1_726cd")
@@ -89,7 +89,7 @@ text = "Music
 Menu - \"The Voice Someone Calls\" by ATLUS Sound Team from Persona 3 Reload
 In Game - \"Gear Trains\" by sailthemarigold
 Boss - \"The Halting of Gears in a System\" by sailthemarigold
-Credits - \"Period - Persona 4 (Alpha Version)\" by Jimmy Nguyen"
+Credits - \"con lentitud poderosa\" by Chris Christodoulou from Risk of Rain 2"
 label_settings = SubResource("LabelSettings_mbqqj")
 horizontal_alignment = 1
 vertical_alignment = 1

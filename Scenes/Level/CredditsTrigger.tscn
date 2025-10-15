@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://831fmhc36r3h"]
+[gd_scene load_steps=4 format=3 uid="uid://cyyrmqa8inhlj"]
 
 [ext_resource type="Script" uid="uid://dl36pcgy56ktv" path="res://Scenes/Level/CreditsTrigger.cs" id="1_21g3f"]
-[ext_resource type="Texture2D" uid="uid://hu4llcqeqs3n" path="res://icon.svg" id="2_r0ghh"]
+[ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="2_r0ghh"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pct48"]
 

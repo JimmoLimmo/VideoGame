@@ -62,7 +62,12 @@ public partial class Boss : CharacterBody2D {
 	private Marker2D _spawnLeft;
 	private Marker2D _spawnRight;
 	private BossSword _sword;
-
+	private bool _invulnerable = false;
+	private float _invulnTimer = 0f;
+	private const float InvulnTime = 0.25f; // short anti multi-hit window
+	private bool _flashVisible = true;
+	private float _flashTimer = 0f;
+	private const float FlashRate = 0.06f;
 
 
 	// ========================= Internals =========================
@@ -227,7 +232,7 @@ public partial class Boss : CharacterBody2D {
 
 		_anim = GetNodeOrNull<AnimationPlayer>("SpriteRoot/AnimationPlayer")
 			 ?? GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-			
+
 		bossAnimate = GetNode<AnimationPlayer>("BossAnimation");
 		gearAnimate = GetNode<AnimationPlayer>("GearAnimation");
 
@@ -325,33 +330,36 @@ public partial class Boss : CharacterBody2D {
 			GD.Print($"[Boss] State={_state} Attack={_currentAttack} Pos={GlobalPosition} Vel={Velocity} OnFloor={IsOnFloor()} Grav={_worldGravity}");
 			_debugTimer = 0.25f;
 		}
-		
+
 		AnimationHandler();
+		UpdateInvulnerability(delta);
 
 		// keep inside arena
 		ClampArena();
 	}
-	
+
 	private void AnimationHandler() {
 		string nextGearAnimation = "";
 		string nextBossAnimation = "";
-		
-		if(Velocity.Y != 0) {
+
+		if (Velocity.Y != 0) {
 			nextGearAnimation = "Move";
 			nextBossAnimation = "Idle";
-		} else if(Velocity.X != 0) {
+		}
+		else if (Velocity.X != 0) {
 			nextGearAnimation = "Move";
 			nextBossAnimation = "Walk";
-		} else {
+		}
+		else {
 			nextGearAnimation = "Idle";
 			nextBossAnimation = "Idle";
 		}
-		
+
 		if (gearAnimate.CurrentAnimation != nextGearAnimation && nextGearAnimation != "") {
 			gearAnimate.Play(nextGearAnimation);
 			lastGearAnimation = nextGearAnimation;
 		}
-		
+
 		if (bossAnimate.CurrentAnimation != nextBossAnimation && nextBossAnimation != "") {
 			bossAnimate.Play(nextBossAnimation);
 			lastBossAnimation = nextBossAnimation;
@@ -820,6 +828,7 @@ public partial class Boss : CharacterBody2D {
 	// ========================= Damage & Hitboxes =========================
 	public void TakeDamage(int dmg) {
 		if (_state is State.Die_1 or State.Die_2) return;
+		if (_invulnerable) return;
 
 		_hp -= dmg;
 		GD.Print($"[Boss] Took {dmg} damage! Remaining HP: {_hp}");
@@ -831,6 +840,8 @@ public partial class Boss : CharacterBody2D {
 	}
 	public void TakeDamage(int dmg, Vector2 sourcePos) {
 		// optional: use hit source for directional effects
+		if (_state is State.Die_1 or State.Die_2) return;
+		if (_invulnerable) return;
 		EmitDirectionalBlood(sourcePos);
 		TakeDamage(dmg);
 	}
@@ -910,6 +921,32 @@ public partial class Boss : CharacterBody2D {
 		SetProcess(true);
 		ProcessMode = ProcessModeEnum.Inherit;  //  reactivate processing globally
 		RoarIntro();                            //  plays the cinematic and transitions to Idle
+	}
+	private void BeginInvulnerability(float duration) {
+		_invulnerable = true;
+		_invulnTimer = duration;
+		_flashTimer = 0f;
+		_flashVisible = true;
+		_sprite?.SetModulate(new Color(2f, 2f, 2f, 1f)); // white flash start
+	}
+
+	private void UpdateInvulnerability(double delta) {
+		if (!_invulnerable) return;
+
+		_invulnTimer -= (float)delta;
+		if (_invulnTimer <= 0f) {
+			_invulnerable = false;
+			_sprite?.SetModulate(Colors.White);
+			return;
+		}
+
+		// flicker between bright white and normal
+		_flashTimer -= (float)delta;
+		if (_flashTimer <= 0f) {
+			_flashTimer = FlashRate;
+			_flashVisible = !_flashVisible;
+			_sprite?.SetModulate(_flashVisible ? new Color(2f, 2f, 2f, 1f) : new Color(1f, 1f, 1f, 0.7f));
+		}
 	}
 
 }
