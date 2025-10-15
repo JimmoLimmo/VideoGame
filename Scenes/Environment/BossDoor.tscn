@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://b533htuagsdxy"]
+
+[ext_resource type="Script" uid="uid://bx5rflayaasdp" path="res://Scenes/Environment/BossDoor.cs" id="1_s4pxd"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_3yph4"]
+[ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_j52aj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j52aj"]
+size = Vector2(231, 507)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4c1x2"]
+size = Vector2(191, 203)
+
+[node name="BossDoor" type="Node2D"]
+script = ExtResource("1_s4pxd")
+
+[node name="DoorBody" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="DoorBody"]
+texture = ExtResource("2_3yph4")
+region_enabled = true
+region_rect = Rect2(1036.83, 0, 235.263, 515.1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorBody"]
+position = Vector2(0.5, -2.5)
+shape = SubResource("RectangleShape2D_j52aj")
+
+[node name="Trigger" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trigger"]
+position = Vector2(-215, 533)
+shape = SubResource("RectangleShape2D_4c1x2")
+
+[node name="CloseSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_j52aj")
+volume_db = 24.0
+bus = &"SFX"
