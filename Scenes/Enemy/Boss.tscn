@@ -52,10 +52,10 @@ position = Vector2(119, -9)
 scale = Vector2(7.995, 7.995)
 shape = SubResource("RectangleShape2D_ykrhc")
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="."]
 position = Vector2(-1, 2)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(-2, -7)
 shape = SubResource("CapsuleShape2D_0puiv")
 debug_color = Color(0.957019, 2.40654e-06, 0.534826, 0.42)
