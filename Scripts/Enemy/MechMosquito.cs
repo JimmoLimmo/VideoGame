@@ -35,6 +35,7 @@ public partial class MechMosquito : CharacterBody2D {
 	private Area2D aggroArea;
 	private CpuParticles2D bloodEmitter;
 	private CpuParticles2D sparkEmitter;
+	private AudioStreamPlayer2D hit;
 
 	public override void _Ready() {
 		AddToGroup("enemies");
@@ -51,6 +52,8 @@ public partial class MechMosquito : CharacterBody2D {
 		aggroArea = GetNode<Area2D>("AggroArea");
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
 		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
+		hit = GetNode<AudioStreamPlayer2D>("Hit");
+
 
 		hitBox.BodyEntered += OnBodyEntered;
 		aggroArea.BodyEntered += EnteredAggroArea;
@@ -58,7 +61,7 @@ public partial class MechMosquito : CharacterBody2D {
 	}
 
 	public override void _PhysicsProcess(double delta) {
-		if(!hasKnockback) {
+		if (!hasKnockback) {
 			Vector2 velocity = new Vector2(0, 0);
 
 			if (dashTimer < dashBreak) dashTimer += 1 * (float)delta;
@@ -85,7 +88,7 @@ public partial class MechMosquito : CharacterBody2D {
 					}
 					else {
 						velocity = dashDirection * dashSpeed * (float)delta * 50;
-						
+
 						dashTracker += (Position - lastPos).Length();
 					}
 				}
@@ -99,46 +102,49 @@ public partial class MechMosquito : CharacterBody2D {
 				Vector2 movePos = startPos;
 				Vector2 toPos = movePos - GlobalPosition;
 				Vector2 direction = toPos.Normalized();
-				
+
 				velocity = direction * speed * (float)delta * 50;
 			}
 
 			Vector2 randomizedVelocity = velocity.Rotated(angleOffset);
-			
+
 			lastPos = Position;
 			Velocity = randomizedVelocity;
-		} else {
-			if(knockbackTimer < knockbackTime) {
+		}
+		else {
+			if (knockbackTimer < knockbackTime) {
 				knockbackTimer += 1 * (float)delta;
-			} else {
+			}
+			else {
 				hasKnockback = false;
 			}
 		}
-		
+
 		MoveAndSlide();
 	}
 
 	public void TakeDamage(int amount, Vector2 source) {
 		currentHealth -= amount;
-		
+
 		bloodEmitter.Restart();
 		sparkEmitter.Restart();
-		
+		hit?.Play();
+
 		ApplyKnockback(source);
 		CheckDeath();
 	}
-	
+
 	private void ApplyKnockback(Vector2 source) {
 		hasKnockback = true;
 		knockbackTimer = 0f;
-		
+
 		Vector2 velocity = new Vector2(0, 0);
-		
+
 		Vector2 dir = (GlobalPosition - source).Normalized();
-		
-		if(dir.X > 0) velocity = new Vector2(knockbackVelocity, 0);
+
+		if (dir.X > 0) velocity = new Vector2(knockbackVelocity, 0);
 		else velocity = new Vector2(-knockbackVelocity, 0);
-		
+
 		Velocity = velocity;
 	}
 

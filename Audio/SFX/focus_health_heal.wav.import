@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://c1cr4vldn0e0i"
-path="res://.godot/imported/focus_health_heal.wav-e29da9a03e905c9628190e30aa55dd6a.sample"
+path="res://.godot/imported/focus_health_heal.wav-853e2bb6b6f80755af15125a9abcd856.sample"
 
 [deps]
 
-source_file="res://Audio/focus_health_heal.wav"
-dest_files=["res://.godot/imported/focus_health_heal.wav-e29da9a03e905c9628190e30aa55dd6a.sample"]
+source_file="res://Audio/SFX/focus_health_heal.wav"
+dest_files=["res://.godot/imported/focus_health_heal.wav-853e2bb6b6f80755af15125a9abcd856.sample"]
 
 [params]
 
