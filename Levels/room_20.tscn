@@ -382,6 +382,7 @@ position = Vector2(630, -192)
 shape = SubResource("RectangleShape2D_k5trp")
 
 [node name="LeftExit" parent="." instance=ExtResource("7_uwnvm")]
+position = Vector2(-1, 0)
 ConnectedRoom = "res://Levels/room_21.tscn"
 PlayerPos = Vector2(551, -132)
 

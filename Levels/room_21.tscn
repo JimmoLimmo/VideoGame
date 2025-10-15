@@ -234,7 +234,7 @@ tile_map_data = PackedByteArray("AAD//wkAAgACAAgAAAD9/wwAAgACAAgAAAD+/wwAAgADAAg
 tile_set = SubResource("TileSet_gu7ek")
 
 [node name="Player" parent="." instance=ExtResource("4_aaqji")]
-position = Vector2(-1261, -174)
+position = Vector2(-1262, -174)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -336,8 +336,10 @@ position = Vector2(636.5, -192)
 shape = SubResource("RectangleShape2D_k5trp")
 
 [node name="LeftExit" parent="." instance=ExtResource("9_djciu")]
+position = Vector2(-1, 0)
 ConnectedRoom = "res://Levels/room_boss.tscn"
 PlayerPos = Vector2(2300, 991)
+IsBossEntrance = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-1549, -200)
