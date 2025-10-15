@@ -325,6 +325,7 @@ texture = SubResource("GradientTexture2D_qqn31")
 [node name="FactoryBreakawayFloor2" parent="." instance=ExtResource("5_fri8c")]
 position = Vector2(0, 1024)
 breakTime = 0.5
+FloorID = "room_09_floor_01"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor2"]
 position = Vector2(-869, 673)
@@ -335,6 +336,7 @@ texture = SubResource("GradientTexture2D_23gfh")
 [node name="FactoryBreakawayFloor" parent="." instance=ExtResource("5_fri8c")]
 position = Vector2(-1664, 0)
 breakTime = 0.5
+FloorID = "room_09_floor_02"
 
 [node name="Sprite2D" type="Sprite2D" parent="FactoryBreakawayFloor"]
 position = Vector2(779.01, 671.238)

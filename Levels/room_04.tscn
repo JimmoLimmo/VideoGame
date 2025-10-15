@@ -357,6 +357,41 @@ offset_right = 2147.0
 offset_bottom = 1138.0
 color = Color(1, 1, 1, 0)
 
+[node name="Gears2" type="Node2D" parent="."]
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+[node name="SmallOpenGear" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(1153, -895)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+
+[node name="SmallOpenGear3" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(4227, -768)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+
+[node name="SmallOpenGear4" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(4866, -379)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+spinClockwise = false
+
+[node name="SmallOpenGear5" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(4226, -382)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+
+[node name="SmallOpenGear6" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(4483, -637)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+spinClockwise = false
+
+[node name="SmallOpenGear7" parent="Gears2" instance=ExtResource("16_gvkpr")]
+position = Vector2(1153, -895)
+scale = Vector2(0.75, 0.75)
+gearScale = 0.75
+
 [node name="Player" parent="." instance=ExtResource("3_1nl82")]
 position = Vector2(3244, -177)
 
@@ -573,38 +608,3 @@ tile_set = SubResource("TileSet_cacw8")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_mbv8v")
 volume_db = -10.306
-
-[node name="Gears2" type="Node2D" parent="."]
-modulate = Color(0.4, 0.4, 0.4, 1)
-
-[node name="SmallOpenGear" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(1153, -895)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
-
-[node name="SmallOpenGear3" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(4227, -768)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
-
-[node name="SmallOpenGear4" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(4866, -379)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
-spinClockwise = false
-
-[node name="SmallOpenGear5" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(4226, -382)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
-
-[node name="SmallOpenGear6" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(4483, -637)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
-spinClockwise = false
-
-[node name="SmallOpenGear7" parent="Gears2" instance=ExtResource("16_gvkpr")]
-position = Vector2(1153, -895)
-scale = Vector2(0.75, 0.75)
-gearScale = 0.75
