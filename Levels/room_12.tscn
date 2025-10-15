@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_hxe35"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_1x57y"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="3_m3o54"]
-[ext_resource type="PackedScene" uid="uid://bd0w1ls0vyoad" path="res://Scenes/Player/Player.tscn" id="4_an48l"]
+[ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="4_an48l"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="5_2dyk4"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="5_an48l"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="6_2dyk4"]
@@ -254,7 +254,7 @@ tile_map_data = PackedByteArray("AADz//n/AgAHAAQAAAD0//n/AgAIAAQAAAD1//n/AgAIAAQ
 tile_set = SubResource("TileSet_oi6js")
 
 [node name="Player" parent="." instance=ExtResource("4_an48l")]
-position = Vector2(-2131, -8495)
+position = Vector2(-230, -118)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -297,6 +297,7 @@ rotation = 1.5708
 [node name="FactoryCrusher3" parent="." instance=ExtResource("9_1x57y")]
 position = Vector2(-2049, -2307)
 rotation = 3.14159
+downDuration = 0.25
 
 [node name="MidTiles" type="Node2D" parent="."]
 
@@ -318,7 +319,6 @@ tile_set = SubResource("TileSet_1blyw")
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="MidDropoff" type="Node2D" parent="."]
-visible = false
 
 [node name="T" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(-1205.14, -9108)

@@ -6,7 +6,7 @@ void fragment() {
     vec4 tex_color = texture(TEXTURE, UV);
 
     // Keep only the bottom portion according to fill_ratio
-    if (UV.y < (1.0 - fill_ratio)) {
+    if (UV.x < (1.0 - fill_ratio)) {
         discard;
     }
 

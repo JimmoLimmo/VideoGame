@@ -378,8 +378,8 @@ scale = Vector2(1.9425, 3.36786)
 texture = SubResource("GradientTexture2D_iulru")
 
 [node name="RightExit" parent="." instance=ExtResource("7_uwnvm")]
-ConnectedRoom = "res://Levels/room_05.tscn"
-PlayerPos = Vector2(-189, 2198)
+ConnectedRoom = "res://Levels/room_02.tscn"
+PlayerPos = Vector2(-74, -2043)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit"]
 position = Vector2(630, -192)
