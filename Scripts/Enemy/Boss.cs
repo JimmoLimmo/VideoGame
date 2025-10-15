@@ -780,7 +780,7 @@ public partial class Boss : CharacterBody2D {
 			int dir = _player != null && _playerPos.X < GlobalPosition.X ? 1 : -1;
 			// Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.25f);
 			Velocity = Vector2.Zero;
-			_stateTimer = 0.25f;
+			_stateTimer = 0.0f;
 			FloorSnapLength = 0f;
 		}
 
@@ -836,7 +836,8 @@ public partial class Boss : CharacterBody2D {
 		_spark?.Restart();
 
 		if (_hp <= 0) Change(State.Die_1);
-		else Change(State.Hurt);
+		// else Change(State.Hurt);
+		PlaySFX(_sfxHurt);
 	}
 	public void TakeDamage(int dmg, Vector2 sourcePos) {
 		// optional: use hit source for directional effects
