@@ -94,7 +94,7 @@ tile_size = Vector2i(128, 128)
 sources/2 = SubResource("TileSetAtlasSource_wlflr")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7ql3"]
-size = Vector2(0, 0)
+size = Vector2(2795, 0)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_r1pom"]
 polygon = PackedVector2Array(-133, -706, -133, 255, -261, 255, -261, 383, 122, 383, 123, -513, 2427, -513, 2427, 384, 2683, 384, 2683, -706)
@@ -146,7 +146,7 @@ sources/0 = SubResource("TileSetAtlasSource_flkfy")
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -594.0
 offset_top = -438.0
-offset_right = 4180.34
+offset_right = 7607.0
 offset_bottom = 2321.0
 scale = Vector2(0.695, 0.695)
 color = Color(0.147672, 0.147672, 0.147672, 1)
@@ -155,7 +155,7 @@ color = Color(0.147672, 0.147672, 0.147672, 1)
 position = Vector2(902, 622)
 zoom = Vector2(0.75, 0.75)
 script = ExtResource("1_3y6oe")
-playerPath = NodePath("")
+playerPath = NodePath("../Player")
 boundsPath = NodePath("../CameraBounds/CameraCollsion")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -165,7 +165,7 @@ scroll_scale = Vector2(0.8, 0.8)
 material = SubResource("ShaderMaterial_y5lni")
 offset_left = -775.0
 offset_top = -490.0
-offset_right = 2867.0
+offset_right = 3921.0
 offset_bottom = 1625.0
 color = Color(1, 1, 1, 0)
 
@@ -185,7 +185,7 @@ position = Vector2(1654, 867)
 
 [node name="ground" type="TileMapLayer" parent="MidTiles"]
 position = Vector2(-1654, -867)
-tile_map_data = PackedByteArray("AAD9/wkAAgAFAAAAAAD//wkAAgAFAAAAAAABAAkAAgAFAAAAAAADAAkAAgAFAAAAAAAFAAkAAgAFAAAAAAAHAAkAAgAFAAAAAAAJAAkAAgAFAAAAAAALAAkAAgAFAAAAAAANAAkAAgAFAAAAAAAPAAkAAgAFAAAAAAARAAkAAgAAAAAAAAD9/wcAAgAAAAAAAAD9/wQAAgAFAAAAAAD9/wIAAgACAAAAAAD+/wAAAgAEAAAAAAD9/wEAAgAFAAEAAAD9//7/AgAAAAAAAAD9/wAAAgAFAAEAAAD///7/AgAFAAAAAAABAP7/AgAFAAAAAAADAP7/AgAFAAAAAAAFAP7/AgAFAAAAAAAHAP7/AgAFAAAAAAAJAP7/AgAFAAAAAAALAP7/AgAFAAAAAAANAP7/AgAFAAAAAAAPAP7/AgAFAAAAAAARAP7/AgAAAAAAAAARAAQAAgAAAAAAAAARAAMAAgAFAAEAAAASAAIAAgAEAAAAAAARAAEAAgAEAAAAAAARAAAAAgAFAAAAAAASAAEAAgAFAAEAAAD8/wUAAgAFAAAAAAD+/wUAAgAFAAEAAAARAAYAAgAAAAAAAAARAAgAAgAFAAAAAAASAAgAAgAFAAEAAAD9/wYAAgAFAAAAAAAbAAMAAgAFAAAAAAA=")
+tile_map_data = PackedByteArray("AAD9/wkAAgAFAAAAAAD//wkAAgAFAAAAAAABAAkAAgAFAAAAAAADAAkAAgAFAAAAAAAFAAkAAgAFAAAAAAAHAAkAAgAFAAAAAAAJAAkAAgAFAAAAAAALAAkAAgAFAAAAAAANAAkAAgAFAAAAAAAPAAkAAgAFAAAAAAARAAkAAgACAAAAAAD9/wcAAgAAAAAAAAD9/wQAAgAFAAAAAAD9/wIAAgACAAAAAAD+/wAAAgAEAAAAAAD9/wEAAgAFAAEAAAD9//7/AgAAAAAAAAD9/wAAAgAFAAEAAAD///7/AgAFAAAAAAABAP7/AgAFAAAAAAADAP7/AgAFAAAAAAAFAP7/AgAFAAAAAAAHAP7/AgAFAAAAAAAJAP7/AgAFAAAAAAALAP7/AgAFAAAAAAANAP7/AgAFAAAAAAAPAP7/AgAFAAAAAAARAP7/AgAAAAAAAAARAAQAAgACAAAAAAARAAMAAgAFAAEAAAASAAIAAgAEAAAAAAARAAEAAgAEAAAAAAARAAAAAgAFAAAAAAASAAEAAgAFAAEAAAD8/wUAAgAFAAAAAAD+/wUAAgAFAAEAAAD9/wYAAgAFAAAAAAATAAkAAgAFAAAAAAAUAAoAAgAFAAAAAAAVAAkAAgAFAAAAAAAWAAoAAgAFAAAAAAAXAAkAAgAFAAAAAAATAAUAAgAFAAAAAAAUAAQAAgAFAAAAAAAVAAUAAgAFAAAAAAAWAAQAAgAFAAAAAAATAAoAAgAFAAEAAAATAAQAAgAFAAEAAAAYAAoAAgAFAAAAAAAXAAUAAgAFAAAAAAAYAAQAAgAFAAAAAAAZAAkAAgAFAAAAAAAZAAUAAgAFAAAAAAAaAAQAAgAFAAAAAAAaAAoAAgAFAAAAAAAbAAkAAgAFAAAAAAAcAAoAAgAFAAAAAAAbAAUAAgAFAAAAAAAcAAQAAgAFAAAAAAAdAAUAAgAFAAAAAAAdAAkAAgAFAAAAAAAeAAoAAgAFAAAAAAAeAAQAAgAFAAAAAAAfAAUAAgAFAAAAAAAgAAQAAgAFAAAAAAAfAAkAAgAFAAAAAAAgAAoAAgAFAAAAAAAhAAkAAgAFAAAAAAAhAAUAAgAFAAAAAAAiAAQAAgAFAAAAAAAiAAoAAgAFAAAAAAAjAAUAAgAFAAAAAAAjAAkAAgAFAAAAAAAkAAoAAgAFAAAAAAAkAAQAAgAFAAAAAAAlAAkAAgAFAAEAAAAlAAUAAgAFAAEAAAAmAAkAAgAAAAAAAAAmAAQAAgAAAAAAAAA=")
 tile_set = SubResource("TileSet_ykuuq")
 
 [node name="detailBack" type="TileMapLayer" parent="MidTiles"]
@@ -199,7 +199,7 @@ tile_set = SubResource("TileSet_i48qr")
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(1031.45, 535)
+position = Vector2(2415.5, 535)
 shape = SubResource("RectangleShape2D_j7ql3")
 
 [node name="Lighting" type="Node2D" parent="."]
@@ -220,7 +220,7 @@ color = Color(0.999999, 0.995279, 0.695077, 1)
 energy = 0.25
 
 [node name="Door Light" type="PointLight2D" parent="Lighting"]
-position = Vector2(2418, 960.109)
+position = Vector2(4720, 954)
 scale = Vector2(11.3594, 6.71533)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_y5lni")
@@ -235,9 +235,9 @@ texture = SubResource("GradientTexture2D_jd76r")
 [node name="MidDropoff" type="Node2D" parent="."]
 
 [node name="RightDropoff" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(2303.28, 445.69)
+position = Vector2(2303.28, 247.187)
 rotation = 3.14159
-scale = Vector2(3.8748, 21.9775)
+scale = Vector2(3.8748, 15.7743)
 texture = SubResource("GradientTexture2D_rntpy")
 
 [node name="BottomDropoff" type="Sprite2D" parent="MidDropoff"]
@@ -255,6 +255,18 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="TopDropoff2" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(-288, 497.264)
 scale = Vector2(2.9227, 25.5855)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="BottomDropoff2" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(3690, 1262)
+rotation = -1.5708
+scale = Vector2(16.1574, 43.9227)
+texture = SubResource("GradientTexture2D_rntpy")
+
+[node name="TopDropoff3" type="Sprite2D" parent="MidDropoff"]
+position = Vector2(3721, 374)
+rotation = 1.5708
+scale = Vector2(22.3306, 42.6425)
 texture = SubResource("GradientTexture2D_rntpy")
 
 [node name="Foreground" type="Parallax2D" parent="."]
@@ -282,7 +294,7 @@ texture = SubResource("GradientTexture2D_rntpy")
 [node name="ScreenFade" parent="." instance=ExtResource("7_52mge")]
 
 [node name="Player" parent="." instance=ExtResource("11_mnije")]
-position = Vector2(1269, 984)
+position = Vector2(4711, 1001)
 hasWalljump = true
 hasDash = true
 hasSword = true
