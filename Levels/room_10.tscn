@@ -136,7 +136,7 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 sources/2 = SubResource("TileSetAtlasSource_ojaaw")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s6or5"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kvxvt"]
 texture = ExtResource("3_3cbvf")
 texture_region_size = Vector2i(128, 128)
 6:7/0 = 0
@@ -154,7 +154,7 @@ texture_region_size = Vector2i(128, 128)
 tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_s6or5")
+sources/0 = SubResource("TileSetAtlasSource_kvxvt")
 
 [sub_resource type="Gradient" id="Gradient_oci5r"]
 offsets = PackedFloat32Array(0.36478, 1)

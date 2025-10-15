@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dpvf5k15qhor3"]
+[gd_scene load_steps=5 format=3 uid="uid://dpvf5k15qhor3"]
 
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="1_vxrlw"]
 [ext_resource type="Texture2D" uid="uid://ji84ipxl8iwj" path="res://Sprites/Interactables/Lamp.png" id="2_s4xt4"]
+[ext_resource type="Texture2D" uid="uid://qlsat226uvw7" path="res://Sprites/Player/Walljump_Upgrade_Image.png" id="2_uncsc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uncsc"]
 size = Vector2(29, 48)
@@ -11,7 +12,7 @@ size = Vector2(29, 48)
 [node name="Area2D" type="Area2D" parent="."]
 script = ExtResource("1_vxrlw")
 Type = 2
-PickupTexture = ExtResource("2_s4xt4")
+PickupTexture = ExtResource("2_uncsc")
 ItemName = "Wall Spikes"
 keybindDesc = "Press <button> while on wall to Wall Jump"
 Description = "Cling to walls to dash and jump off of them."
