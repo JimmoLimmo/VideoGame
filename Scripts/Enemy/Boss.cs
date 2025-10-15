@@ -510,7 +510,7 @@ using System.Collections.Generic;
 
 public partial class Boss : CharacterBody2D {
 	// ========================= Tunables =========================
-	[Export] public int MaxHealth = 1000;
+	[Export] public int MaxHealth = 500;
 
 	[ExportGroup("Movement")]
 	[Export] public float WalkSpeed = 140f;
@@ -718,7 +718,9 @@ public partial class Boss : CharacterBody2D {
 		UpDirection = Vector2.Up;
 
 		SetPhysicsProcess(false);
-		ProcessMode = ProcessModeEnum.Disabled;
+		SetProcess(false);
+		ProcessMode = ProcessModeEnum.Inherit;  // prevents scene from killing processing completely
+
 
 		RefreshWorldGravity();
 		GD.Print($"[Boss READY] JumpVy = {JumpVy}, Gravity={_worldGravity}");
@@ -770,8 +772,8 @@ public partial class Boss : CharacterBody2D {
 		_spawnRight = GetNodeOrNull<Marker2D>("ShockwaveSpawnRight");
 
 		// DEBUG: Force spawn once on start
-		GD.Print("[Boss TEST] Forcing initial shockwave spawn for verification");
-		SpawnShockwaves();
+		// GD.Print("[Boss TEST] Forcing initial shockwave spawn for verification");
+		// SpawnShockwaves();
 
 		AddToGroup("boss");
 	}
@@ -1317,6 +1319,52 @@ public partial class Boss : CharacterBody2D {
 		_blood.Rotation = dir.Angle();
 		_blood.Emitting = false; // reset first to retrigger properly
 		_blood.Restart();
+	}
+	public async void RoarIntro() {
+		GD.Print("[Boss] Roar intro triggered!");
+
+		// freeze AI
+		SetPhysicsProcess(true);
+		SetProcess(true);
+		Velocity = Vector2.Zero;
+
+		// just treat this as a cinematic, not an FSM state
+		_stateNew = true;
+		_changedThisFrame = true;
+		_currentAttack = Attack.Roar;
+
+		// Animation + sound
+		if (HasAnim(ARoarPrep)) {
+			SafePlay(ARoarPrep);
+			await ToSignal(GetTree().CreateTimer(0.35f), Timer.SignalName.Timeout);
+		}
+		if (HasAnim(ARoar))
+			SafePlay(ARoar);
+
+		PlaySFX(_sfxRoar);
+		ShakeCamera(0.6f, 8f);
+
+		// optional spark/dust burst
+		_spark?.Restart();
+
+		await ToSignal(GetTree().CreateTimer(1.2f), Timer.SignalName.Timeout);
+
+		Change(State.Idle);  // resume AI normally
+		GD.Print("[Boss] Roar intro finished — AI reactivated.");
+	}
+
+	public void Activate() {
+		GD.Print("[Boss] Activated!");
+		SetPhysicsProcess(true);
+		SetProcess(true);
+		Change(State.Ready);
+	}
+	public void ActivateWithRoar() {
+		GD.Print("[Boss] Activated with roar intro!");
+		SetPhysicsProcess(true);
+		SetProcess(true);
+		ProcessMode = ProcessModeEnum.Inherit;  //  reactivate processing globally
+		RoarIntro();                            //  plays the cinematic and transitions to Idle
 	}
 
 }

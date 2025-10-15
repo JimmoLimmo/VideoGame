@@ -10,8 +10,9 @@ size = Vector2(231, 507)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4c1x2"]
 size = Vector2(191, 203)
 
-[node name="BossDoor" type="Node2D"]
+[node name="BossDoor" type="Node2D" node_paths=PackedStringArray("CloseSound")]
 script = ExtResource("1_s4pxd")
+CloseSound = NodePath("CloseSound")
 
 [node name="DoorBody" type="StaticBody2D" parent="."]
 collision_layer = 2

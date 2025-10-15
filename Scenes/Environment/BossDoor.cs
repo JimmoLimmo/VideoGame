@@ -2,116 +2,103 @@ using Godot;
 using System.Threading.Tasks;
 
 public partial class BossDoor : Node2D {
-    [Export] public NodePath BossPath;
-    [Export] public Vector2 ClosedOffset = new(0, 500);
-    [Export] public float CloseSpeed = 1200f;
-    [Export] public float BossActivationDelay = 1.0f;
+    // === Timing & movement ===
+    [Export] public float CloseDelay = 0.3f;
+    [Export] public float SlideDuration = 0.4f;
+    [Export] public Vector2 ClosedOffset = new Vector2(0, 500);
+    [Export] public AudioStreamPlayer2D CloseSound;
 
-    private Boss _boss;
+    // === Cinematic control ===
+    [Export] public NodePath BossPath;
+    [Export] public NodePath CameraPath;
+    [Export] public float DelayBeforeWake = 2.5f;
+    [Export] public Rect2 CameraLockArea = new Rect2(1500, 200, 1500, 800);
+    [Export] public Vector2 CameraFocusPoint = new Vector2(982, 531);
+
     private StaticBody2D _doorBody;
-    private Sprite2D _doorSprite;
-    private AudioStreamPlayer2D _closeSound;
+    private Area2D _trigger;
+    private bool _closed = false;
     private Vector2 _openPos;
     private Vector2 _closedPos;
-    private bool _isClosed = false;
-    private bool _triggered = false;
 
+    private Boss _boss;
+    private CameraController _camera;
 
     public override void _Ready() {
         _doorBody = GetNode<StaticBody2D>("DoorBody");
-        _doorSprite = _doorBody.GetNode<Sprite2D>("Sprite2D");
-        _closeSound = GetNode<AudioStreamPlayer2D>("CloseSound");
-
-        if (BossPath != null && !BossPath.IsEmpty)
-            _boss = GetNodeOrNull<Boss>(BossPath);
-
-        if (_boss == null) {
-            var bosses = GetTree().GetNodesInGroup("boss");
-            if (bosses.Count > 0)
-                _boss = bosses[0] as Boss;
-        }
+        _trigger = GetNode<Area2D>("Trigger");
 
         _openPos = _doorBody.Position;
         _closedPos = _openPos + ClosedOffset;
 
-        var trigger = GetNode<Area2D>("Trigger");
-        trigger.BodyEntered += OnBodyEntered;
+        _trigger.BodyEntered += OnBodyEntered;
 
-        MusicManager.Instance?.Play(BgmTrack.Ambiance, 1.0);
+        _boss = GetNodeOrNull<Boss>(BossPath);
+        _camera = GetNodeOrNull<CameraController>(CameraPath);
 
-        if (_boss != null) {
-            _boss.SetPhysicsProcess(false);
-            _boss.ProcessMode = ProcessModeEnum.Disabled;
-        }
-
-        GD.Print("[BossDoor] Initialized: ambient playing, boss idle.");
+        if (_boss != null)
+            _boss.SetProcess(false); // freeze boss until trigger
     }
 
     private async void OnBodyEntered(Node body) {
-        if (_triggered) return; //  prevent re-entry
-        if (body is not Player player) return;
+        if (_closed) return;
+        if (!body.IsInGroup("player")) return;
+        _closed = true;
 
-        _triggered = true; //  mark as used
-        var trigger = GetNode<Area2D>("Trigger");
-        // trigger.Monitoring = false; //  stop future signals
-        trigger.SetDeferred("monitoring", false);
+        // === Step 1: Close door ===
+        await ToSignal(GetTree().CreateTimer(CloseDelay), Timer.SignalName.Timeout);
+        CloseDoor();
 
-        GD.Print("[BossDoor] Player entered boss arena — closing door and starting intro.");
+        // === Step 2: Fade out overworld music ===
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.Stop(1.0); // smooth fade-out before boss
 
-        await CloseDoor();
-        _closeSound?.Play(); // slam
-        GD.Print("[BossDoor] Closed.");
 
-        MusicManager.Instance?.StartBoss(0.8);
+        // === Step 4: Dramatic pause ===
+        // await ToSignal(GetTree().CreateTimer(DelayBeforeWake), Timer.SignalName.Timeout);
 
-        await ToSignal(GetTree().CreateTimer(BossActivationDelay), Timer.SignalName.Timeout);
-
+        // === Step 5: Wake boss + roar ===
         if (_boss != null) {
-            _boss.ProcessMode = ProcessModeEnum.Inherit;
-            _boss.SetPhysicsProcess(true);
-            _boss.SetProcess(true);
-            GD.Print("[BossDoor] Boss activated!");
+            _boss.Visible = true;
+            // _boss.SetPhysicsProcess(true);
+            // _boss.SetProcess(true);
+            // _boss.RoarIntro();
+            _boss.ActivateWithRoar();
         }
-        else {
-            GD.PrintErr("[BossDoor] ERROR: Boss not assigned!");
-        }
+
+        // === Step 6: Start boss music ===
+        MusicManager.Instance?.StartBoss(1.2);
+
+
+
+        GD.Print("[BossDoor] Boss battle started!");
     }
 
+    private void CloseDoor() {
+        var tween = CreateTween();
+        tween.SetTrans(Tween.TransitionType.Sine);
+        tween.SetEase(Tween.EaseType.InOut);
+        tween.TweenProperty(_doorBody, "position", _closedPos, SlideDuration);
 
-    public async Task CloseDoor() {
-        if (_isClosed) return;
-        _isClosed = true;
+        // use layer/mask toggles instead of disabling shapes
+        _doorBody.CollisionLayer = 1;
+        _doorBody.CollisionMask = 1;
 
-        //  Enable collision before closing
-        foreach (var shape in _doorBody.GetChildren()) {
-            if (shape is CollisionShape2D cs)
-                cs.SetDeferred("disabled", false);
-        }
-
-        var tween = GetTree().CreateTween();
-        tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
-        tween.TweenProperty(_doorBody, "position", _closedPos, 0.5);
-        await ToSignal(tween, Tween.SignalName.Finished);
-
-        GD.Print("[BossDoor] Closed and collision enabled.");
+        CloseSound?.Play();
+        GD.Print("[BossDoor] Closed.");
+        _boss.Activate();
     }
 
+    public void OpenDoor() {
+        var tween = CreateTween();
+        tween.SetTrans(Tween.TransitionType.Sine);
+        tween.SetEase(Tween.EaseType.InOut);
+        tween.TweenProperty(_doorBody, "position", _openPos, SlideDuration);
 
-    public async void OpenDoor() {
-        if (!_isClosed) return;
-        _isClosed = false;
+        _doorBody.CollisionLayer = 0;
+        _doorBody.CollisionMask = 0;
 
-        var tween = GetTree().CreateTween();
-        tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.InOut);
-        tween.TweenProperty(_doorBody, "position", _openPos, 0.8);
-        await ToSignal(tween, Tween.SignalName.Finished);
-
-        //  Disable collision once open
-        foreach (var shape in _doorBody.GetChildren()) {
-            if (shape is CollisionShape2D cs)
-                cs.SetDeferred("disabled", true);
-        }
-
-        GD.Print("[BossDoor] Door reopened and collision disabled.");
+        GD.Print("[BossDoor] Opened.");
     }
+
 }
