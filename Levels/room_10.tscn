@@ -241,7 +241,7 @@ color = Color(1, 1, 1, 0)
 tile_set = SubResource("TileSet_mj7xw")
 
 [node name="Player" parent="." instance=ExtResource("4_gickc")]
-position = Vector2(-156, -61)
+position = Vector2(-83, -66)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -337,7 +337,7 @@ ConnectedRoom = "res://Levels/room_09.tscn"
 PlayerPos = Vector2(421, 2195)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
-position = Vector2(-203, -61)
+position = Vector2(-253, -65)
 shape = SubResource("RectangleShape2D_6ap5a")
 
 [node name="Lighting" type="Node2D" parent="."]
@@ -393,7 +393,7 @@ scale = Vector2(34.3891, 41.408)
 texture = SubResource("GradientTexture2D_il8a8")
 
 [node name="BL4" type="Sprite2D" parent="."]
-position = Vector2(-1281, 67)
+position = Vector2(-1309, 50)
 rotation = -1.5708
 scale = Vector2(34.3891, 41.408)
 texture = SubResource("GradientTexture2D_il8a8")
