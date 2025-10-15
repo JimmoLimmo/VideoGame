@@ -219,9 +219,10 @@ boundsPath = NodePath("../CameraBounds/CameraCollsion")
 cameraYOffset = -200
 
 [node name="CameraBounds" type="Area2D" parent="."]
+position = Vector2(0, 65.01)
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(1773.5, 250.5)
+position = Vector2(1638, 254.99)
 shape = SubResource("RectangleShape2D_8u4bp")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -240,7 +241,7 @@ color = Color(1, 1, 1, 0)
 tile_set = SubResource("TileSet_mj7xw")
 
 [node name="Player" parent="." instance=ExtResource("4_gickc")]
-position = Vector2(-150, -108)
+position = Vector2(-156, -61)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -249,6 +250,7 @@ hasDash = true
 hasSword = true
 
 [node name="MidTiles" type="Node2D" parent="."]
+position = Vector2(0, 65.01)
 
 [node name="DetailBack" type="TileMapLayer" parent="MidTiles"]
 tile_set = SubResource("TileSet_7baxb")
@@ -267,6 +269,7 @@ tile_set = SubResource("TileSet_7baxb")
 [node name="Gears" type="Node2D" parent="."]
 
 [node name="MidDropoff" type="Node2D" parent="."]
+position = Vector2(0, 65.01)
 
 [node name="T" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(1399.22, -611.265)
@@ -287,9 +290,9 @@ scale = Vector2(5.83864, 32.0938)
 texture = SubResource("GradientTexture2D_do6f4")
 
 [node name="BL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(692.978, 1194.44)
+position = Vector2(653.294, 1194.44)
 rotation = -1.5708
-scale = Vector2(34.3891, 42.6481)
+scale = Vector2(34.3891, 41.408)
 texture = SubResource("GradientTexture2D_il8a8")
 
 [node name="FactoryBreakawayFloor2" parent="." instance=ExtResource("7_fk00x")]
@@ -334,7 +337,7 @@ ConnectedRoom = "res://Levels/room_09.tscn"
 PlayerPos = Vector2(421, 2195)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
-position = Vector2(-227, -127)
+position = Vector2(-203, -61)
 shape = SubResource("RectangleShape2D_6ap5a")
 
 [node name="Lighting" type="Node2D" parent="."]
@@ -358,3 +361,39 @@ volume_db = -10.306
 [node name="WallJumpUpgrade" parent="." instance=ExtResource("10_kvxvt")]
 position = Vector2(2378, 1032)
 scale = Vector2(5, 5)
+
+[node name="BL" type="Sprite2D" parent="."]
+position = Vector2(4137, 537)
+rotation = -1.5708
+scale = Vector2(65.6637, 41.408)
+texture = SubResource("GradientTexture2D_il8a8")
+
+[node name="BL2" type="Sprite2D" parent="."]
+position = Vector2(2243, 2434)
+rotation = -1.5708
+scale = Vector2(34.3891, 41.408)
+texture = SubResource("GradientTexture2D_il8a8")
+
+[node name="BL" type="Sprite2D" parent="BL2"]
+position = Vector2(653.294, 1194.44)
+rotation = -1.5708
+scale = Vector2(34.3891, 41.408)
+texture = SubResource("GradientTexture2D_il8a8")
+
+[node name="BL3" type="Sprite2D" parent="."]
+position = Vector2(653.337, -1652)
+rotation = -1.5708
+scale = Vector2(34.3891, 85.1162)
+texture = SubResource("GradientTexture2D_il8a8")
+
+[node name="BL" type="Sprite2D" parent="BL3"]
+position = Vector2(653.294, 1194.44)
+rotation = -1.5708
+scale = Vector2(34.3891, 41.408)
+texture = SubResource("GradientTexture2D_il8a8")
+
+[node name="BL4" type="Sprite2D" parent="."]
+position = Vector2(-1281, 67)
+rotation = -1.5708
+scale = Vector2(34.3891, 41.408)
+texture = SubResource("GradientTexture2D_il8a8")

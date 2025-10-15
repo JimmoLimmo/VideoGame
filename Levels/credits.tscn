@@ -87,7 +87,8 @@ grow_vertical = 2
 text = "Music
 
 Menu - \"The Voice Someone Calls\" by ATLUS Sound Team from Persona 3 Reload
-In Game - \"tartaris_0d01\" by ATLUS Sound Team from Persona 3
+In Game - \"The Halting of Gears in a System\" by sailthemarigold
+Boss - \"Gear Trains\" by sailthemarigold
 Credits - \"Period - Persona 4 (Alpha Version)\" by Jimmy Nguyen"
 label_settings = SubResource("LabelSettings_mbqqj")
 horizontal_alignment = 1
