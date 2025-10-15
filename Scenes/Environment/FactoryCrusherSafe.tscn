@@ -1,20 +1,17 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmrx72adb6qla"]
+[gd_scene load_steps=12 format=3 uid="uid://8eoje8g17g04"]
 
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="1_d6asn"]
-[ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_jc7cj"]
-[ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_yo5wu"]
+[ext_resource type="Script" uid="uid://bvyjshce2jilp" path="res://Scripts/Environment/Crusher.cs" id="1_ws1w4"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_ulv3b"]
+[ext_resource type="AudioStream" uid="uid://bih2k3464r5vu" path="res://Audio/SFX/boom.wav" id="3_52c0n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yo5wu"]
 size = Vector2(139, 123)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_d6asn"]
-size = Vector2(21.5, 128)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tjs4c"]
-size = Vector2(211.75, 80)
+size = Vector2(256, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4cr11"]
-size = Vector2(255, 385)
+size = Vector2(256, 385)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_jc7cj"]
 polygon = PackedVector2Array(-128, -896, -128, -384, 128, -384, 128, -896)
@@ -98,10 +95,12 @@ _data = {
 }
 
 [node name="FactoryCrusher" type="Node2D"]
-script = ExtResource("1_jc7cj")
+script = ExtResource("1_ws1w4")
 movementTime = 0.75
+doesDamage = false
 
 [node name="DeathZone" type="Area2D" parent="."]
+visible = false
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
@@ -114,13 +113,13 @@ position = Vector2(0, 25)
 
 [node name="Shadow" type="Sprite2D" parent="Top"]
 position = Vector2(0, -484)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(0, 1152, 255, 64)
 
 [node name="Head" type="Sprite2D" parent="Top"]
 position = Vector2(0, -448)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(256, 1156, 256, 128)
 
@@ -128,36 +127,28 @@ region_rect = Rect2(256, 1156, 256, 128)
 
 [node name="Pipe" type="Sprite2D" parent="Top/Pipes"]
 position = Vector2(0, -832)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
 
 [node name="Pipe2" type="Sprite2D" parent="Top/Pipes"]
 position = Vector2(0, -704)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
 
 [node name="Pipe3" type="Sprite2D" parent="Top/Pipes"]
 position = Vector2(0, -576)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(0, 1028, 256, 128)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
-position = Vector2(-117, -448.5)
-shape = SubResource("RectangleShape2D_d6asn")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Top"]
-position = Vector2(117, -448)
-shape = SubResource("RectangleShape2D_d6asn")
-
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Top"]
-position = Vector2(0, -472)
+position = Vector2(0, -448)
 shape = SubResource("RectangleShape2D_tjs4c")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Top"]
-position = Vector2(0.5, -704.5)
+position = Vector2(0, -704.5)
 shape = SubResource("RectangleShape2D_4cr11")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Top"]
@@ -168,7 +159,7 @@ occluder = SubResource("OccluderPolygon2D_jc7cj")
 
 [node name="PipeGuide" type="Sprite2D" parent="."]
 position = Vector2(0, -452)
-texture = ExtResource("1_d6asn")
+texture = ExtResource("2_ulv3b")
 region_enabled = true
 region_rect = Rect2(0, 897, 256, 127)
 
@@ -178,6 +169,6 @@ libraries = {
 }
 
 [node name="BoomSound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_yo5wu")
+stream = ExtResource("3_52c0n")
 volume_db = 24.0
 bus = &"SFX"

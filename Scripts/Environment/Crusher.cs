@@ -7,6 +7,7 @@ public partial class Crusher : Node {
 	[Export] public float upDuration = 1f;
 	[Export] public float downDuration = 0.5f;
 	[Export] public float movementTime = 0.5f;
+	[Export] public float offset = 0f;
 	[Export] public bool isDown = false;
 	[Export] public bool halt = false;
 	[Export] public bool doesDamage = true;
@@ -31,7 +32,7 @@ public partial class Crusher : Node {
 		if(!halt) {
 			cycleTimer.OneShot = true;
 			cycleTimer.Timeout += OnCycleTimeout;
-			cycleTimer.Start(upDuration);
+			cycleTimer.Start(upDuration + offset);
 		}
 	}
 

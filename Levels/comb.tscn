@@ -1,0 +1,48 @@
+[gd_scene load_steps=12 format=3 uid="uid://b7qdgqbn7u0g4"]
+
+[ext_resource type="PackedScene" uid="uid://cyr4ejhyrgm4b" path="res://Levels/room_03.tscn" id="1_k6c8l"]
+[ext_resource type="PackedScene" uid="uid://dk01o0xsh57wl" path="res://Levels/room_02.tscn" id="2_mrxlw"]
+[ext_resource type="PackedScene" uid="uid://blemgugjlqkjd" path="res://Levels/room_01.tscn" id="3_mkgyw"]
+[ext_resource type="PackedScene" uid="uid://dvltqe00uspnr" path="res://Levels/room_04.tscn" id="4_du6vu"]
+[ext_resource type="PackedScene" uid="uid://x32noqlfbc2m" path="res://Levels/room_05.tscn" id="5_s71qn"]
+[ext_resource type="PackedScene" uid="uid://1y1he86baeod" path="res://Levels/room_07.tscn" id="6_yndrg"]
+[ext_resource type="PackedScene" uid="uid://dlo7wg1xdnnpi" path="res://Levels/room_08.tscn" id="7_cbomi"]
+[ext_resource type="PackedScene" uid="uid://cbn8ldt61lap1" path="res://Levels/room_11.tscn" id="8_671e7"]
+[ext_resource type="PackedScene" uid="uid://ccaul74w3d7u6" path="res://Levels/room_09.tscn" id="9_o26vr"]
+[ext_resource type="PackedScene" uid="uid://cyl1m8mh10hnq" path="res://Levels/room_12.tscn" id="10_pypba"]
+[ext_resource type="PackedScene" uid="uid://b2og63ngq6nsu" path="res://Levels/room_13.tscn" id="11_mrxlw"]
+
+[node name="Comb" type="Node2D"]
+
+[node name="Room03" parent="." instance=ExtResource("1_k6c8l")]
+position = Vector2(5770, 5122)
+
+[node name="Room02" parent="." instance=ExtResource("2_mrxlw")]
+position = Vector2(3088, 1154)
+
+[node name="Room01" parent="." instance=ExtResource("3_mkgyw")]
+position = Vector2(272, 2)
+
+[node name="Room04" parent="." instance=ExtResource("4_du6vu")]
+position = Vector2(8697, 5142)
+
+[node name="Room05" parent="." instance=ExtResource("5_s71qn")]
+position = Vector2(15599, 5109)
+
+[node name="Room07" parent="." instance=ExtResource("6_yndrg")]
+position = Vector2(14606, 7414)
+
+[node name="Room08" parent="." instance=ExtResource("7_cbomi")]
+position = Vector2(10445, 9578)
+
+[node name="Room11" parent="." instance=ExtResource("8_671e7")]
+position = Vector2(1890, 7659)
+
+[node name="Room09" parent="." instance=ExtResource("9_o26vr")]
+position = Vector2(3553, 9578)
+
+[node name="Room12" parent="." instance=ExtResource("10_pypba")]
+position = Vector2(-6846, 7649)
+
+[node name="Room13" parent="." instance=ExtResource("11_mrxlw")]
+position = Vector2(-9534, -1567)
