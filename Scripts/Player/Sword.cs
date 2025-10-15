@@ -46,13 +46,14 @@ public partial class Sword : Area2D {
 					// Damage the enemy
 					if (current.HasMethod("TakeDamage")) {
 						current.CallDeferred("TakeDamage", Damage, GlobalPosition);
+						
+						if(current.IsInGroup("enemies") || current.IsInGroup("boss")) {
+							// Add mana reward
+							var player = GetParentOrNull<Player>();
+							player?.AddMana(1);
+							GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
+						}
 					}
-
-					// Apply knockback to any CharacterBody2D enemy
-					var player = GetParentOrNull<Player>();
-					// Add mana reward
-					player?.AddMana(1);
-					GD.Print($"[ManaGain] Enemy hit → mana={GlobalRoomChange.mana}/{GlobalRoomChange.maxMana}");
 				}
 			}
 		}

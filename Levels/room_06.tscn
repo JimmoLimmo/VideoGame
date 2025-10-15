@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="12_6au6i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rky6a"]
-size = Vector2(6145, 1121)
+size = Vector2(5795, 1121)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qhpts"]
 shader = ExtResource("2_4p8kh")
@@ -234,7 +234,7 @@ cameraYOffset = -200
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(4170.5, 319.5)
+position = Vector2(3995.5, 319.5)
 shape = SubResource("RectangleShape2D_rky6a")
 
 [node name="Background" type="Parallax2D" parent="."]

@@ -62,13 +62,13 @@ script = ExtResource("1_jo63a")
 position = Vector2(-128, 128)
 texture = ExtResource("1_nq5m8")
 region_enabled = true
-region_rect = Rect2(256, 0, 256, 256)
+region_rect = Rect2(1408, 1024, 256, 256)
 
 [node name="RightBlock" type="Sprite2D" parent="PhysicsArea/Sprite Container"]
 position = Vector2(128, 128)
 texture = ExtResource("1_nq5m8")
 region_enabled = true
-region_rect = Rect2(256, 0, 256, 256)
+region_rect = Rect2(1408, 1024, 256, 256)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PhysicsArea"]
 position = Vector2(0, 128)

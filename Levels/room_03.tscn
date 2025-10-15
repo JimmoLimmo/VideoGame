@@ -279,7 +279,7 @@ texture = SubResource("GradientTexture2D_ff12f")
 
 [node name="LeftExit" parent="." instance=ExtResource("6_tuau3")]
 ConnectedRoom = "res://Levels/room_02.tscn"
-PlayerPos = Vector2(2332, 1046)
+PlayerPos = Vector2(2322, 3857)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit"]
 position = Vector2(-227, -190)

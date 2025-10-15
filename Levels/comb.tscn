@@ -6,11 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://dvltqe00uspnr" path="res://Levels/room_04.tscn" id="4_du6vu"]
 [ext_resource type="PackedScene" uid="uid://x32noqlfbc2m" path="res://Levels/room_05.tscn" id="5_s71qn"]
 [ext_resource type="PackedScene" uid="uid://1y1he86baeod" path="res://Levels/room_07.tscn" id="6_yndrg"]
-[ext_resource type="PackedScene" uid="uid://dlo7wg1xdnnpi" path="res://Levels/room_08.tscn" id="7_cbomi"]
+[ext_resource type="PackedScene" uid="uid://qeknog0ao022" path="res://Levels/room_08.tscn" id="7_cbomi"]
 [ext_resource type="PackedScene" uid="uid://cbn8ldt61lap1" path="res://Levels/room_11.tscn" id="8_671e7"]
-[ext_resource type="PackedScene" uid="uid://ccaul74w3d7u6" path="res://Levels/room_09.tscn" id="9_o26vr"]
+[ext_resource type="PackedScene" uid="uid://641es3coh6tl" path="res://Levels/room_09.tscn" id="9_o26vr"]
 [ext_resource type="PackedScene" uid="uid://cyl1m8mh10hnq" path="res://Levels/room_12.tscn" id="10_pypba"]
-[ext_resource type="PackedScene" uid="uid://b2og63ngq6nsu" path="res://Levels/room_13.tscn" id="11_mrxlw"]
+[ext_resource type="PackedScene" uid="uid://dqcliyr6wbhoi" path="res://Levels/room_13.tscn" id="11_mrxlw"]
 
 [node name="Comb" type="Node2D"]
 

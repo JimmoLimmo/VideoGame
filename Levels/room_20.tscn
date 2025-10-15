@@ -1,10 +1,9 @@
-[gd_scene load_steps=36 format=4 uid="uid://ca5pax52ouyjp"]
+[gd_scene load_steps=35 format=4 uid="uid://ca5pax52ouyjp"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_7lhma"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_sbbxc"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_gghdd"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_28pln"]
-[ext_resource type="PackedScene" uid="uid://bmrx72adb6qla" path="res://Scenes/Environment/FactoryCrusher.tscn" id="5_28pln"]
 [ext_resource type="PackedScene" uid="uid://dajr1nqbjbtyb" path="res://Scenes/Enemy/MechMosquito.tscn" id="6_gtoxw"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="7_uwnvm"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="7_v1ns2"]
@@ -13,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_7dhnf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_32f6u"]
-size = Vector2(7767, 1)
+size = Vector2(6861, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f8rw4"]
 shader = ExtResource("2_sbbxc")
@@ -221,7 +220,7 @@ cameraYOffset = -200
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(-3908.5, -258.5)
+position = Vector2(-3704.5, -261)
 shape = SubResource("RectangleShape2D_32f6u")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -241,20 +240,13 @@ tile_map_data = PackedByteArray("AAD//wkAAgACAAgAAAD9/wwAAgACAAgAAAD+/wwAAgADAAg
 tile_set = SubResource("TileSet_gu7ek")
 
 [node name="Player" parent="." instance=ExtResource("3_gghdd")]
-position = Vector2(-8085, -128)
+position = Vector2(389, -128)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
 hasWalljump = true
 hasDash = true
 hasSword = true
-
-[node name="FactoryCrusher2" parent="." instance=ExtResource("5_28pln")]
-position = Vector2(-2139, 256)
-rotation = 1.5708
-upDuration = 0.05
-downDuration = 0.1
-movementTime = 0.1
 
 [node name="MechMosquito3" parent="." instance=ExtResource("6_gtoxw")]
 position = Vector2(-5575, -344)
@@ -276,6 +268,36 @@ position = Vector2(-1170.67, 0)
 
 [node name="RightLimit" type="Marker2D" parent="TechTick"]
 position = Vector2(805.333, 4)
+
+[node name="TechTick2" parent="." instance=ExtResource("7_v1ns2")]
+position = Vector2(-6892, -93)
+Speed = 400.0
+LeftLimitPath = NodePath("LeftLimit")
+RightLimitPath = NodePath("RightLimit")
+
+[node name="LeftLimit" type="Marker2D" parent="TechTick2"]
+position = Vector2(-1170.67, 0)
+
+[node name="RightLimit" type="Marker2D" parent="TechTick2"]
+position = Vector2(805.333, 4)
+
+[node name="MechMosquito4" parent="." instance=ExtResource("6_gtoxw")]
+position = Vector2(-4151, -369)
+
+[node name="TechTick3" parent="." instance=ExtResource("7_v1ns2")]
+position = Vector2(-4568, -68)
+Speed = 400.0
+LeftLimitPath = NodePath("LeftLimit")
+RightLimitPath = NodePath("RightLimit")
+
+[node name="LeftLimit" type="Marker2D" parent="TechTick3"]
+position = Vector2(-1170.67, 0)
+
+[node name="RightLimit" type="Marker2D" parent="TechTick3"]
+position = Vector2(805.333, 4)
+
+[node name="MechMosquito5" parent="." instance=ExtResource("6_gtoxw")]
+position = Vector2(-2991, -379)
 
 [node name="MidTiles" type="Node2D" parent="."]
 
@@ -309,28 +331,10 @@ rotation = -1.5708
 scale = Vector2(7.03609, 152.449)
 texture = SubResource("GradientTexture2D_egxpl")
 
-[node name="TL" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-4198, 1212)
-rotation = -1.5708
-scale = Vector2(17.8301, 18.4462)
-texture = SubResource("GradientTexture2D_mw1p2")
-
-[node name="BR" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(706, 2578)
-rotation = -1.5708
-scale = Vector2(17.9565, 19.5479)
-texture = SubResource("GradientTexture2D_mw1p2")
-
 [node name="TMR" type="Sprite2D" parent="MidDropoff"]
 position = Vector2(1138, -258)
 rotation = -1.5708
 scale = Vector2(36.5099, 17.8603)
-texture = SubResource("GradientTexture2D_mw1p2")
-
-[node name="TL_Removable" type="Sprite2D" parent="MidDropoff"]
-position = Vector2(-5837, -2619)
-rotation = -1.5708
-scale = Vector2(37.1579, 37.4041)
 texture = SubResource("GradientTexture2D_mw1p2")
 
 [node name="L" type="Sprite2D" parent="MidDropoff"]
@@ -403,33 +407,3 @@ texture = SubResource("GradientTexture2D_pc3pq")
 [node name="ScreenFade" parent="." instance=ExtResource("8_amkhg")]
 
 [node name="CollectionOverlay" parent="." instance=ExtResource("9_7dhnf")]
-
-[node name="TechTick2" parent="." instance=ExtResource("7_v1ns2")]
-position = Vector2(-6892, -93)
-Speed = 400.0
-LeftLimitPath = NodePath("LeftLimit")
-RightLimitPath = NodePath("RightLimit")
-
-[node name="LeftLimit" type="Marker2D" parent="TechTick2"]
-position = Vector2(-1170.67, 0)
-
-[node name="RightLimit" type="Marker2D" parent="TechTick2"]
-position = Vector2(805.333, 4)
-
-[node name="MechMosquito4" parent="." instance=ExtResource("6_gtoxw")]
-position = Vector2(-4151, -369)
-
-[node name="TechTick3" parent="." instance=ExtResource("7_v1ns2")]
-position = Vector2(-4568, -68)
-Speed = 400.0
-LeftLimitPath = NodePath("LeftLimit")
-RightLimitPath = NodePath("RightLimit")
-
-[node name="LeftLimit" type="Marker2D" parent="TechTick3"]
-position = Vector2(-1170.67, 0)
-
-[node name="RightLimit" type="Marker2D" parent="TechTick3"]
-position = Vector2(805.333, 4)
-
-[node name="MechMosquito5" parent="." instance=ExtResource("6_gtoxw")]
-position = Vector2(-2991, -379)

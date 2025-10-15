@@ -337,15 +337,12 @@ public partial class Boss : CharacterBody2D {
 		string nextBossAnimation = "";
 		
 		if(Velocity.Y != 0) {
-			GD.Print("[Animation] JUMPING");
 			nextGearAnimation = "Move";
 			nextBossAnimation = "Idle";
 		} else if(Velocity.X != 0) {
-			GD.Print("[Animation] WALKING");
 			nextGearAnimation = "Move";
 			nextBossAnimation = "Walk";
 		} else {
-			GD.Print("[Animation] IDLE");
 			nextGearAnimation = "Idle";
 			nextBossAnimation = "Idle";
 		}

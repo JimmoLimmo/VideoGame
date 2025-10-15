@@ -87,8 +87,8 @@ grow_vertical = 2
 text = "Music
 
 Menu - \"The Voice Someone Calls\" by ATLUS Sound Team from Persona 3 Reload
-In Game - \"The Halting of Gears in a System\" by sailthemarigold
-Boss - \"Gear Trains\" by sailthemarigold
+In Game - \"Gear Trains\" by sailthemarigold
+Boss - \"The Halting of Gears in a System\" by sailthemarigold
 Credits - \"Period - Persona 4 (Alpha Version)\" by Jimmy Nguyen"
 label_settings = SubResource("LabelSettings_mbqqj")
 horizontal_alignment = 1
@@ -104,7 +104,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Sound Effects
 
-From Team Cherry's Hollow Knight"
+From \"Hollow Knight\" by Team Cherry"
 label_settings = SubResource("LabelSettings_mbqqj")
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -1,23 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://c4l8w38r3nu8b"]
+[gd_scene load_steps=5 format=3 uid="uid://bl4mtdq514bn1"]
 
-[ext_resource type="Script" uid="uid://cjsgarigvd28p" path="res://Scripts/Level/BreakableWall.cs" id="1_xaw07"]
-[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_3x67c"]
+[ext_resource type="Script" uid="uid://cjsgarigvd28p" path="res://Scripts/Level/BreakableWall.cs" id="1_ikb06"]
+[ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="2_e7f3k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36tn6"]
-size = Vector2(320, 256)
+size = Vector2(320, 384)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xaw07"]
-size = Vector2(256, 256)
+size = Vector2(256, 384)
 
 [node name="BreakableWall" type="Node2D"]
-script = ExtResource("1_xaw07")
+script = ExtResource("1_ikb06")
 
 [node name="HitBox" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
-position = Vector2(1, 0)
 shape = SubResource("RectangleShape2D_36tn6")
-debug_color = Color(0.843781, 0.3188, 0.537774, 0.42)
+debug_color = Color(0.850012, 0.350085, 0.3487, 0.42)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -25,6 +24,6 @@ debug_color = Color(0.843781, 0.3188, 0.537774, 0.42)
 shape = SubResource("RectangleShape2D_xaw07")
 
 [node name="WallSprite" type="Sprite2D" parent="StaticBody2D"]
-texture = ExtResource("2_3x67c")
+texture = ExtResource("2_e7f3k")
 region_enabled = true
-region_rect = Rect2(1408, 1024, 256, 256)
+region_rect = Rect2(1152, 896, 256, 384)

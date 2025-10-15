@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=4 uid="uid://cpotf3frxxlp"]
+[gd_scene load_steps=25 format=4 uid="uid://cpotf3frxxlp"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_3y6oe"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_pfkkc"]
@@ -109,14 +109,6 @@ polygon = PackedVector2Array(-128, 512, 128, 512, 128, 768, 2688, 768, 2688, 102
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_y5lni"]
 gradient = SubResource("Gradient_wlflr")
 
-[sub_resource type="Gradient" id="Gradient_i48qr"]
-colors = PackedColorArray(1.20327e-06, 0, 0.520981, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_jd76r"]
-gradient = SubResource("Gradient_i48qr")
-fill_from = Vector2(0, 0.58296)
-fill_to = Vector2(1, 0.600897)
-
 [sub_resource type="Gradient" id="Gradient_2g3pj"]
 offsets = PackedFloat32Array(0.484277, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
@@ -187,6 +179,12 @@ DashStopAccel = 2500.05
 ArenaRightX = 2000.0
 PlayerPath = NodePath("../Player")
 
+[node name="Player" parent="." instance=ExtResource("11_mnije")]
+position = Vector2(2300, 991)
+hasWalljump = true
+hasDash = true
+hasSword = true
+
 [node name="MidTiles" type="Node2D" parent="."]
 z_index = 2
 position = Vector2(1654, 867)
@@ -233,13 +231,6 @@ position = Vector2(2062, 954)
 scale = Vector2(11.3594, 6.71533)
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_y5lni")
-
-[node name="FinalBossLight" type="PointLight2D" parent="Lighting"]
-position = Vector2(-704, 842)
-scale = Vector2(26.6682, 36.6289)
-energy = 9.81
-shadow_enabled = true
-texture = SubResource("GradientTexture2D_jd76r")
 
 [node name="MidDropoff" type="Node2D" parent="."]
 z_index = 2
@@ -290,12 +281,6 @@ scale = Vector2(1.9425, 3.36786)
 texture = SubResource("GradientTexture2D_rntpy")
 
 [node name="ScreenFade" parent="." instance=ExtResource("7_52mge")]
-
-[node name="Player" parent="." instance=ExtResource("11_mnije")]
-position = Vector2(2300, 991)
-hasWalljump = true
-hasDash = true
-hasSword = true
 
 [node name="BossDoor" parent="." instance=ExtResource("8_hotvb")]
 z_index = 1

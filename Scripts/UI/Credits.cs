@@ -28,7 +28,7 @@ public partial class Credits : Node2D {
 		sfx = GetNode<Label>("CanvasLayer/Control/SoundEffects");
 		ty = GetNode<Label>("CanvasLayer/Control/ThankYou");
 		
-		slides = new Label[] {scrum, pgm, art, music, sfx, ty};
+		slides = new Label[] {pgm, art, music, sfx, ty};
 		
 		slideTimer.OneShot = true;
 		slideTimer.Timeout += OnCycleTimeout;
