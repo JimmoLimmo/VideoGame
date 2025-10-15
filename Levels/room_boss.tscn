@@ -147,6 +147,7 @@ sources/0 = SubResource("TileSetAtlasSource_flkfy")
 size = Vector2(33, 384)
 
 [node name="Room" type="Node2D"]
+position = Vector2(1, 0)
 
 [node name="Background Color" type="ColorRect" parent="."]
 offset_left = -594.0
