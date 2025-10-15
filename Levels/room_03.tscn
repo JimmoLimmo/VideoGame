@@ -1,11 +1,12 @@
-[gd_scene load_steps=38 format=4 uid="uid://cyr4ejhyrgm4b"]
+[gd_scene load_steps=39 format=4 uid="uid://cyr4ejhyrgm4b"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_c8iti"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_cp1p4"]
 [ext_resource type="PackedScene" uid="uid://bl57h6bp50oo2" path="res://Scenes/Player/player.tscn" id="3_u616v"]
-[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/SwordUpgrade.tscn" id="4_cp1p4"]
+[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/Upgrade.tscn" id="4_cp1p4"]
 [ext_resource type="Texture2D" uid="uid://b242eyhweiko7" path="res://Sprites/Environment/FactoryWall_Tileset.png" id="4_f4wdb"]
 [ext_resource type="Texture2D" uid="uid://doah6cryalvyl" path="res://Sprites/Environment/Pipe_Tileset.png" id="5_h8xti"]
+[ext_resource type="Texture2D" uid="uid://dlp0xpmc8va38" path="res://Sprites/Player/Claw_Upgrade_Image.png" id="6_c8iti"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_tuau3"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_qkxc1"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="12_2l3ox"]
@@ -257,6 +258,10 @@ position = Vector2(-139, -126)
 
 [node name="SwordUpgrade" parent="." instance=ExtResource("4_cp1p4")]
 position = Vector2(1030, -214)
+PickupTexture = ExtResource("6_c8iti")
+ItemName = "Claw"
+keybindDesc = "Press <button> to swing."
+Description = "Slash your way through enemies and weak structures."
 
 [node name="MidTiles" type="Node2D" parent="."]
 position = Vector2(1654, 867)

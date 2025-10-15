@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://cb0f77dgrked4"]
+[gd_scene load_steps=36 format=4 uid="uid://cb0f77dgrked4"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_jsgsb"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_1vl50"]
@@ -8,11 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="8_0qgqw"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_nf0iw"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="10_4daad"]
-[ext_resource type="PackedScene" uid="uid://dpvf5k15qhor3" path="res://Scenes/Collectables/WallJumpUpgrade.tscn" id="10_kvxvt"]
+[ext_resource type="Texture2D" uid="uid://qlsat226uvw7" path="res://Sprites/Player/Walljump_Upgrade_Image.png" id="11_1vl50"]
+[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/Upgrade.tscn" id="11_jsgsb"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="11_tth6v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8u4bp"]
-size = Vector2(1253, 775)
+size = Vector2(1049.5, 775)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vp4u1"]
 shader = ExtResource("2_1vl50")
@@ -222,7 +223,7 @@ cameraYOffset = -200
 position = Vector2(0, 65.01)
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(1638, 254.99)
+position = Vector2(1739.75, 254.99)
 shape = SubResource("RectangleShape2D_8u4bp")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -358,10 +359,6 @@ texture = SubResource("GradientTexture2D_clqi0")
 stream = ExtResource("11_tth6v")
 volume_db = -10.306
 
-[node name="WallJumpUpgrade" parent="." instance=ExtResource("10_kvxvt")]
-position = Vector2(2378, 1032)
-scale = Vector2(5, 5)
-
 [node name="BL" type="Sprite2D" parent="."]
 position = Vector2(4137, 537)
 rotation = -1.5708
@@ -392,8 +389,10 @@ rotation = -1.5708
 scale = Vector2(34.3891, 41.408)
 texture = SubResource("GradientTexture2D_il8a8")
 
-[node name="BL4" type="Sprite2D" parent="."]
-position = Vector2(-1309, 50)
-rotation = -1.5708
-scale = Vector2(34.3891, 41.408)
-texture = SubResource("GradientTexture2D_il8a8")
+[node name="SwordUpgrade" parent="." instance=ExtResource("11_jsgsb")]
+position = Vector2(2383, 952)
+Type = 2
+PickupTexture = ExtResource("11_1vl50")
+ItemName = "Wall Jump"
+keybindDesc = "Press <button> while on a wall to use."
+Description = "You can now cling to walls and jump off of them to achieve new heights."

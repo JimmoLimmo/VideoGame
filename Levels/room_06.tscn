@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://c1qmvnh7lusmk"]
+[gd_scene load_steps=42 format=4 uid="uid://c1qmvnh7lusmk"]
 
 [ext_resource type="Script" uid="uid://cgdpkkfvspe6f" path="res://Scripts/Camera/CameraController.cs" id="1_d287s"]
 [ext_resource type="Shader" uid="uid://j67wbxdm5fle" path="res://Scripts/Shader/blur.gdshader" id="2_4p8kh"]
@@ -8,10 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="5_vkjb2"]
 [ext_resource type="PackedScene" uid="uid://3kfeb17b550a" path="res://Scenes/Level/DoorArea2D.tscn" id="6_spqte"]
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="7_1lsf5"]
-[ext_resource type="PackedScene" uid="uid://d2jl12xy2svgx" path="res://Scenes/Collectables/DashUpgrade.tscn" id="7_kuq1f"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="9_q12ft"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="10_7n36c"]
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="12_6au6i"]
+[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/Upgrade.tscn" id="12_kuq1f"]
+[ext_resource type="Texture2D" uid="uid://b4664oktyypy0" path="res://Sprites/Player/Dash_Upgrade_Image.png" id="13_kuq1f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rky6a"]
 size = Vector2(5795, 1121)
@@ -254,7 +255,7 @@ tile_map_data = PackedByteArray("AAAqAAQAAgACAAgAAAAtAAYAAgACAAgAAAAuAAYAAgADAAg
 tile_set = SubResource("TileSet_3ikjv")
 
 [node name="Player" parent="." instance=ExtResource("4_kuq1f")]
-position = Vector2(2182, -208)
+position = Vector2(6841, -176)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0
@@ -314,10 +315,6 @@ position = Vector2(-897.334, -5.33333)
 
 [node name="RightLimit" type="Marker2D" parent="TechTick2"]
 position = Vector2(1073.33, -20)
-
-[node name="DashUpgrade" parent="." instance=ExtResource("7_kuq1f")]
-position = Vector2(7776, -215)
-scale = Vector2(5, 5)
 
 [node name="MidTiles" type="Node2D" parent="."]
 
@@ -464,3 +461,11 @@ texture = SubResource("GradientTexture2D_j533a")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_7n36c")
 volume_db = -10.306
+
+[node name="SwordUpgrade" parent="." instance=ExtResource("12_kuq1f")]
+position = Vector2(7662, -242)
+Type = 1
+PickupTexture = ExtResource("13_kuq1f")
+ItemName = "Dash"
+keybindDesc = "Press and Hold <button> to dash."
+Description = "Propel yourself over deep pits and away from danger. Release the button early to end the dash."

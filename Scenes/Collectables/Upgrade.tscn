@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://bcm8cay7pje61"]
+[gd_scene load_steps=7 format=3 uid="uid://bcm8cay7pje61"]
 
 [ext_resource type="Script" uid="uid://dfllcnuu6o1u7" path="res://Scripts/Level/Collectable.cs" id="2_v0dgo"]
-[ext_resource type="Texture2D" uid="uid://dlp0xpmc8va38" path="res://Sprites/Player/Claw_Upgrade_Image.png" id="2_wtmdk"]
 [ext_resource type="Texture2D" uid="uid://d4fcncxpe678v" path="res://Sprites/Interactables/BloodWorks_Icon_Transparent.png" id="3_olvd5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wtmdk"]
@@ -47,14 +46,9 @@ _data = {
 }
 
 [node name="SwordUpgrade" type="Node2D"]
+script = ExtResource("2_v0dgo")
 
 [node name="Area2D" type="Area2D" parent="."]
-script = ExtResource("2_v0dgo")
-PickupTexture = ExtResource("2_wtmdk")
-ItemName = "Claw"
-keybindDesc = "Press <button> to swing."
-Description = "Slash your way through enemies and weak structures."
-WaitTime = 1.5
 
 [node name="Sprite2D" type="Sprite2D" parent="Area2D"]
 texture = ExtResource("3_olvd5")
