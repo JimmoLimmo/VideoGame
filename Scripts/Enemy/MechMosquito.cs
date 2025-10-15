@@ -2,8 +2,6 @@ using Godot;
 using System;
 
 public partial class MechMosquito : CharacterBody2D {
-	private AnimationPlayer animator;
-
 	[Export] public int maxHealth = 30;
 	[Export] public float speed = 300;
 	[Export] public float angleVariationDegrees = 15f;
@@ -15,6 +13,8 @@ public partial class MechMosquito : CharacterBody2D {
 	[Export] public int contactDamage = 1;
 	[Export] public float knockbackVelocity = 1500f;
 	[Export] public float knockbackTime = 0.2f;
+	[Export] public float idleRadius = 50f;
+	[Export] public float TargetChangeInterval = 0.5f;
 
 	private int currentHealth;
 	private bool isActive = false;
@@ -29,13 +29,19 @@ public partial class MechMosquito : CharacterBody2D {
 	private FastNoiseLite noise = new FastNoiseLite();
 	private bool hasKnockback = false;
 	private float knockbackTimer = 0f;
+	private float targetTimer = 0f;
+	private Random rng = new();
+	private Vector2 idlePos;
+	private Vector2 centerPoint = Vector2.Zero;
 
 	private Sprite2D sprite;
 	private Area2D hitBox;
 	private Area2D aggroArea;
 	private CpuParticles2D bloodEmitter;
 	private CpuParticles2D sparkEmitter;
+	private AnimationPlayer animator;
 	private AudioStreamPlayer2D hit;
+	CharacterBody2D player;
 
 	public override void _Ready() {
 		AddToGroup("enemies");
@@ -52,12 +58,18 @@ public partial class MechMosquito : CharacterBody2D {
 		aggroArea = GetNode<Area2D>("AggroArea");
 		bloodEmitter = GetNode<CpuParticles2D>("BloodEmitter");
 		sparkEmitter = GetNode<CpuParticles2D>("SparkEmitter");
+		animator = GetNode<AnimationPlayer>("AnimationPlayer");
 		hit = GetNode<AudioStreamPlayer2D>("Hit");
+		player = GetNode<CharacterBody2D>("../Player");
 
 
 		hitBox.BodyEntered += OnBodyEntered;
 		aggroArea.BodyEntered += EnteredAggroArea;
 		aggroArea.BodyExited += ExitAggroArea;
+		
+		idlePos = GetRandomTarget();
+		centerPoint = GlobalPosition;
+		GlobalPosition = centerPoint + GetRandomTarget();
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -71,8 +83,6 @@ public partial class MechMosquito : CharacterBody2D {
 			float angleOffset = Mathf.DegToRad(noiseValue * angleVariationDegrees);
 
 			if (isActive && dashTimer >= dashBreak) {
-				CharacterBody2D player = GetNode<CharacterBody2D>("../Player");
-
 				Vector2 toPlayer = player.GlobalPosition - GlobalPosition;
 				Vector2 direction = toPlayer.Normalized();
 
@@ -94,14 +104,18 @@ public partial class MechMosquito : CharacterBody2D {
 				else {
 					dashing = true;
 					dashDirection = direction;
-					Rotation = direction.Angle();
+					if(direction.X <= 0) {
+						Rotation = direction.Angle() - Mathf.DegToRad(120);
+					} else if(direction.X > 0) {
+						Rotation = direction.Angle() + Mathf.DegToRad(300);
+					}
 				}
 			}
 			else {
-				Vector2 movePos = startPos;
-				Vector2 toPos = movePos - GlobalPosition;
-				Vector2 direction = toPos.Normalized();
-				velocity = direction * speed * (float)delta * 50;
+				Vector2 targetPos = centerPoint + idlePos;
+				Vector2 dir = targetPos - GlobalPosition;
+				
+				velocity = dir.Normalized() * speed;
 			}
 
 			Vector2 randomizedVelocity = velocity.Rotated(angleOffset);
@@ -117,8 +131,38 @@ public partial class MechMosquito : CharacterBody2D {
 				hasKnockback = false;
 			}
 		}
+		
+		HandleAnimations();
+		
+		targetTimer += (float)delta;
+		if(targetTimer >= TargetChangeInterval) {
+			idlePos = GetRandomTarget();
+			targetTimer = 0;
+		}
 
 		MoveAndSlide();
+	}
+	
+	private void HandleAnimations() {
+		string nextAnimation = "";
+		
+		if(!dashing) {
+			nextAnimation = "Fly";
+		} else {
+			nextAnimation = "Dash";
+		}
+		
+		Vector2 dir = player.GlobalPosition - GlobalPosition;
+		
+		if(dir.X > 0) {
+			sprite.FlipH = true;
+		} else if(dir.X < 0) {
+			sprite.FlipH = false;
+		}
+		
+		if(animator.CurrentAnimation != nextAnimation) {
+			animator.Play(nextAnimation);
+		}
 	}
 
 	public void TakeDamage(int amount, Vector2 source) {
@@ -166,5 +210,16 @@ public partial class MechMosquito : CharacterBody2D {
 
 	private void ExitAggroArea(Node2D body) {
 		if (body is Player player) isActive = false;
+	}
+	
+	public void Kill() {
+		currentHealth = 0;
+		CheckDeath();
+	}
+	
+	private Vector2 GetRandomTarget() {
+		float angle = (float)(rng.NextDouble() * MathF.Tau);
+		float dist = (float)(rng.NextDouble()) * idleRadius;
+		return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
 	}
 }
