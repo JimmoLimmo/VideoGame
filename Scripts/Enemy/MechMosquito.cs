@@ -152,8 +152,6 @@ public partial class MechMosquito : CharacterBody2D {
 			nextAnimation = "Dash";
 		}
 		
-		GD.Print(Velocity.X);
-		
 		Vector2 dir = player.GlobalPosition - GlobalPosition;
 		
 		if(dir.X > 0) {
