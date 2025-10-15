@@ -1239,7 +1239,8 @@ public partial class Boss : CharacterBody2D {
 			SafePlay(AStagger);
 			PlaySFX(_sfxHurt);
 			int dir = _player != null && _playerPos.X < GlobalPosition.X ? 1 : -1;
-			Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.25f);
+			// Velocity = new Vector2(HurtKnockback * dir, -Mathf.Abs(JumpVy) * 0.25f);
+			Velocity = Vector2.Zero;
 			_stateTimer = 0.25f;
 			FloorSnapLength = 0f;
 		}
@@ -1275,6 +1276,13 @@ public partial class Boss : CharacterBody2D {
 			MusicManager.Instance?.EndBoss(1.0);
 			SetPhysicsProcess(false);
 			SetProcess(false);
+
+			// Spawn credits trigger pickup
+			var triggerScene = GD.Load<PackedScene>("res://Scenes/Level/CredditsTrigger.tscn");
+			var trigger = triggerScene.Instantiate<Area2D>();
+			trigger.GlobalPosition = GlobalPosition + new Vector2(0, -80);
+			GetTree().CurrentScene.AddChild(trigger);
+
 		}
 	}
 
@@ -1283,11 +1291,17 @@ public partial class Boss : CharacterBody2D {
 		if (_state is State.Die_1 or State.Die_2) return;
 
 		_hp -= dmg;
+		GD.Print($"[Boss] Took {dmg} damage! Remaining HP: {_hp}");
 		_blood?.Restart();
 		_spark?.Restart();
 
 		if (_hp <= 0) Change(State.Die_1);
 		else Change(State.Hurt);
+	}
+	public void TakeDamage(int dmg, Vector2 sourcePos) {
+		// optional: use hit source for directional effects
+		EmitDirectionalBlood(sourcePos);
+		TakeDamage(dmg);
 	}
 
 	private void OnHitBoxBodyEntered(Node2D body) {
