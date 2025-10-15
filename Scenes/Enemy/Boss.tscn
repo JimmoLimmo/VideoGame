@@ -1,8 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://u5ti17mobc8c"]
+[gd_scene load_steps=24 format=3 uid="uid://u5ti17mobc8c"]
 
 [ext_resource type="Script" uid="uid://cc0d3s6lwbkul" path="res://Scripts/Enemy/Boss.cs" id="1_wshln"]
 [ext_resource type="PackedScene" uid="uid://shockwave" path="res://Scenes/Enemy/Shockwave.tscn" id="2_ghr8m"]
-[ext_resource type="Texture2D" uid="uid://csw4j11liypac" path="res://PlayerCharacter_MockUp.png" id="2_okvah"]
+[ext_resource type="Texture2D" uid="uid://bvv274oq3t32j" path="res://Sprites/Enemies/UnhappyFrog_SpriteSheet.png" id="3_frr2l"]
 [ext_resource type="Script" uid="uid://dt7q8jvr5huvt" path="res://Scripts/Enemy/BossSword.cs" id="4_frr2l"]
 [ext_resource type="AudioStream" uid="uid://ckahw3jbohypt" path="res://Audio/SFX/hollow_knight_self_stab_prepare.wav" id="4_ykrhc"]
 [ext_resource type="AudioStream" uid="uid://cwv4gk3ni0usg" path="res://Audio/SFX/mage_knight_dash.wav" id="5_frr2l"]
@@ -12,38 +12,213 @@
 [ext_resource type="AudioStream" uid="uid://dr514cs52fp5b" path="res://Audio/SFX/hollow_knight_scream_distant.wav" id="9_rkgoy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_okvah"]
-radius = 77.0
+radius = 116.0
 height = 354.0
+
+[sub_resource type="Animation" id="Animation_frr2l"]
+resource_name = "Idle"
+length = 0.0833375
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Body:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Arm:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_us8nl"]
+resource_name = "Walk"
+length = 0.416671
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Body:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Arm:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2), Vector2i(5, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_kmfwt"]
+resource_name = "Jump"
+
+[sub_resource type="Animation" id="Animation_usne3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Body:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpriteRoot/Arm:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 2)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rkgoy"]
+_data = {
+&"Idle": SubResource("Animation_frr2l"),
+&"Jump": SubResource("Animation_kmfwt"),
+&"RESET": SubResource("Animation_usne3"),
+&"Walk": SubResource("Animation_us8nl")
+}
+
+[sub_resource type="Animation" id="Animation_bq31s"]
+resource_name = "Idle"
+length = 0.0833375
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Gear:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_kmc66"]
+resource_name = "Move"
+length = 0.208338
+loop_mode = 1
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Gear:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0416667, 0.0833333, 0.125, 0.166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_4mmex"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRoot/Gear:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w78de"]
+_data = {
+&"Idle": SubResource("Animation_bq31s"),
+&"Move": SubResource("Animation_kmc66"),
+&"RESET": SubResource("Animation_4mmex")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykrhc"]
 size = Vector2(16.4218, 42.0263)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0puiv"]
-radius = 86.0
-height = 336.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_frr2l"]
+radius = 195.003
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ghr8m"]
-radius = 105.0
-height = 364.0
+radius = 175.0
+height = 374.0
 
 [node name="Boss" type="CharacterBody2D"]
 script = ExtResource("1_wshln")
 ShockwaveScene = ExtResource("2_ghr8m")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(27, 69)
 shape = SubResource("CapsuleShape2D_okvah")
-debug_color = Color(8.18223e-07, 0.6335, 0.439752, 0.42)
+debug_color = Color(0, 0.544247, 0.944187, 0.42)
 
 [node name="SpriteRoot" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="SpriteRoot"]
-modulate = Color(0.992349, 0, 0.179767, 1)
-position = Vector2(0, -1)
-texture = ExtResource("2_okvah")
+[node name="Arm" type="Sprite2D" parent="SpriteRoot"]
+texture = ExtResource("3_frr2l")
+hframes = 7
+vframes = 3
+frame = 14
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="Gear" type="Sprite2D" parent="SpriteRoot"]
+texture = ExtResource("3_frr2l")
+hframes = 7
+vframes = 3
+frame = 7
+
+[node name="Body" type="Sprite2D" parent="SpriteRoot"]
+texture = ExtResource("3_frr2l")
+hframes = 7
+vframes = 3
+
+[node name="BossAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rkgoy")
+}
+
+[node name="GearAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_w78de")
+}
 
 [node name="Sword" type="Area2D" parent="."]
+visible = false
 monitoring = false
 script = ExtResource("4_frr2l")
 
@@ -56,14 +231,14 @@ shape = SubResource("RectangleShape2D_ykrhc")
 position = Vector2(-1, 2)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
-position = Vector2(-2, -7)
-shape = SubResource("CapsuleShape2D_0puiv")
+position = Vector2(29, 56)
+shape = SubResource("CircleShape2D_frr2l")
 debug_color = Color(0.957019, 2.40654e-06, 0.534826, 0.42)
 
 [node name="HurtBox" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(-4, -8)
+position = Vector2(27, 60)
 shape = SubResource("CapsuleShape2D_ghr8m")
 
 [node name="BloodEmitter" type="CPUParticles2D" parent="."]
