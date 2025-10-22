@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="6_tqt53"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="7_g2auc"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="8_uk2e3"]
-[ext_resource type="PackedScene" path="res://Scenes/Environment/FactoryCrusherSafe.tscn" id="9_rgbyj"]
+[ext_resource type="PackedScene" uid="uid://8eoje8g17g04" path="res://Scenes/Environment/FactoryCrusherSafe.tscn" id="9_rgbyj"]
 [ext_resource type="PackedScene" uid="uid://b45jr477n6ff0" path="res://Scenes/Level/Checkpoint.tscn" id="10_tsv7c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g0h3y"]
@@ -262,12 +262,12 @@ downDuration = 1.0
 [node name="FactoryCrusher2" parent="." instance=ExtResource("9_rgbyj")]
 position = Vector2(5632, -131)
 rotation = -3.14159
-downDuration = 1.0
+downDuration = 1.5
 
 [node name="FactoryCrusher3" parent="." instance=ExtResource("9_rgbyj")]
 position = Vector2(6912, -131)
 rotation = -3.14159
-downDuration = 1.0
+downDuration = 1.5
 offset = 1.0
 
 [node name="FactoryCrusher4" parent="." instance=ExtResource("9_rgbyj")]

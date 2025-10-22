@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://ndjhcd7ysgc1" path="res://Scenes/Enemy/TechTick.tscn" id="13_p1pli"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_32f6u"]
-size = Vector2(2006, 1965.5)
+size = Vector2(1824, 1965.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f8rw4"]
 shader = ExtResource("2_1kff1")
@@ -238,7 +238,7 @@ cameraYOffset = -200
 [node name="CameraBounds" type="Area2D" parent="."]
 
 [node name="CameraCollsion" type="CollisionShape2D" parent="CameraBounds"]
-position = Vector2(-1751, 727.25)
+position = Vector2(-1660, 727.25)
 shape = SubResource("RectangleShape2D_32f6u")
 
 [node name="Background" type="Parallax2D" parent="."]
@@ -258,7 +258,7 @@ tile_map_data = PackedByteArray("AAD//wkAAgACAAgAAAD9/wwAAgACAAgAAAD+/wwAAgADAAg
 tile_set = SubResource("TileSet_gu7ek")
 
 [node name="Player" parent="." instance=ExtResource("4_p1pli")]
-position = Vector2(528, -107)
+position = Vector2(-3805, 2057)
 safe_margin = 1.0
 WallJumpLockTime = 0.15
 WallJumpForce = 1250.0

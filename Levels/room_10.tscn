@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c2lbnb23jrpgt" path="res://Scenes/UI/ScreenFade.tscn" id="9_nf0iw"]
 [ext_resource type="PackedScene" uid="uid://d30vj7qfwl6uj" path="res://Scenes/UI/CollectionOverlay.tscn" id="10_4daad"]
 [ext_resource type="Texture2D" uid="uid://qlsat226uvw7" path="res://Sprites/Player/Walljump_Upgrade_Image.png" id="11_1vl50"]
-[ext_resource type="PackedScene" uid="uid://bcm8cay7pje61" path="res://Scenes/Collectables/Upgrade.tscn" id="11_jsgsb"]
+[ext_resource type="PackedScene" uid="uid://g63h10c3sjsi" path="res://Scenes/Collectables/Upgrade.tscn" id="11_jsgsb"]
 [ext_resource type="AudioStream" uid="uid://c4eefii077p5q" path="res://Audio/Music/Persona 3 OST - Tartarus Block 1 Extended.mp3" id="11_tth6v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8u4bp"]
